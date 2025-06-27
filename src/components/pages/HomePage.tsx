@@ -113,6 +113,7 @@ export function HomePage() {
   
   // Carousel state
   const [currentSlide, setCurrentSlide] = React.useState(0);
+  const [progress, setProgress] = React.useState(0);
 
   const { data: newInProducts } = useDummyProducts({ 
     filters: { sortBy: "newest" }, 
@@ -138,7 +139,7 @@ export function HomePage() {
       id: 1,
       title: "New Season Arrivals",
       subtitle: "Discover the latest fashion trends",
-      video: "/hero1.mp4",
+      video: "/hero2.mp4",
       buttonText: "Shop Now",
       buttonLink: "/new-in"
     },
@@ -196,14 +197,31 @@ export function HomePage() {
     }
   }, []);
 
-  // Carousel auto-play effect
+  // Carousel auto-play effect with progress
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
-    }, 7000); // 7 seconds (uzatıldı)
+    const duration = 10000; // 10 seconds
+    const interval = 50; // Update every 50ms for smooth progress
+    
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        const newProgress = prev + (interval / duration) * 100;
+        if (newProgress >= 100) {
+          // Move to next slide and reset progress
+          setCurrentSlide((current) => (current + 1) % carouselSlides.length);
+          return 0; // Reset progress immediately
+        }
+        return newProgress;
+      });
+    }, interval);
 
-    return () => clearInterval(interval);
-  }, [carouselSlides.length]);
+    return () => clearInterval(progressInterval);
+  }, [carouselSlides.length]); // Remove currentSlide dependency
+
+  // Reset progress when slide changes manually
+  const handleSlideChange = (index: number) => {
+    setCurrentSlide(index);
+    setProgress(0);
+  };
 
   const scrollBrands = (direction: 'left' | 'right') => {
     if (!brandScrollRef.current) return;
@@ -262,12 +280,12 @@ export function HomePage() {
                       />
                     )}
                     <div className="absolute inset-0 bg-black/40 rounded-lg" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center text-white max-w-4xl px-6">
+                    <div className="absolute inset-0 flex items-center justify-start px-8 md:px-16">
+                      <div className="text-left text-white max-w-2xl">
                         <h1 className="text-3xl md:text-5xl font-bold mb-4 leading-tight">
                           {slide.title}
                         </h1>
-                        <p className="text-base md:text-lg mb-6 opacity-90 max-w-2xl mx-auto">
+                        <p className="text-base md:text-lg mb-6 opacity-90">
                           {slide.subtitle}
                         </p>
                         <Link to={slide.buttonLink}>
@@ -286,25 +304,35 @@ export function HomePage() {
                 {carouselSlides.map((_, index) => (
                   <button
                     key={index}
-                    onClick={() => setCurrentSlide(index)}
+                    onClick={() => handleSlideChange(index)}
                     className={cn(
-                      "relative h-1 transition-all duration-300 rounded-full",
-                      index === currentSlide ? "w-10 bg-white" : "w-6 bg-white/50 hover:bg-white/70"
+                      "relative h-1 transition-all duration-300 rounded-full overflow-hidden",
+                      index === currentSlide ? "w-10 bg-white/30" : "w-6 bg-white/50 hover:bg-white/70"
                     )}
-                  />
+                  >
+                    {index === currentSlide && (
+                      <div 
+                        className="absolute left-0 top-0 h-full bg-white rounded-full transition-all duration-100"
+                        style={{ width: `${progress}%` }}
+                      />
+                    )}
+                    {index !== currentSlide && (
+                      <div className="absolute inset-0 bg-white/50 rounded-full" />
+                    )}
+                  </button>
                 ))}
               </div>
             </div>
 
             {/* Navigation Arrows - Outside Container */}
             <button
-              onClick={() => setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length)}
+              onClick={() => handleSlideChange((currentSlide - 1 + carouselSlides.length) % carouselSlides.length)}
               className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors"
             >
               <ChevronLeft className="h-8 w-8" />
             </button>
             <button
-              onClick={() => setCurrentSlide((prev) => (prev + 1) % carouselSlides.length)}
+              onClick={() => handleSlideChange((currentSlide + 1) % carouselSlides.length)}
               className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors"
             >
               <ChevronRight className="h-8 w-8" />
