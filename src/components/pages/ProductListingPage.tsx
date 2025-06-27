@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
-  Grid3x3, 
-  LayoutGrid, 
   Filter, 
   X, 
   Heart,
   ArrowLeft,
-  ArrowRight
+  ArrowRight,
+  ChevronDown
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -31,13 +30,17 @@ export function ProductListingPage() {
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [gridColumns, setGridColumns] = useState(4);
   const [sortBy, setSortBy] = useState('featured');
+  const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false);
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   
   // Filter State
   const [activeFilters, setActiveFilters] = useState<ActiveFilter[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState([0, 5000]);
+  const [tempPriceRange, setTempPriceRange] = useState([0, 5000]);
   const [showSaleOnly, setShowSaleOnly] = useState(false);
   
   // Pagination
@@ -47,7 +50,7 @@ export function ProductListingPage() {
   // Get products with filters
   const { data: products, total: totalProducts, isLoading } = useDummyProducts({
     filters: {
-      category: category ? [category] : undefined,
+      category: selectedCategories.length > 0 ? selectedCategories : (category ? [category] : undefined),
       brand: selectedBrands.length > 0 ? selectedBrands : undefined,
       color: selectedColors.length > 0 ? selectedColors : undefined,
       size: selectedSizes.length > 0 ? selectedSizes : undefined,
@@ -72,6 +75,9 @@ export function ProductListingPage() {
   useEffect(() => {
     const filters: ActiveFilter[] = [];
     
+    selectedCategories.forEach(cat => 
+      filters.push({ key: 'category', value: cat, label: cat })
+    );
     selectedBrands.forEach(brand => 
       filters.push({ key: 'brand', value: brand, label: brand })
     );
@@ -88,15 +94,32 @@ export function ProductListingPage() {
       filters.push({ 
         key: 'price', 
         value: `${priceRange[0]}-${priceRange[1]}`, 
-        label: `R${priceRange[0]} - R${priceRange[1]}` 
+        label: `AED ${priceRange[0]} - AED ${priceRange[1]}` 
       });
     }
     
     setActiveFilters(filters);
-  }, [selectedBrands, selectedColors, selectedSizes, showSaleOnly, priceRange]);
+  }, [selectedCategories, selectedBrands, selectedColors, selectedSizes, showSaleOnly, priceRange]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isSortDropdownOpen) {
+        setIsSortDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isSortDropdownOpen]);
 
   const removeFilter = (filterToRemove: ActiveFilter) => {
     switch (filterToRemove.key) {
+      case 'category':
+        setSelectedCategories(prev => prev.filter(c => c !== filterToRemove.value));
+        break;
       case 'brand':
         setSelectedBrands(prev => prev.filter(b => b !== filterToRemove.value));
         break;
@@ -111,41 +134,80 @@ export function ProductListingPage() {
         break;
       case 'price':
         setPriceRange([0, 5000]);
+        setTempPriceRange([0, 5000]);
         break;
     }
   };
 
   const clearAllFilters = () => {
+    setSelectedCategories([]);
     setSelectedBrands([]);
     setSelectedColors([]);
     setSelectedSizes([]);
     setShowSaleOnly(false);
     setPriceRange([0, 5000]);
+    setTempPriceRange([0, 5000]);
   };
 
   const FilterDrawer = () => (
     <div className="w-64 space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Filters</h3>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={clearAllFilters}
-          className="text-muted-foreground hover:text-foreground"
-        >
-          Clear All
-        </Button>
+        {activeFilters.length > 0 && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={clearAllFilters}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Clear All
+          </Button>
+        )}
       </div>
+
+      {/* Active Filters */}
+      {activeFilters.length > 0 && (
+        <div className="border-b pb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-sm font-medium">Active filters:</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {activeFilters.map((filter, index) => (
+              <Badge key={index} variant="secondary" className="pr-1">
+                {filter.label}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removeFilter(filter)}
+                  className="h-auto p-0 ml-1 hover:bg-transparent group"
+                >
+                  <X className="h-3 w-3 text-white group-hover:text-gray-300" />
+                </Button>
+              </Badge>
+            ))}
+          </div>
+        </div>
+      )}
 
       <Accordion type="multiple" className="w-full">
         {/* Category Filter */}
         <AccordionItem value="category">
           <AccordionTrigger>Category</AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-3">
+            <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
               {filterData.categories.map((cat) => (
                 <div key={cat} className="flex items-center space-x-2">
-                  <Checkbox id={`category-${cat}`} />
+                  <Checkbox 
+                    id={`category-${cat}`}
+                    checked={selectedCategories.includes(cat)}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setSelectedCategories(prev => [...prev, cat]);
+                      } else {
+                        setSelectedCategories(prev => prev.filter(c => c !== cat));
+                      }
+                    }}
+                  />
                   <label htmlFor={`category-${cat}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                     {cat}
                   </label>
@@ -159,7 +221,7 @@ export function ProductListingPage() {
         <AccordionItem value="brand">
           <AccordionTrigger>Brand</AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-3">
+            <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
               {filterData.brands.map((brand) => (
                 <div key={brand} className="flex items-center space-x-2">
                   <Checkbox 
@@ -182,38 +244,64 @@ export function ProductListingPage() {
           </AccordionContent>
         </AccordionItem>
 
-        {/* Price Filter */}
-        <AccordionItem value="price">
-          <AccordionTrigger>Price</AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-4">
-              <div className="px-2">
-                <Slider
-                  value={priceRange}
-                  onValueChange={setPriceRange}
-                  max={5000}
-                  min={0}
-                  step={50}
-                  className="w-full"
-                />
-              </div>
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span>R{priceRange[0]}</span>
-                <span>R{priceRange[1]}</span>
+        {/* Price Filter - Custom Implementation */}
+        <div className="border-b">
+          <button
+            className="flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline w-full text-left"
+            onClick={() => setIsPriceFilterOpen(!isPriceFilterOpen)}
+          >
+            Price
+            <svg 
+              className={`h-4 w-4 shrink-0 transition-transform duration-200 ${isPriceFilterOpen ? 'rotate-180' : ''}`}
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {isPriceFilterOpen && (
+            <div className="pb-4 pt-0">
+              <div className="space-y-4 p-2">
+                <div className="px-2">
+                  <Slider
+                    value={tempPriceRange}
+                    onValueChange={setTempPriceRange}
+                    max={5000}
+                    min={0}
+                    step={50}
+                    className="w-full"
+                  />
+                </div>
+                <div className="flex items-center justify-between text-sm text-muted-foreground px-2">
+                  <span>AED {tempPriceRange[0]}</span>
+                  <span>AED {tempPriceRange[1]}</span>
+                </div>
+                <div className="px-2">
+                  <Button
+                    onClick={() => setPriceRange([...tempPriceRange])}
+                    size="sm"
+                    className="w-full"
+                    disabled={priceRange[0] === tempPriceRange[0] && priceRange[1] === tempPriceRange[1]}
+                  >
+                    Apply Price Filter
+                  </Button>
+                </div>
               </div>
             </div>
-          </AccordionContent>
-        </AccordionItem>
+          )}
+        </div>
 
         {/* Color Filter */}
         <AccordionItem value="color">
           <AccordionTrigger>Color</AccordionTrigger>
           <AccordionContent>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-2" onClick={(e) => e.stopPropagation()}>
               {filterData.colors.map((color) => (
                 <button
                   key={color}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     if (selectedColors.includes(color)) {
                       setSelectedColors(prev => prev.filter(c => c !== color));
                     } else {
@@ -236,13 +324,14 @@ export function ProductListingPage() {
         <AccordionItem value="size">
           <AccordionTrigger>Size</AccordionTrigger>
           <AccordionContent>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2" onClick={(e) => e.stopPropagation()}>
               {filterData.sizes.map((size) => (
                 <Button
                   key={size}
                   variant={selectedSizes.includes(size) ? "default" : "outline"}
                   size="sm"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     if (selectedSizes.includes(size)) {
                       setSelectedSizes(prev => prev.filter(s => s !== size));
                     } else {
@@ -262,7 +351,7 @@ export function ProductListingPage() {
         <AccordionItem value="offers">
           <AccordionTrigger>Offers</AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-3">
+            <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
               <div className="flex items-center space-x-2">
                 <Checkbox 
                   id="sale-items"
@@ -304,9 +393,9 @@ export function ProductListingPage() {
           <div className="flex-1">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
-              <div>
-                <h1 className="text-2xl font-bold capitalize mb-2">{category}</h1>
-                <p className="text-muted-foreground">
+              <div className="flex items-center space-x-6">
+                <h1 className="text-2xl font-bold capitalize">{category}</h1>
+                <p className="text-muted-foreground text-sm">
                   Showing {products.length} of {totalProducts} results
                 </p>
               </div>
@@ -331,7 +420,12 @@ export function ProductListingPage() {
                     onClick={() => setGridColumns(3)}
                     className="rounded-r-none"
                   >
-                    <Grid3x3 className="h-4 w-4" />
+                    {/* 3 Column Icon - 3 thick vertical rectangles */}
+                    <svg className="h-4 w-4" viewBox="0 0 16 16" fill="currentColor">
+                      <rect x="1" y="2" width="3" height="12" rx="0.5"/>
+                      <rect x="6" y="2" width="3" height="12" rx="0.5"/>
+                      <rect x="11" y="2" width="3" height="12" rx="0.5"/>
+                    </svg>
                   </Button>
                   <Button
                     variant={gridColumns === 4 ? "default" : "ghost"}
@@ -339,56 +433,63 @@ export function ProductListingPage() {
                     onClick={() => setGridColumns(4)}
                     className="rounded-l-none"
                   >
-                    <LayoutGrid className="h-4 w-4" />
+                    {/* 4 Column Icon - 4 thin vertical rectangles */}
+                    <svg className="h-4 w-4" viewBox="0 0 16 16" fill="currentColor">
+                      <rect x="1" y="2" width="2" height="12" rx="0.5"/>
+                      <rect x="4.5" y="2" width="2" height="12" rx="0.5"/>
+                      <rect x="8" y="2" width="2" height="12" rx="0.5"/>
+                      <rect x="11.5" y="2" width="2" height="12" rx="0.5"/>
+                    </svg>
                   </Button>
                 </div>
 
                 {/* Sort Dropdown */}
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="border rounded-md px-3 py-2 text-sm bg-background"
-                >
-                  <option value="featured">Featured</option>
-                  <option value="newest">Newest</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-
-                </select>
+                <div className="relative">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsSortDropdownOpen(!isSortDropdownOpen);
+                    }}
+                    className="flex items-center space-x-2 min-w-[140px] justify-between"
+                  >
+                    <span className="text-sm">
+                      {sortBy === 'featured' && 'Featured'}
+                      {sortBy === 'newest' && 'Newest'}
+                      {sortBy === 'price-low' && 'Price: Low to High'}
+                      {sortBy === 'price-high' && 'Price: High to Low'}
+                    </span>
+                    <ChevronDown className={cn("h-4 w-4 transition-transform", isSortDropdownOpen && "rotate-180")} />
+                  </Button>
+                  
+                  {isSortDropdownOpen && (
+                    <div className="absolute right-0 top-full mt-1 w-48 bg-background border rounded-md shadow-lg z-10">
+                      {[
+                        { value: 'featured', label: 'Featured' },
+                        { value: 'newest', label: 'Newest' },
+                        { value: 'price-low', label: 'Price: Low to High' },
+                        { value: 'price-high', label: 'Price: High to Low' }
+                      ].map((option) => (
+                        <button
+                          key={option.value}
+                          onClick={() => {
+                            setSortBy(option.value);
+                            setIsSortDropdownOpen(false);
+                          }}
+                          className={cn(
+                            "w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors first:rounded-t-md last:rounded-b-md",
+                            sortBy === option.value && "bg-muted font-medium"
+                          )}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-
-            {/* Active Filters */}
-            {activeFilters.length > 0 && (
-              <div className="mb-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-sm font-medium">Active filters:</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={clearAllFilters}
-                    className="text-xs text-muted-foreground hover:text-foreground"
-                  >
-                    Remove All
-                  </Button>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {activeFilters.map((filter, index) => (
-                    <Badge key={index} variant="secondary" className="pr-1">
-                      {filter.label}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeFilter(filter)}
-                        className="h-auto p-0 ml-1 hover:bg-transparent"
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Products Grid */}
             {isLoading ? (
@@ -459,7 +560,7 @@ export function ProductListingPage() {
       {isFilterDrawerOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="fixed inset-0 bg-black/50" onClick={() => setIsFilterDrawerOpen(false)} />
-          <div className="fixed left-0 top-0 h-full w-80 bg-background p-6 shadow-lg">
+          <div className="fixed left-0 top-0 h-full w-80 bg-background p-6 shadow-lg overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold">Filters</h3>
               <Button
@@ -521,17 +622,16 @@ function ProductCard({ product }: ProductCardProps) {
         )}
 
         {/* Wishlist Button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 hover:bg-white"
+        <button
+          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
           onClick={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             setIsWishlisted(!isWishlisted);
           }}
         >
-                                <Heart className={cn("h-4 w-4", isWishlisted && "fill-current text-primary")} />
-        </Button>
+          <Heart className={cn("h-6 w-6 text-white drop-shadow-md hover:text-red-500 transition-colors duration-200", isWishlisted && "fill-current text-red-500")} />
+        </button>
 
         {/* Color Variants */}
         {product.variants?.colors && product.variants.colors.length > 1 && (

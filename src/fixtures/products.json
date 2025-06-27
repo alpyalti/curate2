@@ -11,7 +11,11 @@
       { "url": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=500", "alt": "Satin Slip Dress" },
       { "url": "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=500", "alt": "Satin Slip Dress - Back View" }
     ],
-    "variants": [{"id": "var-w001", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "black"}]}],
+    "variants": [
+      {"id": "var-w001-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "black"}], "available": true},
+      {"id": "var-w001-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "black"}], "available": false},
+      {"id": "var-w001-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "black"}], "available": true}
+    ],
     "rating": { "average": 4.7, "count": 89 },
     "availability": { "inStock": true, "quantity": 12 },
     "badges": [{ "type": "new-season", "label": "NEW SEASON", "color": "#000000", "textColor": "#ffffff" }],
@@ -29,7 +33,11 @@
       { "url": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=500", "alt": "Cashmere Coat" },
       { "url": "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=500", "alt": "Cashmere Coat - Detail View" }
     ],
-    "variants": [{"id": "var-w002", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "camel"}]}],
+    "variants": [
+      {"id": "var-w002-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "camel"}], "available": true},
+      {"id": "var-w002-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "camel"}], "available": true},
+      {"id": "var-w002-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "camel"}], "available": false}
+    ],
     "rating": { "average": 4.9, "count": 156 },
     "availability": { "inStock": true, "quantity": 8 },
     "badges": [{ "type": "exclusive", "label": "EXCLUSIVE", "color": "#000000", "textColor": "#ffffff" }],
@@ -65,7 +73,11 @@
       { "url": "https://images.unsplash.com/photo-1591369822096-ffd140ec948f?w=500", "alt": "Cropped Blazer" },
       { "url": "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=500", "alt": "Cropped Blazer - Detail View" }
     ],
-    "variants": [{"id": "var-w004", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "black"}]}],
+    "variants": [
+      {"id": "var-w004-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "black"}], "available": false},
+      {"id": "var-w004-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "black"}], "available": true},
+      {"id": "var-w004-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "black"}], "available": true}
+    ],
     "rating": { "average": 4.6, "count": 127 },
     "availability": { "inStock": true, "quantity": 6 },
     "badges": [{ "type": "low-stock", "label": "LIMITED STOCK", "color": "#000000", "textColor": "#ffffff" }],
@@ -80,7 +92,11 @@
     "sku": "FRM-HWJ-005",
     "price": { "amount": 890, "currency": "AED", "formattedAmount": "890 AED" },
     "images": [{ "url": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=500", "alt": "High-waisted Jeans" }],
-    "variants": [{"id": "var-w005", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "blue"}]}],
+    "variants": [
+      {"id": "var-w005-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "blue"}], "available": true},
+      {"id": "var-w005-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "blue"}], "available": true},
+      {"id": "var-w005-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "blue"}], "available": true}
+    ],
     "rating": { "average": 4.5, "count": 234 },
     "availability": { "inStock": true, "quantity": 20 },
     "badges": [],
@@ -98,7 +114,11 @@
       { "url": "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500", "alt": "Wool Suit" },
       { "url": "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=500", "alt": "Wool Suit - Back View" }
     ],
-    "variants": [{"id": "var-m001", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "navy"}]}],
+    "variants": [
+      {"id": "var-m001-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "navy"}], "available": true},
+      {"id": "var-m001-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "navy"}], "available": false},
+      {"id": "var-m001-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "navy"}], "available": true}
+    ],
     "rating": { "average": 4.8, "count": 95 },
     "availability": { "inStock": true, "quantity": 5 },
     "badges": [{ "type": "sale", "label": "SALE", "color": "#000000", "textColor": "#ffffff" }],
@@ -113,7 +133,11 @@
     "sku": "PRL-COS-002",
     "price": { "amount": 450, "currency": "AED", "formattedAmount": "450 AED" },
     "images": [{ "url": "https://images.unsplash.com/photo-1603252109360-909baaf261c7?w=500", "alt": "Oxford Shirt" }],
-    "variants": [{"id": "var-m002", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "white"}]}],
+    "variants": [
+      {"id": "var-m002-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "white"}], "available": true},
+      {"id": "var-m002-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "white"}], "available": true},
+      {"id": "var-m002-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "white"}], "available": false}
+    ],
     "rating": { "average": 4.6, "count": 178 },
     "availability": { "inStock": true, "quantity": 18 },
     "badges": [],
@@ -143,7 +167,11 @@
     "sku": "BC-CS-004",
     "price": { "amount": 2100, "currency": "AED", "formattedAmount": "2,100 AED" },
     "images": [{ "url": "https://images.unsplash.com/photo-1564557287817-3785e38ec1f5?w=500", "alt": "Cashmere Sweater" }],
-    "variants": [{"id": "var-m004", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "gray"}]}],
+    "variants": [
+      {"id": "var-m004-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "gray"}], "available": true},
+      {"id": "var-m004-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "gray"}], "available": true},
+      {"id": "var-m004-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "gray"}], "available": false}
+    ],
     "rating": { "average": 4.9, "count": 87 },
     "availability": { "inStock": true, "quantity": 2 },
     "badges": [],
@@ -188,7 +216,11 @@
     "sku": "LUL-YL-002",
     "price": { "amount": 390, "currency": "AED", "formattedAmount": "390 AED" },
     "images": [{ "url": "https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=500", "alt": "Yoga Leggings" }],
-    "variants": [{"id": "var-s002", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "black"}]}],
+    "variants": [
+      {"id": "var-s002-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "black"}], "available": false},
+      {"id": "var-s002-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "black"}], "available": true},
+      {"id": "var-s002-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "black"}], "available": true}
+    ],
     "rating": { "average": 4.7, "count": 189 },
     "availability": { "inStock": true, "quantity": 30 },
     "badges": [],
@@ -203,7 +235,11 @@
     "sku": "ADI-TS-003",
     "price": { "amount": 220, "currency": "AED", "formattedAmount": "220 AED" },
     "images": [{ "url": "https://images.unsplash.com/photo-1506629905607-c281b35c8db6?w=500", "alt": "Training Shorts" }],
-    "variants": [{"id": "var-s003", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "black"}]}],
+    "variants": [
+      {"id": "var-s003-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "black"}], "available": true},
+      {"id": "var-s003-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "black"}], "available": false},
+      {"id": "var-s003-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "black"}], "available": true}
+    ],
     "rating": { "average": 4.3, "count": 156 },
     "availability": { "inStock": true, "quantity": 22 },
     "badges": [],

@@ -1,5 +1,5 @@
-import React from "react";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useState } from "react";
+import { ArrowRight, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
@@ -9,13 +9,11 @@ import { useDummyProducts } from "../../hooks/useDummyProducts";
 const categoryTiles = [
   {
     id: "sale",
-    title: "Up to",
-    subtitle: "75% off",
-    description: "Sale",
+    title: "Sale",
     href: "/sale",
-    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=600&fit=crop",
-    className: "col-span-2 row-span-2 bg-gradient-to-br from-red-500 to-red-600 text-white",
-    featured: true
+    image: "/images/sale.png",
+    className: "col-span-1 row-span-1",
+    featured: false
   },
   {
     id: "women",
@@ -32,10 +30,17 @@ const categoryTiles = [
     className: "col-span-1 row-span-1"
   },
   {
-    id: "sports",
-    title: "Sports",
-    href: "/c/sports",
-    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop",
+    id: "beauty",
+    title: "Beauty",
+    href: "/c/beauty",
+    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&h=400&fit=crop&auto=format&q=80",
+    className: "col-span-1 row-span-1"
+  },
+  {
+    id: "bags",
+    title: "Bags",
+    href: "/c/bags",
+    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=400&fit=crop",
     className: "col-span-1 row-span-1"
   },
   {
@@ -46,31 +51,17 @@ const categoryTiles = [
     className: "col-span-1 row-span-1"
   },
   {
-    id: "kids",
-    title: "Kids",
-    href: "/c/kids",
-    image: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&h=400&fit=crop",
+    id: "sports",
+    title: "Sports",
+    href: "/c/sports",
+    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop&auto=format&q=80",
     className: "col-span-1 row-span-1"
   },
   {
-    id: "beauty",
-    title: "Beauty",
-    href: "/c/beauty",
-    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=400&fit=crop",
-    className: "col-span-1 row-span-1"
-  },
-  {
-    id: "jewellery",
-    title: "Jewellery",
-    href: "/c/jewellery",
-    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&h=400&fit=crop",
-    className: "col-span-1 row-span-1"
-  },
-  {
-    id: "tech",
-    title: "Tech",
-    href: "/c/tech",
-    image: "https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=600&h=400&fit=crop",
+    id: "pre-loved",
+    title: "Pre Loved",
+    href: "/c/pre-loved",
+    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&h=400&fit=crop&auto=format&q=80",
     className: "col-span-1 row-span-1"
   }
 ];
@@ -119,6 +110,9 @@ export function HomePage() {
   const [canScrollBrandLeft, setCanScrollBrandLeft] = React.useState(false);
   const [canScrollBrandRight, setCanScrollBrandRight] = React.useState(true);
   const brandScrollRef = React.useRef<HTMLDivElement>(null);
+  
+  // Carousel state
+  const [currentSlide, setCurrentSlide] = React.useState(0);
 
   const { data: newInProducts } = useDummyProducts({ 
     filters: { sortBy: "newest" }, 
@@ -137,6 +131,42 @@ export function HomePage() {
     page: 1, 
     size: 8 
   });
+
+  // Carousel slides
+  const carouselSlides = [
+    {
+      id: 1,
+      title: "New Season Arrivals",
+      subtitle: "Discover the latest fashion trends",
+      image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=800&fit=crop&auto=format&q=80",
+      buttonText: "Shop Now",
+      buttonLink: "/new-in"
+    },
+    {
+      id: 2,
+      title: "Luxury Beauty Collection",
+      subtitle: "Premium skincare and makeup essentials",
+      image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1920&h=800&fit=crop&auto=format&q=80",
+      buttonText: "Explore Beauty",
+      buttonLink: "/c/beauty"
+    },
+    {
+      id: 3,
+      title: "Designer Bags & Accessories",
+      subtitle: "Elevate your style with premium accessories",
+      image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1920&h=800&fit=crop&auto=format&q=80",
+      buttonText: "Shop Bags",
+      buttonLink: "/c/bags"
+    },
+    {
+      id: 4,
+      title: "Sale - Up to 70% Off",
+      subtitle: "Limited time offers on selected items",
+      image: "https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?w=1920&h=800&fit=crop&auto=format&q=80",
+      buttonText: "Shop Sale",
+      buttonLink: "/sale"
+    }
+  ];
 
   React.useEffect(() => {
     const updateBrandScrollState = () => {
@@ -166,12 +196,21 @@ export function HomePage() {
     }
   }, []);
 
+  // Carousel auto-play effect
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
+    }, 7000); // 7 seconds (uzatıldı)
+
+    return () => clearInterval(interval);
+  }, [carouselSlides.length]);
+
   const scrollBrands = (direction: 'left' | 'right') => {
     if (!brandScrollRef.current) return;
     
     const container = brandScrollRef.current;
-    const cardWidth = 256; // w-64 = 256px
-    const gap = 24; // space-x-6 = 24px
+    const cardWidth = 176; // w-44 = 176px
+    const gap = 16; // space-x-4 = 16px
     const scrollAmount = cardWidth + gap;
     
     let newPosition = brandScrollPosition;
@@ -191,8 +230,81 @@ export function HomePage() {
 
   return (
     <div className="min-h-screen">
+      {/* Hero Carousel */}
+      <section className="container-padding section-padding -mt-4">
+        <div className="container mx-auto px-4">
+          <div className="relative">
+            <div className="relative h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
+              <div className="relative w-full h-full">
+                {carouselSlides.map((slide, index) => (
+                  <div
+                    key={slide.id}
+                    className={cn(
+                      "absolute inset-0 transition-all duration-1000 ease-in-out rounded-lg",
+                      index === currentSlide 
+                        ? "opacity-100 scale-100" 
+                        : "opacity-0 scale-105"
+                    )}
+                  >
+                    <img
+                      src={slide.image}
+                      alt={slide.title}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                    <div className="absolute inset-0 bg-black/40 rounded-lg" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center text-white max-w-4xl px-6">
+                        <h1 className="text-3xl md:text-5xl font-bold mb-4 leading-tight">
+                          {slide.title}
+                        </h1>
+                        <p className="text-base md:text-lg mb-6 opacity-90 max-w-2xl mx-auto">
+                          {slide.subtitle}
+                        </p>
+                        <Link to={slide.buttonLink}>
+                          <Button size="lg" className="bg-white text-black hover:bg-gray-100 font-semibold px-6 py-2">
+                            {slide.buttonText}
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Progress Indicators */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {carouselSlides.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={cn(
+                      "relative h-1 transition-all duration-300 rounded-full",
+                      index === currentSlide ? "w-10 bg-white" : "w-6 bg-white/50 hover:bg-white/70"
+                    )}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Navigation Arrows - Outside Container */}
+            <button
+              onClick={() => setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length)}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              <ChevronLeft className="h-8 w-8" />
+            </button>
+            <button
+              onClick={() => setCurrentSlide((prev) => (prev + 1) % carouselSlides.length)}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              <ChevronRight className="h-8 w-8" />
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* Hero Section with Bento Grid */}
-      <section className="container-padding section-padding">
+      <section className="container-padding pb-8 md:pb-12 lg:pb-16 -mt-4">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[200px] md:auto-rows-[250px]">
             {categoryTiles.map((tile) => (
@@ -217,24 +329,24 @@ export function HomePage() {
                   tile.featured ? "bg-gradient-to-br from-red-500/90 to-red-600/90" : "bg-black/40 group-hover:bg-black/50"
                 )} />
                 <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-end">
-                  {tile.featured ? (
-                    <div className="text-white">
-                      <div className="text-lg md:text-xl font-light">{tile.title}</div>
-                      <div className="text-3xl md:text-5xl font-bold mb-2">{tile.subtitle}</div>
-                      <div className="flex items-center text-sm md:text-base font-medium">
-                        {tile.description}
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </div>
+                  <div className="text-white">
+                    <div className="flex items-center text-xl md:text-2xl font-semibold">
+                      {tile.title}
+                      <svg 
+                        className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
+                        viewBox="0 0 20 20" 
+                        fill="none"
+                      >
+                        <path 
+                          d="M7 4l6 6-6 6" 
+                          stroke="currentColor" 
+                          strokeWidth="1.5" 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round"
+                        />
+                      </svg>
                     </div>
-                  ) : (
-                    <div className="text-white">
-                      <div className="text-lg md:text-xl font-semibold mb-1">{tile.title}</div>
-                      <div className="flex items-center text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                        Shop now
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </div>
-                    </div>
-                  )}
+                  </div>
                 </div>
               </Link>
             ))}
@@ -260,23 +372,20 @@ export function HomePage() {
             {/* Brands Container */}
             <div 
               ref={brandScrollRef}
-              className="flex space-x-6 overflow-x-auto scroll-bar-hide pb-4"
+              className="flex space-x-4 overflow-x-auto scroll-bar-hide pb-4"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {brands.map((brand, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 w-64 h-32 bg-background rounded-lg border flex flex-col items-center justify-center cursor-pointer p-3 hover:border-primary/50 transition-colors duration-300"
+                  className="flex-shrink-0 w-44 h-32 bg-background rounded-lg border flex items-center justify-center cursor-pointer p-3 hover:border-primary/50 transition-colors duration-300"
                 >
                   <img
                     src={brand.logo}
                     alt={brand.name}
-                    className="max-w-full max-h-24 object-contain filter grayscale hover:grayscale-0 transition-all duration-300 mb-1"
+                    className="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
                     loading="lazy"
                   />
-                  <span className="text-xs font-medium text-center text-muted-foreground">
-                    {brand.name}
-                  </span>
                 </div>
               ))}
             </div>
@@ -484,16 +593,22 @@ interface ProductCardProps {
 }
 
 function ProductCard({ product, className }: ProductCardProps) {
+  const [hoveredImage, setHoveredImage] = useState(0);
+  const [isWishlisted, setIsWishlisted] = useState(false);
   const hasDiscount = !!product.discount;
   const displayPrice = hasDiscount ? product.discount.discountedPrice : product.price;
   const originalPrice = hasDiscount ? product.discount.originalPrice : null;
 
   return (
     <Link to={`/product/${product.id}`} className={cn("group cursor-pointer block", className)}>
-      <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-muted mb-3">
+      <div 
+        className="relative aspect-[3/4] overflow-hidden rounded-lg bg-muted mb-3"
+        onMouseEnter={() => setHoveredImage(1)}
+        onMouseLeave={() => setHoveredImage(0)}
+      >
         <img
-          src={product.images[0]?.url}
-          alt={product.images[0]?.alt}
+          src={product.images[hoveredImage]?.url || product.images[0]?.url}
+          alt={product.images[hoveredImage]?.alt || product.images[0]?.alt}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
         />
@@ -510,15 +625,16 @@ function ProductCard({ product, className }: ProductCardProps) {
             ))}
           </div>
         )}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 hover:bg-white"
+        <button
+          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsWishlisted(!isWishlisted);
+          }}
         >
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-          </svg>
-        </Button>
+          <Heart className={cn("h-6 w-6 text-black drop-shadow-md hover:text-red-500 transition-colors duration-200", isWishlisted && "fill-current text-red-500")} />
+        </button>
       </div>
       <div className="space-y-1">
         <div className="text-xs text-muted-foreground font-medium">{product.brand}</div>

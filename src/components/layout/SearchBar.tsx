@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Search, X } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { cn, debounce } from "../../lib/utils";
 import { useDummyProducts } from "../../hooks/useDummyProducts";
@@ -94,9 +95,9 @@ export function SearchBar({
       <form onSubmit={handleSubmit} className="relative">
         <div
           className={cn(
-            "relative flex items-center rounded-md border bg-background transition-colors",
+            "relative flex items-center rounded-md border bg-background/40 backdrop-blur-sm transition-colors",
             isFocused && "ring-2 ring-ring ring-offset-2",
-            "hover:bg-accent/50"
+            "hover:bg-accent/20"
           )}
         >
           <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
@@ -137,9 +138,14 @@ export function SearchBar({
                 Products
               </div>
               {suggestions.map((product) => (
-                <button
+                <Link
                   key={product.id}
-                  onClick={() => handleSuggestionClick(product.title)}
+                  to={`/product/${product.id}`}
+                  onClick={() => {
+                    setShowSuggestions(false);
+                    setIsFocused(false);
+                    setQuery("");
+                  }}
                   className="flex w-full items-center space-x-3 rounded-sm px-2 py-2 text-left text-sm hover:bg-accent focus:bg-accent focus:outline-none"
                 >
                   <img
@@ -157,7 +163,7 @@ export function SearchBar({
                   <div className="text-sm font-medium">
                     {product.discount?.discountedPrice.formattedAmount || product.price.formattedAmount}
                   </div>
-                </button>
+                </Link>
               ))}
             </div>
           ) : (

@@ -35,6 +35,7 @@ export interface ProductVariant {
   price: Price;
   stock: Stock;
   images?: ProductImage[];
+  available?: boolean; // For simplified variant availability
 }
 
 export interface VariantAttribute {

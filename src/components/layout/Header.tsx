@@ -4,7 +4,6 @@ import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { cn } from "../../lib/utils";
 import { SearchBar } from "./SearchBar";
-import { MegaMenu } from "./MegaMenu";
 
 interface HeaderProps {
   cartItemCount?: number;
@@ -20,7 +19,12 @@ export function Header({
   isMenuOpen = false
 }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [showMegaMenu, setShowMegaMenu] = useState(false);
+  const [showFashionMenu, setShowFashionMenu] = useState(false);
+  const [showBeautyMenu, setShowBeautyMenu] = useState(false);
+  const [showHomeMenu, setShowHomeMenu] = useState(false);
+  const [showSportsMenu, setShowSportsMenu] = useState(false);
+  const [showPreLovedMenu, setShowPreLovedMenu] = useState(false);
+  const [showDesignersMenu, setShowDesignersMenu] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,27 +77,7 @@ export function Header({
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
-            <div className="relative">
-              <button
-                className="text-sm font-medium hover:text-primary transition-colors focus-ring"
-                onMouseEnter={() => setShowMegaMenu(true)}
-                onMouseLeave={() => setShowMegaMenu(false)}
-                onFocus={() => setShowMegaMenu(true)}
-                onBlur={() => setShowMegaMenu(false)}
-              >
-                Shop
-              </button>
-              {showMegaMenu && (
-                <div
-                  className="absolute top-full left-0 pt-2"
-                  onMouseEnter={() => setShowMegaMenu(true)}
-                  onMouseLeave={() => setShowMegaMenu(false)}
-                >
-                  <MegaMenu />
-                </div>
-              )}
-            </div>
+          <nav className="hidden lg:flex items-center space-x-8 ml-12">
             <a
               href="/sale"
               className="text-sm font-medium text-red-600 hover:text-red-700 transition-colors focus-ring"
@@ -106,16 +90,268 @@ export function Header({
             >
               New In
             </a>
-            <a
-              href="/brands"
-              className="text-sm font-medium hover:text-primary transition-colors focus-ring"
-            >
-              Brands
-            </a>
+            <div className="relative">
+              <button
+                className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+                onMouseEnter={() => setShowFashionMenu(true)}
+                onMouseLeave={() => setShowFashionMenu(false)}
+                onFocus={() => setShowFashionMenu(true)}
+                onBlur={() => setShowFashionMenu(false)}
+              >
+                Fashion
+              </button>
+              {showFashionMenu && (
+                <div
+                  className="absolute top-full -left-3 pt-2 z-50"
+                  onMouseEnter={() => setShowFashionMenu(true)}
+                  onMouseLeave={() => setShowFashionMenu(false)}
+                >
+                  <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
+                    <nav className="space-y-1">
+                      <a
+                        href="/c/bags"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Bags & Luggage
+                      </a>
+                      <a
+                        href="/c/men"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Men
+                      </a>
+                      <a
+                        href="/c/women"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Women
+                      </a>
+                    </nav>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="relative">
+              <button
+                className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+                onMouseEnter={() => setShowBeautyMenu(true)}
+                onMouseLeave={() => setShowBeautyMenu(false)}
+                onFocus={() => setShowBeautyMenu(true)}
+                onBlur={() => setShowBeautyMenu(false)}
+              >
+                Beauty
+              </button>
+              {showBeautyMenu && (
+                <div
+                  className="absolute top-full -left-3 pt-2 z-50"
+                  onMouseEnter={() => setShowBeautyMenu(true)}
+                  onMouseLeave={() => setShowBeautyMenu(false)}
+                >
+                  <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[200px]">
+                    <nav className="space-y-1">
+                      <a
+                        href="/c/skincare"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Skincare
+                      </a>
+                      <a
+                        href="/c/makeup"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Makeup
+                      </a>
+                      <a
+                        href="/c/eyebrow-shaping"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Eyebrow shaping service
+                      </a>
+                      <a
+                        href="/c/hair-care"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Hair Care
+                      </a>
+                    </nav>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="relative">
+              <button
+                className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+                onMouseEnter={() => setShowHomeMenu(true)}
+                onMouseLeave={() => setShowHomeMenu(false)}
+                onFocus={() => setShowHomeMenu(true)}
+                onBlur={() => setShowHomeMenu(false)}
+              >
+                Home
+              </button>
+              {showHomeMenu && (
+                <div
+                  className="absolute top-full -left-3 pt-2 z-50"
+                  onMouseEnter={() => setShowHomeMenu(true)}
+                  onMouseLeave={() => setShowHomeMenu(false)}
+                >
+                  <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
+                    <nav className="space-y-1">
+                      <a
+                        href="/c/bath"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Bath
+                      </a>
+                      <a
+                        href="/c/home-decor"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Home Decor
+                      </a>
+                    </nav>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="relative">
+              <button
+                className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+                onMouseEnter={() => setShowSportsMenu(true)}
+                onMouseLeave={() => setShowSportsMenu(false)}
+                onFocus={() => setShowSportsMenu(true)}
+                onBlur={() => setShowSportsMenu(false)}
+              >
+                Sports
+              </button>
+              {showSportsMenu && (
+                <div
+                  className="absolute top-full -left-3 pt-2 z-50"
+                  onMouseEnter={() => setShowSportsMenu(true)}
+                  onMouseLeave={() => setShowSportsMenu(false)}
+                >
+                  <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
+                    <nav className="space-y-1">
+                      <a
+                        href="/c/cycling"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Cycling
+                      </a>
+                    </nav>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="relative">
+              <button
+                className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+                onMouseEnter={() => setShowPreLovedMenu(true)}
+                onMouseLeave={() => setShowPreLovedMenu(false)}
+                onFocus={() => setShowPreLovedMenu(true)}
+                onBlur={() => setShowPreLovedMenu(false)}
+              >
+                Pre Loved
+              </button>
+              {showPreLovedMenu && (
+                <div
+                  className="absolute top-full -left-3 pt-2 z-50"
+                  onMouseEnter={() => setShowPreLovedMenu(true)}
+                  onMouseLeave={() => setShowPreLovedMenu(false)}
+                >
+                  <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
+                    <nav className="space-y-1">
+                      <a
+                        href="/c/pre-loved-bags"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Bags
+                      </a>
+                    </nav>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="relative">
+              <button
+                className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+                onMouseEnter={() => setShowDesignersMenu(true)}
+                onMouseLeave={() => setShowDesignersMenu(false)}
+                onFocus={() => setShowDesignersMenu(true)}
+                onBlur={() => setShowDesignersMenu(false)}
+              >
+                Designers
+              </button>
+              {showDesignersMenu && (
+                <div
+                  className="absolute top-full -left-3 pt-2 z-50"
+                  onMouseEnter={() => setShowDesignersMenu(true)}
+                  onMouseLeave={() => setShowDesignersMenu(false)}
+                >
+                  <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
+                    <nav className="space-y-1">
+                      <a
+                        href="/brand/lets-swim"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Lets Swim
+                      </a>
+                      <a
+                        href="/brand/nori-enomoto"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Nori Enomoto
+                      </a>
+                      <a
+                        href="/brand/capello"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Capello
+                      </a>
+                      <a
+                        href="/brand/muse-for-all"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Muse for All
+                      </a>
+                      <a
+                        href="/brand/tay-candles"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Tay Candles
+                      </a>
+                      <a
+                        href="/brand/iconic-london"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Iconic London
+                      </a>
+                      <a
+                        href="/brand/ibrou"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        İbrou
+                      </a>
+                      <a
+                        href="/brand/mixsoon"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Mixsoon
+                      </a>
+                      <a
+                        href="/brand/georgini"
+                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                      >
+                        Georgini
+                      </a>
+                    </nav>
+                  </div>
+                </div>
+              )}
+            </div>
           </nav>
 
           {/* Search Bar - Desktop */}
-          <div className="hidden md:flex flex-1 max-w-md mx-8">
+          <div className="hidden md:flex max-w-md ml-auto mr-4">
             <SearchBar />
           </div>
 
