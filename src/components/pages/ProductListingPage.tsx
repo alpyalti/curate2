@@ -492,7 +492,7 @@ function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link to={`/product/${product.id}`} className="block">
-      <Card className="group cursor-pointer overflow-hidden border-0 shadow-none hover:shadow-md transition-shadow">
+      <Card className="group cursor-pointer overflow-hidden border-0 shadow-none">
       <div 
         className="relative aspect-[3/4] overflow-hidden rounded-lg bg-muted mb-3"
         onMouseEnter={() => setHoveredImage(1)}

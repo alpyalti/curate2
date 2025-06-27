@@ -76,7 +76,7 @@ export function MegaMenu({ className }: MegaMenuProps) {
               <a
                 key={category.name}
                 href={category.href}
-                className="group relative overflow-hidden rounded-lg aspect-[3/2] hover-lift"
+                className="group relative overflow-hidden rounded-lg aspect-[3/2]"
               >
                 <img
                   src={category.image}

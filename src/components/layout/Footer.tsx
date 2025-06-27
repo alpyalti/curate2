@@ -4,31 +4,18 @@ import { Button } from "../ui/button";
 
 const footerLinks = {
   "Customer Service": [
+    { name: "Shipping Policies", href: "/shipping-policies" },
+    { name: "Returns and Refunds", href: "/returns-refunds" },
+    { name: "Track your orders", href: "/track-order" },
     { name: "Contact Us", href: "/contact" },
-    { name: "Size Guide", href: "/size-guide" },
-    { name: "Shipping & Returns", href: "/shipping" },
-    { name: "Track Your Order", href: "/track-order" },
-    { name: "FAQ", href: "/faq" },
+    { name: "FAQ's", href: "/faq" },
   ],
   "About Curate": [
-    { name: "Our Story", href: "/about" },
-    { name: "Careers", href: "/careers" },
-    { name: "Press", href: "/press" },
-    { name: "Sustainability", href: "/sustainability" },
-    { name: "Affiliate Program", href: "/affiliate" },
-  ],
-  "Quick Links": [
-    { name: "New Arrivals", href: "/new-arrivals" },
-    { name: "Sale", href: "/sale" },
-    { name: "Gift Cards", href: "/gift-cards" },
-    { name: "Store Locator", href: "/stores" },
-    { name: "Personal Shopping", href: "/personal-shopping" },
-  ],
-  "Legal": [
+    { name: "About Us", href: "/about" },
+    { name: "Partnership", href: "/partnership" },
+    { name: "Store Locator", href: "/store-locator" },
     { name: "Privacy Policy", href: "/privacy" },
-    { name: "Terms of Service", href: "/terms" },
-    { name: "Cookie Policy", href: "/cookies" },
-    { name: "Accessibility", href: "/accessibility" },
+    { name: "Terms and Conditions", href: "/terms" },
   ],
 };
 
@@ -45,36 +32,11 @@ const languages = ["English", "العربية", "Français"];
 export function Footer() {
   return (
     <footer className="bg-muted/30 border-t">
-      {/* Newsletter Section */}
-      <div className="border-b">
-        <div className="container mx-auto px-4 py-12">
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold mb-2">Stay in the loop</h3>
-            <p className="text-muted-foreground mb-6">
-              Be the first to know about new arrivals, exclusive sales, and special events.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <div className="flex-1">
-                <input
-                  type="email"
-                  placeholder="Enter your email address"
-                  className="w-full h-10 px-3 rounded-md border border-input bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                />
-              </div>
-              <Button>Subscribe</Button>
-            </div>
-            <p className="text-xs text-muted-foreground mt-4">
-              By subscribing, you agree to our Privacy Policy and consent to receive updates.
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Main Footer Content */}
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Company Info */}
-          <div className="col-span-2">
+          <div>
             <div className="flex items-center space-x-2 mb-4">
               <svg width="120" height="28" viewBox="330 250 490 120" xmlns="http://www.w3.org/2000/svg" className="h-7 w-auto">
                 <g fill="#0090a4">
@@ -89,17 +51,19 @@ export function Footer() {
               </svg>
             </div>
             <p className="text-sm text-muted-foreground mb-4 max-w-xs">
-              Discover curated collections from the world's finest designers. 
-              Luxury fashion, beauty, and lifestyle products delivered to your doorstep.
+              Curate is a next-generation retail concept that blends inspiration, technology, and access—offering a shopping experience that's both elevated and effortless.
+            </p>
+            <p className="text-sm text-muted-foreground mb-4 max-w-xs">
+              We're here to help with any questions, returns, or order-related inquiries.
             </p>
             <div className="space-y-2">
               <div className="flex items-center text-sm text-muted-foreground">
                 <Phone className="h-4 w-4 mr-2" />
-                +971 4 123 4567
+                800 707070
               </div>
               <div className="flex items-center text-sm text-muted-foreground">
                 <Mail className="h-4 w-4 mr-2" />
-                hello@curate.ae
+                care@curate.ae
               </div>
             </div>
           </div>
@@ -122,19 +86,38 @@ export function Footer() {
               </ul>
             </div>
           ))}
-        </div>
-      </div>
 
-      {/* Bottom Section */}
-      <div className="border-t bg-muted/50">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            {/* Copyright */}
-            <div className="text-sm text-muted-foreground">
-              © 2024 Curate. All rights reserved.
+          {/* Download our apps */}
+          <div>
+            <h4 className="font-semibold mb-4">Download our apps</h4>
+            <div className="space-y-3 mb-8">
+              <a
+                href="https://apps.apple.com/in/app/reem-mall/id1583719509"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block transition-opacity hover:opacity-80"
+              >
+                <img
+                  src="/appstore.png"
+                  alt="Download on the App Store"
+                  className="h-10 w-auto"
+                />
+              </a>
+              <a
+                href="https://play.google.com/store/apps/details?id=ae.reemmall.app&pcampaignid=web_share&pli=1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block transition-opacity hover:opacity-80"
+              >
+                <img
+                  src="/googleplay.png"
+                  alt="Get it on Google Play"
+                  className="h-10 w-auto"
+                />
+              </a>
             </div>
-
-            {/* Social Links */}
+            
+            <h4 className="font-semibold mb-4">Social channels</h4>
             <div className="flex items-center space-x-4">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
@@ -152,6 +135,40 @@ export function Footer() {
                 );
               })}
             </div>
+          </div>
+
+          {/* Newsletter Section */}
+          <div>
+            <h4 className="font-semibold mb-4">Stay in the loop</h4>
+            <p className="text-sm text-muted-foreground mb-4">
+              Be the first to know about new arrivals, exclusive sales, and special events.
+            </p>
+            <div className="space-y-3">
+              <input
+                type="email"
+                placeholder="Enter your email address"
+                className="w-full h-10 px-3 rounded-md border border-input bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-sm"
+              />
+              <Button size="sm" className="w-full">Subscribe</Button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-3">
+              By subscribing, you agree to our Privacy Policy and consent to receive updates.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Section */}
+      <div className="border-t bg-muted/50">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            {/* Copyright */}
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <span>© 2025 All rights reserved. Reem Mall</span>
+              <img src="/RMLogo.png" alt="RM Logo" className="h-6 w-auto" />
+            </div>
+
+
 
             {/* Language & Currency Selector */}
             <div className="flex items-center space-x-4">

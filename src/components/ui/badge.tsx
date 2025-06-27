@@ -8,17 +8,23 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+          "border-transparent bg-black text-white hover:bg-gray-800",
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "border-transparent bg-black text-white hover:bg-gray-800",
         destructive:
-          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        outline: "text-foreground",
-        "new-season": "border-transparent bg-green-600 text-white hover:bg-green-700",
-        sale: "border-transparent bg-orange-600 text-white hover:bg-orange-700",
+          "border-transparent bg-black text-white hover:bg-gray-800",
+        outline: "border-black text-black hover:bg-gray-100",
+        "new-season": "border-transparent bg-black text-white hover:bg-gray-800",
+        sale: "border-transparent bg-black text-white hover:bg-gray-800",
         exclusive: "border-transparent bg-black text-white hover:bg-gray-800",
-        "low-stock": "border-transparent bg-red-600 text-white hover:bg-red-700",
-        "further-reduction": "border-transparent bg-red-700 text-white hover:bg-red-800",
+        "low-stock": "border-transparent bg-black text-white hover:bg-gray-800",
+        "further-reduction": "border-transparent bg-black text-white hover:bg-gray-800",
+        bestseller: "border-transparent bg-black text-white hover:bg-gray-800",
+        new: "border-transparent bg-black text-white hover:bg-gray-800",
+        trending: "border-transparent bg-black text-white hover:bg-gray-800",
+        "in-stock": "border-transparent bg-green-600 text-white hover:bg-green-700",
+        "low-stock-warning": "border-transparent bg-red-600 text-white hover:bg-red-700",
+        "out-of-stock": "border-transparent bg-red-600 text-white hover:bg-red-700",
       },
     },
     defaultVariants: {

@@ -5,10 +5,8 @@ import {
   ChevronRight, 
   Heart, 
   ShoppingBag, 
-  Check,
   Share2,
-  Ruler,
-  X
+  Ruler
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -205,39 +203,26 @@ export function ProductDetailPage() {
               {/* Navigation arrows */}
               {product.images.length > 1 && (
                 <>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white"
+                  <button
+                    className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all"
                     onClick={() => setSelectedImageIndex(prev => 
                       prev === 0 ? product.images.length - 1 : prev - 1
                     )}
                   >
-                    <ChevronLeft className="h-5 w-5" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white"
+                    <ChevronLeft className="h-6 w-6 text-black" />
+                  </button>
+                  <button
+                    className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all"
                     onClick={() => setSelectedImageIndex(prev => 
                       prev === product.images.length - 1 ? 0 : prev + 1
                     )}
                   >
-                    <ChevronRight className="h-5 w-5" />
-                  </Button>
+                    <ChevronRight className="h-6 w-6 text-black" />
+                  </button>
                 </>
               )}
 
-              {/* Badges */}
-              {product.badges && product.badges.length > 0 && (
-                <div className="absolute top-4 left-4 flex flex-col gap-2">
-                  {product.badges.slice(0, 2).map((badge, index) => (
-                    <Badge key={index} variant={badge.type as any}>
-                      {badge.label}
-                    </Badge>
-                  ))}
-                </div>
-              )}
+
             </div>
 
             {/* Thumbnail Strip */}
@@ -269,6 +254,36 @@ export function ProductDetailPage() {
                 <div>
                   <h1 className="text-2xl font-bold mb-2">{product.title}</h1>
                   <p className="text-muted-foreground mb-2">{product.brand}</p>
+                  {/* Product Badges */}
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {/* Product Badges */}
+                    {product.badges && product.badges.length > 0 && (
+                      <>
+                        {product.badges.slice(0, 2).map((badge, index) => (
+                          <Badge key={index} variant={badge.type as any} className="text-xs">
+                            {badge.label}
+                          </Badge>
+                        ))}
+                      </>
+                    )}
+                    
+                    {/* Stock Status Badge */}
+                    {product.availability.inStock ? (
+                      product.availability.quantity && product.availability.quantity <= 5 ? (
+                        <Badge variant="low-stock-warning" className="text-xs">
+                          ONLY {product.availability.quantity} LEFT
+                        </Badge>
+                      ) : (
+                        <Badge variant="in-stock" className="text-xs">
+                          IN STOCK
+                        </Badge>
+                      )
+                    ) : (
+                      <Badge variant="out-of-stock" className="text-xs">
+                        OUT OF STOCK
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 <div className="flex space-x-2">
                   <Button
@@ -304,23 +319,7 @@ export function ProductDetailPage() {
 
 
 
-              {/* Stock Status */}
-              <div className="flex items-center space-x-2 mb-6">
-                {product.availability.inStock ? (
-                  <>
-                    <Check className="h-4 w-4 text-green-600" />
-                    <span className="text-sm text-green-600">In Stock</span>
-                    {product.availability.quantity && product.availability.quantity < 5 && (
-                      <span className="text-sm text-orange-600">• Only {product.availability.quantity} left</span>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <X className="h-4 w-4 text-red-600" />
-                    <span className="text-sm text-red-600">Out of Stock</span>
-                  </>
-                )}
-              </div>
+
             </div>
 
             {/* Color Selection */}
@@ -512,14 +511,7 @@ export function ProductDetailPage() {
 
         {/* Related Products */}
         {relatedProducts && relatedProducts.length > 0 && (
-          <div className="mt-16">
-            <h2 className="text-2xl font-bold mb-8">You might also like</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {relatedProducts.slice(0, 4).map((relatedProduct) => (
-                <RelatedProductCard key={relatedProduct.id} product={relatedProduct} />
-              ))}
-            </div>
-          </div>
+          <RelatedProductsCarousel products={relatedProducts} />
         )}
       </div>
 
@@ -541,6 +533,112 @@ export function ProductDetailPage() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+interface RelatedProductsCarouselProps {
+  products: any[];
+}
+
+function RelatedProductsCarousel({ products }: RelatedProductsCarouselProps) {
+  const [scrollPosition, setScrollPosition] = React.useState(0);
+  const [canScrollLeft, setCanScrollLeft] = React.useState(false);
+  const [canScrollRight, setCanScrollRight] = React.useState(true);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const updateScrollState = () => {
+      if (!scrollRef.current) return;
+      
+      const container = scrollRef.current;
+      const scrollLeft = container.scrollLeft;
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      
+      setScrollPosition(scrollLeft);
+      setCanScrollLeft(scrollLeft > 5);
+      setCanScrollRight(scrollLeft < maxScroll - 5);
+    };
+
+    const container = scrollRef.current;
+    if (container) {
+      updateScrollState();
+      container.addEventListener('scroll', updateScrollState);
+      
+      const resizeObserver = new ResizeObserver(updateScrollState);
+      resizeObserver.observe(container);
+      
+      return () => {
+        container.removeEventListener('scroll', updateScrollState);
+        resizeObserver.disconnect();
+      };
+    }
+  }, [products]);
+
+  const scrollProducts = (direction: 'left' | 'right') => {
+    if (!scrollRef.current) return;
+    
+    const container = scrollRef.current;
+    const cardWidth = container.children[0]?.clientWidth || 280;
+    const gap = 24; // gap-6 = 24px
+    const scrollAmount = cardWidth + gap;
+    
+    let newPosition = scrollPosition;
+    
+    if (direction === 'left') {
+      newPosition = Math.max(0, scrollPosition - scrollAmount);
+    } else {
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      newPosition = Math.min(maxScroll, scrollPosition + scrollAmount);
+    }
+    
+    container.scrollTo({
+      left: newPosition,
+      behavior: 'smooth'
+    });
+  };
+
+  return (
+    <div className="mt-16">
+      <h2 className="text-2xl font-bold mb-8">You might also like</h2>
+      
+      <div className="relative">
+        {/* Products Container */}
+        <div 
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-auto scroll-bar-hide pb-4"
+        >
+          {products.slice(0, 8).map((product) => (
+            <div key={product.id} className="flex-none w-[calc(50%-12px)] md:w-[calc(25%-18px)]">
+              <RelatedProductCard product={product} />
+            </div>
+          ))}
+        </div>
+
+        {/* Left Arrow */}
+        <button
+          className={cn(
+            "absolute left-0 top-[40%] -translate-y-1/2 -translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors",
+            !canScrollLeft && "opacity-30 cursor-not-allowed"
+          )}
+          onClick={() => scrollProducts('left')}
+          disabled={!canScrollLeft}
+        >
+          <ChevronLeft className="h-8 w-8" />
+        </button>
+
+        {/* Right Arrow */}
+        <button
+          className={cn(
+            "absolute right-0 top-[40%] -translate-y-1/2 translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors",
+            !canScrollRight && "opacity-30 cursor-not-allowed"
+          )}
+          onClick={() => scrollProducts('right')}
+          disabled={!canScrollRight}
+        >
+          <ChevronRight className="h-8 w-8" />
+        </button>
+      </div>
     </div>
   );
 }
