@@ -138,7 +138,7 @@ export function HomePage() {
       id: 1,
       title: "New Season Arrivals",
       subtitle: "Discover the latest fashion trends",
-      image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=800&fit=crop&auto=format&q=80",
+      video: "/hero1.mp4",
       buttonText: "Shop Now",
       buttonLink: "/new-in"
     },
@@ -246,11 +246,21 @@ export function HomePage() {
                         : "opacity-0 scale-105"
                     )}
                   >
-                    <img
-                      src={slide.image}
-                      alt={slide.title}
-                      className="w-full h-full object-cover rounded-lg"
-                    />
+                    {slide.video ? (
+                      <video
+                        src={slide.video}
+                        autoPlay
+                        loop
+                        muted
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    ) : (
+                      <img
+                        src={slide.image}
+                        alt={slide.title}
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    )}
                     <div className="absolute inset-0 bg-black/40 rounded-lg" />
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-center text-white max-w-4xl px-6">
