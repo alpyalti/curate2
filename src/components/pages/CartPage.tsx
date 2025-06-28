@@ -441,7 +441,7 @@ export function CartPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
               {/* Checkout Form */}
-              <div className="lg:col-span-2 order-2 lg:order-1">
+              <div className="lg:col-span-2 order-1">
                 {/* Checkout Steps - Left column only */}
                 <div className="mb-6 lg:mb-8">
                   <div className="flex justify-between overflow-x-auto pb-2 px-1 -mx-1">
@@ -887,7 +887,7 @@ export function CartPage() {
               </div>
 
               {/* Order Summary (Checkout) */}
-              <div className="lg:col-span-1 order-1 lg:order-2">
+              <div className="lg:col-span-1 order-2">
                 <Card className="lg:sticky lg:top-24">
                   <CardHeader className="pb-4">
                     <CardTitle className="text-lg">Order Summary</CardTitle>
