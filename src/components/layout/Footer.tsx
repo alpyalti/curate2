@@ -1,5 +1,5 @@
-import React from "react";
-import { Facebook, Twitter, Instagram, Youtube, Mail, Phone } from "lucide-react";
+import React, { useState } from "react";
+import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, ChevronDown } from "lucide-react";
 import { Button } from "../ui/button";
 
 const footerLinks = {
@@ -30,11 +30,140 @@ const currencies = ["AED", "USD", "EUR", "GBP"];
 const languages = ["English", "العربية", "Français"];
 
 export function Footer() {
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
+
+  const toggleSection = (section: string) => {
+    setExpandedSections(prev => 
+      prev.includes(section) 
+        ? prev.filter(s => s !== section)
+        : [...prev, section]
+    );
+  };
+
+  const AccordionSection = ({ title, children }: { title: string; children: React.ReactNode }) => {
+    const isExpanded = expandedSections.includes(title);
+    
+    return (
+      <div className="border-b border-gray-200 last:border-b-0">
+        <button
+          onClick={() => toggleSection(title)}
+          className="flex items-center justify-between w-full py-4 text-left"
+        >
+          <h4 className="font-semibold">{title}</h4>
+          <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+        </button>
+        <div className={`overflow-hidden transition-all duration-300 ${
+          isExpanded ? 'max-h-96 opacity-100 pb-4' : 'max-h-0 opacity-0'
+        }`}>
+          {children}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <footer className="bg-muted/30 border-t">
       {/* Main Footer Content */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+      <div className="container mx-auto px-4 py-6 lg:py-12">
+        {/* Mobile Layout */}
+        <div className="lg:hidden space-y-0">
+          {/* Footer Links - Accordion */}
+          <div className="divide-y divide-gray-200">
+            {Object.entries(footerLinks).map(([title, links]) => (
+              <AccordionSection key={title} title={title}>
+                <ul className="space-y-2">
+                  {links.map((link) => (
+                    <li key={link.name}>
+                      <a
+                        href={link.href}
+                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {link.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </AccordionSection>
+            ))}
+            
+            {/* Newsletter - Accordion */}
+            <AccordionSection title="Stay in the loop">
+              <p className="text-sm text-muted-foreground mb-4">
+                Be the first to know about new arrivals, exclusive sales, and special events.
+              </p>
+              <div className="space-y-3">
+                <input
+                  type="email"
+                  placeholder="Enter your email address"
+                  className="w-full h-10 px-3 rounded-md border border-input bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-sm"
+                />
+                <Button size="sm" className="w-full">Subscribe</Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-3">
+                By subscribing, you agree to our Privacy Policy and consent to receive updates.
+              </p>
+            </AccordionSection>
+          </div>
+
+          {/* Apps & Social - Side by Side */}
+          <div className="grid grid-cols-2 gap-6 pt-6 border-t border-gray-200 mt-6">
+            {/* Download Apps */}
+            <div>
+              <h4 className="font-semibold mb-3 text-sm">Download our apps</h4>
+              <div className="space-y-2">
+                <a
+                  href="https://apps.apple.com/in/app/reem-mall/id1583719509"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block transition-opacity hover:opacity-80"
+                >
+                  <img
+                    src="/appstore.png"
+                    alt="Download on the App Store"
+                    className="h-8 w-auto"
+                  />
+                </a>
+                <a
+                  href="https://play.google.com/store/apps/details?id=ae.reemmall.app&pcampaignid=web_share&pli=1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block transition-opacity hover:opacity-80"
+                >
+                  <img
+                    src="/googleplay.png"
+                    alt="Get it on Google Play"
+                    className="h-8 w-auto"
+                  />
+                </a>
+              </div>
+            </div>
+            
+            {/* Social Channels */}
+            <div>
+              <h4 className="font-semibold mb-3 text-sm">Social channels</h4>
+              <div className="flex items-center space-x-3">
+                {socialLinks.map((social) => {
+                  const Icon = social.icon;
+                  return (
+                    <a
+                      key={social.name}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      aria-label={social.name}
+                    >
+                      <Icon className="h-5 w-5" />
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Layout - Original */}
+        <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Company Info */}
           <div>
             <div className="flex items-center space-x-2 mb-4">

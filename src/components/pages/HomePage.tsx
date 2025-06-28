@@ -113,13 +113,13 @@ const brands = [
   { 
     id: "mixsoon",
     name: "Mixsoon", 
-    logo: "https://api.cdc1so4tme-dimension1-p1-public.model-t.cc.commerce.ondemand.com/medias/mixsoon.png?context=bWFzdGVyfGltYWdlc3w1MTIyfGltYWdlL3BuZ3xhR1V5TDJnNE9HODVNRFV5TXpVNU5EVTRPRFEyTDIxcGVITnZiMjR1Y0c1bnw3NGI4NzMwOGMwZTFkZjgxMTJiMzBjNzUzZDIzMzUzMjFiZTgwNzliYmRiOTAzYTViMjkyOWVhNjdhNDc1ZmJl",
+    logo: "https://ipoontina.com/wp-content/uploads/2023/12/Mixsoon-LOGO.png",
     hasPage: false
   },
   { 
     id: "georgini",
     name: "Georgini", 
-    logo: "https://api.cdc1so4tme-dimension1-p1-public.model-t.cc.commerce.ondemand.com/medias/Untitled-200-x-200-px-9-.png?context=bWFzdGVyfGltYWdlc3w0NTAwfGltYWdlL3BuZ3xhREUzTDJnMk1HODVNRFV5TXpZd05EQTVNVEU0TDFWdWRHbDBiR1ZrSUNneU1EQWdlQ0F5TURBZ2NIZ3BJQ2c1S1M1d2JtY3xmN2M5MDU4MTEwNzM1M2FlZDg5YzY0MTEyMmY3MGVlOTk3ZDdiNzNkMGI1ZTg1ZjdjODZhYzI0Yjc2OWZjODk1",
+    logo: "https://theringmakers.co.nz/wp-content/uploads/2017/10/Georgini-Logo-black.png",
     hasPage: false
   }
 ];
@@ -304,7 +304,8 @@ export function HomePage() {
     if (!brandScrollRef.current) return;
     
     const container = brandScrollRef.current;
-    const cardWidth = 181; // 176px + 5px = 181px
+    // Responsive card width: mobile 163px, desktop 181px
+    const cardWidth = window.innerWidth < 768 ? 163 : 181;
     const gap = 16; // space-x-4 = 16px
     const scrollAmount = cardWidth + gap;
     
@@ -327,7 +328,7 @@ export function HomePage() {
     <div className="min-h-screen">
       {/* Hero Carousel */}
       <section className="container-padding py-4 md:py-6 lg:py-8 -mt-4">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-2 sm:px-6 lg:px-8">
           <div className="relative">
             <div className="relative h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
               <div className="relative w-full h-full">
@@ -423,13 +424,13 @@ export function HomePage() {
             {/* Navigation Arrows - Outside Container */}
             <button
               onClick={() => handleSlideChange((currentSlide - 1 + carouselSlides.length) % carouselSlides.length)}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors"
+              className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors"
             >
               <ChevronLeft className="h-8 w-8" />
             </button>
             <button
               onClick={() => handleSlideChange((currentSlide + 1) % carouselSlides.length)}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors"
+              className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors"
             >
               <ChevronRight className="h-8 w-8" />
             </button>
@@ -439,7 +440,7 @@ export function HomePage() {
 
       {/* Hero Section with Bento Grid */}
       <section className="container-padding pt-4 pb-4 md:pt-2 md:pb-6 lg:pt-0.5 lg:pb-8 -mt-4">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-2 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[200px] md:auto-rows-[250px]">
             {categoryTiles.map((tile) => (
               <Link
@@ -490,7 +491,7 @@ export function HomePage() {
 
       {/* Brand Carousel */}
       <section className="container-padding bg-muted/30">
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-2 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold">Shop by brand</h2>
             <a
@@ -514,26 +515,30 @@ export function HomePage() {
                   <Link
                     key={index}
                     to={`/brand/${brand.id}`}
-                    className="flex-shrink-0 bg-background rounded-lg border flex items-center justify-center cursor-pointer p-3 hover:border-primary/50 transition-colors duration-300"
-                    style={{ width: '181px', height: '133px' }}
+                    className="flex-shrink-0 bg-background rounded-lg border flex items-center justify-center cursor-pointer p-3 hover:border-primary/50 transition-colors duration-300 w-[163px] h-[120px] md:w-[177px] md:h-[130px]"
                   >
                     <img
                       src={brand.logo}
                       alt={brand.name}
-                      className="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                      className={cn(
+                        "max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300",
+                        brand.id === "mixsoon" && "max-w-[70%] max-h-[70%]"
+                      )}
                       loading="lazy"
                     />
                   </Link>
                 ) : (
                   <div
                     key={index}
-                    className="flex-shrink-0 bg-background rounded-lg border flex items-center justify-center cursor-pointer p-3 hover:border-primary/50 transition-colors duration-300 opacity-75"
-                    style={{ width: '181px', height: '133px' }}
+                    className="flex-shrink-0 bg-background rounded-lg border flex items-center justify-center cursor-pointer p-3 hover:border-primary/50 transition-colors duration-300 opacity-75 w-[163px] h-[120px] md:w-[177px] md:h-[130px]"
                   >
                     <img
                       src={brand.logo}
                       alt={brand.name}
-                      className="max-w-full max-h-full object-contain filter grayscale transition-all duration-300"
+                      className={cn(
+                        "max-w-full max-h-full object-contain filter grayscale transition-all duration-300",
+                        brand.id === "mixsoon" && "max-w-[70%] max-h-[70%]"
+                      )}
                       loading="lazy"
                     />
                   </div>
@@ -544,7 +549,7 @@ export function HomePage() {
             {/* Left Arrow */}
             <button
               className={cn(
-                "absolute left-0 top-[40%] -translate-y-1/2 -translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors",
+                "hidden md:block absolute left-0 top-[40%] -translate-y-1/2 -translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors",
                 !canScrollBrandLeft && "opacity-30 cursor-not-allowed"
               )}
               onClick={() => scrollBrands('left')}
@@ -556,7 +561,7 @@ export function HomePage() {
             {/* Right Arrow */}
             <button
               className={cn(
-                "absolute right-0 top-[40%] -translate-y-1/2 translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors",
+                "hidden md:block absolute right-0 top-[40%] -translate-y-1/2 translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors",
                 !canScrollBrandRight && "opacity-30 cursor-not-allowed"
               )}
               onClick={() => scrollBrands('right')}
@@ -598,8 +603,8 @@ export function HomePage() {
 
       {/* Editorial Banner */}
       <section className="container-padding mb-8 mt-4">
-        <div className="container mx-auto px-4">
-          <div className="relative overflow-hidden rounded-lg aspect-[21/9]">
+        <div className="container mx-auto px-2 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-lg aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9]">
             <img
               src="https://api.cdc1so4tme-dimension1-p1-public.model-t.cc.commerce.ondemand.com/medias/banner.jpeg?context=bWFzdGVyfGltYWdlc3wxMjg4MTl8aW1hZ2UvanBlZ3xhREV4TDJneE9TODRPVFF5TmprM01URTVOemMwTDJKaGJtNWxjaTVxY0dWbnw1ZTlkYjE3NzViODk2M2NkMWFkODhhMmMzODMwZWRiYjgxYWI0Njc3NjI1ZWViODJlNDY0YzMxMmQ1MWUxMWVm"
               alt="Discover Luxury Fashion Banner"
@@ -607,17 +612,17 @@ export function HomePage() {
             />
             <div className="absolute inset-0 bg-black/60" />
             <div className="absolute inset-0 flex items-center justify-center text-center text-white">
-              <div className="max-w-2xl px-6">
-                <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              <div className="max-w-2xl px-4 sm:px-6">
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3 sm:mb-4 leading-tight">
                   Discover Luxury Fashion
                 </h2>
-                <p className="text-lg md:text-xl mb-8 opacity-90">
+                <p className="text-sm sm:text-lg md:text-xl mb-6 sm:mb-8 opacity-90 leading-relaxed">
                   Curated collections from the world's finest designers
                 </p>
-                <Button size="lg" asChild className="bg-white text-black hover:bg-gray-100">
+                <Button size="default" asChild className="bg-white text-black hover:bg-gray-100 text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-3">
                   <a href="https://g.co/kgs/ffGrMBK" target="_blank" rel="noopener noreferrer">
                     Visit Store
-                    <MapPin className="ml-2 h-4 w-4" />
+                    <MapPin className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                   </a>
                 </Button>
               </div>
@@ -695,7 +700,7 @@ function ProductSlider({ title, products, viewAllHref, className }: ProductSlide
 
   return (
     <section className={cn("container-padding py-6 md:py-8 lg:py-10", className)}>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-2 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold">{title}</h2>
           <a
@@ -711,10 +716,10 @@ function ProductSlider({ title, products, viewAllHref, className }: ProductSlide
           {/* Products Container */}
           <div 
             ref={scrollRef}
-            className="flex gap-6 overflow-x-auto scroll-bar-hide pb-4"
+            className="flex gap-3 md:gap-6 overflow-x-auto scroll-bar-hide pb-4"
           >
             {products.slice(0, 8).map((product) => (
-              <div key={product.id} className="flex-none w-[calc(50%-12px)] md:w-[calc(25%-18px)]">
+              <div key={product.id} className="flex-none w-[calc(40%-6px)] md:w-[calc(25%-18px)]">
                 <ProductCard product={product} />
               </div>
             ))}
@@ -723,7 +728,7 @@ function ProductSlider({ title, products, viewAllHref, className }: ProductSlide
           {/* Left Arrow */}
           <button
             className={cn(
-              "absolute left-0 top-[40%] -translate-y-1/2 -translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors",
+              "hidden md:block absolute left-0 top-[40%] -translate-y-1/2 -translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors",
               !canScrollLeft && "opacity-30 cursor-not-allowed"
             )}
             onClick={() => scrollProducts('left')}
@@ -735,7 +740,7 @@ function ProductSlider({ title, products, viewAllHref, className }: ProductSlide
           {/* Right Arrow */}
           <button
             className={cn(
-              "absolute right-0 top-[40%] -translate-y-1/2 translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors",
+              "hidden md:block absolute right-0 top-[40%] -translate-y-1/2 translate-x-12 z-10 text-gray-600 hover:text-gray-800 transition-colors",
               !canScrollRight && "opacity-30 cursor-not-allowed"
             )}
             onClick={() => scrollProducts('right')}

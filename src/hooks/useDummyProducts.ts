@@ -57,7 +57,9 @@ export function useDummyProducts(params: SearchParams = {}): UseDummyProductsRes
     // Price filter
     if (filters.price) {
       filtered = filtered.filter(product => {
-        const price = product.discount?.discountedPrice.amount || product.price.amount;
+        // Use the current price (already discounted if discount exists)
+        const price = product.price?.amount;
+        if (price === undefined || price === null) return false;
         return price >= filters.price!.min && price <= filters.price!.max;
       });
     }
@@ -105,16 +107,18 @@ export function useDummyProducts(params: SearchParams = {}): UseDummyProductsRes
     if (filters.sortBy) {
       switch (filters.sortBy) {
         case "price-asc":
+        case "price-low":
           filtered.sort((a, b) => {
-            const priceA = a.discount?.discountedPrice.amount || a.price.amount;
-            const priceB = b.discount?.discountedPrice.amount || b.price.amount;
+            const priceA = a.price?.amount || 0;
+            const priceB = b.price?.amount || 0;
             return priceA - priceB;
           });
           break;
         case "price-desc":
+        case "price-high":
           filtered.sort((a, b) => {
-            const priceA = a.discount?.discountedPrice.amount || a.price.amount;
-            const priceB = b.discount?.discountedPrice.amount || b.price.amount;
+            const priceA = a.price?.amount || 0;
+            const priceB = b.price?.amount || 0;
             return priceB - priceA;
           });
           break;
@@ -137,8 +141,9 @@ export function useDummyProducts(params: SearchParams = {}): UseDummyProductsRes
             return reviewsB - reviewsA;
           });
           break;
+        case "featured":
         default:
-          // Relevance - no specific sorting for dummy data
+          // Featured/Relevance - no specific sorting for dummy data
           break;
       }
     }
@@ -234,9 +239,7 @@ export function getDummySizes() {
 }
 
 export function getDummyPriceRange() {
-  const prices = dummyProducts.map(p => 
-    p.discount?.discountedPrice.amount || p.price.amount
-  );
+  const prices = dummyProducts.map(p => p.price.amount).filter(price => price != null);
   return {
     min: Math.min(...prices),
     max: Math.max(...prices)

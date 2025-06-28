@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { 
-  ChevronRight,
   Trash2,
   Heart,
   Ruler,
@@ -299,7 +298,7 @@ export function WishlistPage() {
         <div className="container mx-auto px-4 py-3">
           <nav className="flex items-center space-x-2 text-sm text-muted-foreground">
             <Link to="/" className="hover:text-foreground">Home</Link>
-            <ChevronRight className="h-4 w-4" />
+            <span className="mx-2">/</span>
             <span className="text-foreground font-medium">Wishlist</span>
           </nav>
         </div>
@@ -394,7 +393,9 @@ export function WishlistPage() {
                             onClick={() => handleSizeChange(item.id, size.value)}
                             disabled={!size.available || (item.category === 'bags' && size.value === 'one-size')}
                             className={cn(
-                              "text-xs h-8 px-2",
+                              "h-8 px-2",
+                              // Smaller font for long size names on mobile, regular size on desktop
+                              size.name.length > 3 ? "text-[10px] md:text-xs" : "text-xs",
                               selectedSize === size.value ? "bg-black text-white hover:bg-black/90" : "",
                               !size.available && "opacity-50 cursor-not-allowed line-through",
                               item.category === 'bags' && size.value === 'one-size' && "cursor-default"

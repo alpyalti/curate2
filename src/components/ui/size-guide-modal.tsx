@@ -82,10 +82,10 @@ export function SizeGuideModal({ isOpen, onClose, category = "women" }: SizeGuid
       />
       
       {/* Modal */}
-      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="bg-background border rounded-lg shadow-lg m-4">
+      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="bg-background border rounded-lg shadow-lg mx-2 sm:m-4">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b">
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b">
             <div className="flex items-center gap-2">
               <Ruler className="h-5 w-5" />
               <h2 className="text-xl font-semibold">{guide.title}</h2>
@@ -101,9 +101,9 @@ export function SizeGuideModal({ isOpen, onClose, category = "women" }: SizeGuid
           </div>
 
           {/* Content */}
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {/* Measurement Instructions */}
-            <div className="mb-6 p-4 bg-muted/30 rounded-lg">
+            <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-muted/30 rounded-lg">
               <h3 className="font-medium mb-2">How to Measure</h3>
               <div className="text-sm text-muted-foreground space-y-1">
                 {category === "women" || category === "sports" ? (
@@ -135,8 +135,8 @@ export function SizeGuideModal({ isOpen, onClose, category = "women" }: SizeGuid
             </div>
 
             {/* Size Chart Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
+            <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+              <table className="w-full border-collapse min-w-[400px]">
                 <thead>
                   <tr className="border-b">
                     {guide.headers.map((header, index) => (
@@ -162,7 +162,7 @@ export function SizeGuideModal({ isOpen, onClose, category = "women" }: SizeGuid
             </div>
 
             {/* Additional Info */}
-            <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
+            <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
               <h4 className="font-medium text-sm mb-2">Size Conversion Tips</h4>
               <div className="text-xs text-muted-foreground space-y-1">
                 <p>• All measurements are in inches</p>
@@ -174,7 +174,7 @@ export function SizeGuideModal({ isOpen, onClose, category = "women" }: SizeGuid
           </div>
 
           {/* Footer */}
-          <div className="border-t p-6">
+          <div className="border-t p-4 sm:p-6">
             <div className="flex justify-end">
               <Button onClick={onClose}>
                 Close

@@ -328,7 +328,7 @@
     "variants": [{"id": "var-s001", "attributes": [{"name": "size", "value": "42"}, {"name": "color", "value": "white"}]}],
     "rating": { "average": 4.5, "count": 312 },
     "availability": { "inStock": true, "quantity": 25 },
-    "badges": [{ "type": "further-reduction", "label": "FURTHER REDUCTION", "color": "#000000", "textColor": "#ffffff" }],
+    "badges": [{ "type": "further-reduction", "label": "FINAL SALE", "color": "#000000", "textColor": "#ffffff" }],
     "createdAt": "2024-01-13T10:30:00Z"
   },
   {

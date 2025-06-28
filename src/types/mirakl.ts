@@ -54,10 +54,10 @@ export interface Price {
 export interface Discount {
   type: "percentage" | "fixed";
   value: number;
-  originalPrice: Price;
-  discountedPrice: Price;
-  validFrom: string;
-  validTo: string;
+  originalPrice?: Price;
+  discountedPrice?: Price;
+  validFrom?: string;
+  validTo?: string;
 }
 
 export interface ProductBadge {
@@ -293,8 +293,11 @@ export interface PriceRange {
 
 export type ProductSortOption = 
   | "relevance"
+  | "featured"
   | "price-asc"
   | "price-desc"
+  | "price-low"
+  | "price-high"
   | "rating"
   | "newest"
   | "popularity";

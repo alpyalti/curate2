@@ -40,7 +40,7 @@ export function ScrollToTop({ className, threshold = 400 }: ScrollToTopProps) {
       onClick={scrollToTop}
       size="icon"
       className={cn(
-        "fixed bottom-6 right-6 z-50 h-12 w-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in",
+        "fixed bottom-24 lg:bottom-6 right-6 z-50 h-12 w-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in",
         className
       )}
       aria-label="Scroll to top"

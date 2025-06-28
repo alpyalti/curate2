@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Search, User, Heart, ShoppingBag, Menu, X } from "lucide-react";
+import { Search, User, Heart, ShoppingBag, Menu, X, Minus, Plus, Clock } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { cn } from "../../lib/utils";
 import { SearchBar } from "./SearchBar";
+import { MobileMenu } from "./MobileMenu";
 
 interface HeaderProps {
   cartItemCount?: number;
@@ -26,6 +27,48 @@ export function Header({
   const [showSportsMenu, setShowSportsMenu] = useState(false);
   const [showPreLovedMenu, setShowPreLovedMenu] = useState(false);
   const [showDesignersMenu, setShowDesignersMenu] = useState(false);
+  const [showCartDropdown, setShowCartDropdown] = useState(false);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const mobileSearchRef = useRef<HTMLDivElement>(null);
+  const searchIconRef = useRef<HTMLButtonElement>(null);
+
+  // Mock cart data - in real app this would come from context/store
+  const cartItems = [
+    {
+      id: "cart-1",
+      name: "Black Triangle Bikini Top",
+      brand: "LETS SWIM",
+      price: 450,
+      quantity: 1,
+      size: "M",
+      color: "Black",
+      image: "https://letsswim.co/cdn/shop/files/LET_SSWIM-BLACKLET_SSWIMTRIANGLEBIKINITOP-6.jpg?v=1721327749"
+    },
+    {
+      id: "cart-2",
+      name: "Red Wired Balconette Swimsuit",
+      brand: "LETS SWIM",
+      price: 750,
+      quantity: 2,
+      size: "S",
+      color: "Red",
+      image: "https://letsswim.co/cdn/shop/files/LET_SSWIM-REDWIREDBALCONETTESWIMSUIT-1.jpg?v=1713187512",
+      stockCount: 2,
+      isLowStock: true
+    },
+    {
+      id: "cart-3",
+      name: "Mardi Matin Lemon Yellow",
+      brand: "NORI ENOMOTO",
+      price: 1850,
+      quantity: 1,
+      size: "One Size",
+      color: "Lemon Yellow",
+      image: "https://nori-enomoto.com/cdn/shop/files/nori_mardi-matin_lemon-yellow_main_02.png?v=1750655214&width=2400"
+    }
+  ];
+
+  const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,6 +79,24 @@ export function Header({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Handle click outside to close mobile search
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as Node;
+      const isOutsideSearch = mobileSearchRef.current && !mobileSearchRef.current.contains(target);
+      const isOutsideIcon = searchIconRef.current && !searchIconRef.current.contains(target);
+      
+      if (isOutsideSearch && isOutsideIcon) {
+        setShowMobileSearch(false);
+      }
+    }
+
+    if (showMobileSearch) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [showMobileSearch]);
+
   return (
     <header
       className={cn(
@@ -45,25 +106,27 @@ export function Header({
     >
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between lg:h-20">
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={onMenuToggle}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
-
-          {/* Logo */}
+          {/* Mobile: Hamburger + Logo Together, Desktop: Just Logo */}
           <div className="flex items-center">
+            {/* Mobile Menu Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden mr-1 hover:bg-transparent"
+              onClick={onMenuToggle}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
+
+            {/* Logo */}
+            <div className="flex items-center lg:pl-2">
             <Link
               to="/"
               className="flex items-center space-x-2"
               aria-label="Curate Home"
             >
-              <svg width="140" height="32" viewBox="330 250 490 120" xmlns="http://www.w3.org/2000/svg" className="h-8 w-auto">
+              <svg width="140" height="32" viewBox="330 250 490 120" xmlns="http://www.w3.org/2000/svg" className="h-6 lg:h-8 w-auto">
                 <g fill="#0090a4">
                   <path d="M388.45,276.39c10.2,0,18.72,4.27,25.58,12.79l13.49-15.29c-10.76-12.14-24.1-18.21-40.04-18.21-14.28,0-26.35,4.82-36.22,14.46-9.87,9.64-14.81,21.67-14.81,36.08s4.84,26.35,14.53,35.8c9.69,9.45,22.01,14.18,36.99,14.18s27.97-6.21,39-18.63l-13.9-14.32c-6.77,8.44-15.48,12.65-26.14,12.65-7.79,0-14.42-2.73-19.88-8.2-5.47-5.47-8.2-12.72-8.2-21.76s2.9-16.22,8.69-21.55c5.79-5.33,12.77-7.99,20.93-7.99"/>
                   <path d="M642.8,285.84c-5.75-4.54-13.16-6.81-22.25-6.81-12.61,0-23.83,3.57-33.65,10.71l9.32,13.49c2.78-2.13,6.19-3.92,10.22-5.35,4.03-1.44,7.86-2.15,11.47-2.15,8.43,0,12.65,3.99,12.65,11.96v.42h-15.57c-9.64,0-17.24,1.9-22.8,5.7-5.56,3.8-8.34,9.52-8.34,17.17s2.69,13.77,8.07,18.36c5.38,4.59,12.03,6.88,19.95,6.88s14.58-3.38,19.95-10.15v9.04h19.6v-47.69c0-9.83-2.87-17.01-8.62-21.55M630.43,326.58c0,3.8-1.41,6.84-4.24,9.11-2.83,2.27-6.1,3.41-9.8,3.41s-6.56-.72-8.55-2.16c-1.99-1.43-2.99-3.5-2.99-6.19,0-5.19,4.17-7.79,12.52-7.79h13.07v3.62Z"/>
@@ -75,6 +138,7 @@ export function Header({
                 </g>
               </svg>
             </Link>
+          </div>
           </div>
 
           {/* Desktop Navigation */}
@@ -337,6 +401,13 @@ export function Header({
                         >
                           Georgini
                         </a>
+                        <div className="border-t my-1"></div>
+                        <a
+                          href="/brands"
+                          className="block px-3 py-2 text-sm font-bold text-primary hover:text-primary/80 transition-colors"
+                        >
+                          View All Brands →
+                        </a>
                       </nav>
                     </div>
                   </div>
@@ -354,38 +425,49 @@ export function Header({
           <div className="flex items-center space-x-2 lg:space-x-4">
             {/* Search Icon - Mobile */}
             <Button
+              ref={searchIconRef}
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className={cn(
+                "md:hidden hover:bg-transparent group",
+                showMobileSearch && "text-primary"
+              )}
               aria-label="Search"
+              onClick={() => setShowMobileSearch(!showMobileSearch)}
             >
-              <Search className="h-5 w-5" />
+              <Search className={cn(
+                "h-5 w-5 transition-colors",
+                showMobileSearch ? "text-primary" : "group-hover:text-primary"
+              )} />
             </Button>
 
             {/* Account */}
             <Button
               variant="ghost"
               size="icon"
-              className="relative"
+              className="hidden md:flex relative hover:bg-transparent group"
               aria-label="Account"
+              asChild
             >
-              <User className="h-5 w-5" />
+              <Link to="/login">
+                <User className="h-5 w-5 group-hover:text-primary transition-colors" />
+              </Link>
             </Button>
 
             {/* Wishlist */}
             <Button
               variant="ghost"
               size="icon"
-              className="relative"
+              className="relative hover:bg-transparent group"
               aria-label={`Wishlist (${wishlistItemCount} items)`}
               asChild
             >
               <Link to="/wishlist">
-                <Heart className="h-5 w-5" />
+                <Heart className="h-5 w-5 group-hover:text-primary transition-colors" />
                 {wishlistItemCount > 0 && (
                   <Badge
                     variant="default"
-                    className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                    className="absolute -top-0.5 -right-0.5 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
                   >
                     {wishlistItemCount > 99 ? "99+" : wishlistItemCount}
                   </Badge>
@@ -394,33 +476,136 @@ export function Header({
             </Button>
 
             {/* Shopping Bag */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative"
-              aria-label={`Shopping bag (${cartItemCount} items)`}
-              asChild
-            >
-              <Link to="/cart">
-                <ShoppingBag className="h-5 w-5" />
-                {cartItemCount > 0 && (
-                  <Badge
-                    variant="default"
-                    className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
-                  >
-                    {cartItemCount > 99 ? "99+" : cartItemCount}
-                  </Badge>
+            <div className="relative">
+              <div
+                onMouseEnter={() => setShowCartDropdown(true)}
+                onMouseLeave={() => setShowCartDropdown(false)}
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative hover:bg-transparent group"
+                  aria-label={`Shopping bag (${cartItemCount} items)`}
+                  asChild
+                >
+                  <Link to="/cart">
+                    <ShoppingBag className="h-5 w-5 group-hover:text-primary transition-colors" />
+                    {cartItemCount > 0 && (
+                      <Badge
+                        variant="default"
+                        className="absolute -top-0.5 -right-0.5 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                      >
+                        {cartItemCount > 99 ? "99+" : cartItemCount}
+                      </Badge>
+                    )}
+                  </Link>
+                </Button>
+                
+                {/* Cart Dropdown */}
+                {showCartDropdown && cartItems.length > 0 && (
+                  <div className="hidden md:block absolute top-full right-0 pt-2 z-50">
+                    <div className="bg-background border rounded-lg shadow-lg w-80 max-h-[500px] flex flex-col">
+                      {/* Sticky Header */}
+                      <div className="sticky top-0 bg-background border-b px-4 py-3 rounded-t-lg">
+                        <h3 className="font-semibold text-lg">My Bag</h3>
+                      </div>
+                      
+                      {/* Scrollable Products Area */}
+                      <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-80">
+                        {cartItems.map((item) => (
+                          <div key={item.id} className="flex gap-3">
+                            <Link to={`/product/${item.id}`} className="flex-shrink-0">
+                              <img 
+                                src={item.image} 
+                                alt={item.name}
+                                className="w-16 h-20 object-cover rounded"
+                              />
+                            </Link>
+                            <div className="flex-1 min-w-0">
+                              <Link 
+                                to={`/product/${item.id}`}
+                                className="font-medium text-sm hover:text-primary transition-colors line-clamp-2"
+                              >
+                                {item.name}
+                              </Link>
+                              <p className="text-xs text-muted-foreground mt-1">{item.brand}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {item.color} • {item.size}
+                              </p>
+                              {item.isLowStock && (
+                                <div className="flex items-center gap-1 mt-1">
+                                  <Clock className="h-3 w-3 text-orange-500" />
+                                  <p className="text-xs text-orange-600">
+                                    Low in stock: only {item.stockCount} left
+                                  </p>
+                                </div>
+                              )}
+                              <div className="flex items-center justify-between mt-2">
+                                <div className="flex items-center gap-2">
+                                  <Button variant="outline" size="icon" className="h-6 w-6">
+                                    <Minus className="h-3 w-3" />
+                                  </Button>
+                                  <span className="text-sm">{item.quantity}</span>
+                                  <Button variant="outline" size="icon" className="h-6 w-6">
+                                    <Plus className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                                <p className="font-semibold text-sm">
+                                  {item.price} AED
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* Sticky Footer */}
+                      <div className="sticky bottom-0 bg-background border-t px-4 py-3 rounded-b-lg">
+                        <div className="flex justify-between items-center mb-3">
+                          <span className="font-semibold">Grand Total:</span>
+                          <span className="font-bold text-lg">{subtotal} AED</span>
+                        </div>
+                        <Button asChild className="w-full" onClick={() => setShowCartDropdown(false)}>
+                          <Link to="/cart">Go to Bag</Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 )}
-              </Link>
-            </Button>
+                
+                {/* Empty Cart Message */}
+                {showCartDropdown && cartItems.length === 0 && (
+                  <div className="hidden md:block absolute top-full right-0 pt-2 z-50">
+                    <div className="bg-background border rounded-lg shadow-lg w-80 p-6 text-center">
+                      <ShoppingBag className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
+                      <p className="text-muted-foreground">Your bag is empty</p>
+                      <Button asChild className="mt-4">
+                        <Link to="/new-in">Start Shopping</Link>
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Mobile Search Bar */}
-        <div className="md:hidden pb-4">
-          <SearchBar />
-        </div>
+        {showMobileSearch && (
+          <div ref={mobileSearchRef} className="md:hidden pb-4 pt-2">
+            <SearchBar 
+              autoFocus={true}
+              onClose={() => setShowMobileSearch(false)}
+            />
+          </div>
+        )}
       </div>
+      
+      {/* Mobile Menu */}
+      <MobileMenu 
+        isOpen={isMenuOpen} 
+        onClose={() => onMenuToggle && onMenuToggle()} 
+      />
     </header>
   );
 } 

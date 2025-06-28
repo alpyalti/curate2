@@ -9,12 +9,16 @@ interface SearchBarProps {
   className?: string;
   placeholder?: string;
   onSearch?: (query: string) => void;
+  onClose?: () => void;
+  autoFocus?: boolean;
 }
 
 export function SearchBar({
   className,
   placeholder = "Search for products...",
-  onSearch
+  onSearch,
+  onClose,
+  autoFocus = false
 }: SearchBarProps) {
   const [query, setQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -39,6 +43,13 @@ export function SearchBar({
   useEffect(() => {
     debouncedSearch(query);
   }, [query, debouncedSearch]);
+
+  // Auto focus when component mounts (for mobile)
+  useEffect(() => {
+    if (autoFocus && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [autoFocus]);
 
   // Handle click outside to close suggestions
   useEffect(() => {
@@ -85,42 +96,56 @@ export function SearchBar({
 
   return (
     <div ref={containerRef} className={cn("relative w-full", className)}>
-      <form onSubmit={handleSubmit} className="relative">
-        <div
-          className={cn(
-            "relative flex items-center rounded-md border bg-background/40 backdrop-blur-sm transition-colors",
-            isFocused && "ring-2 ring-ring ring-offset-2",
-            "hover:bg-accent/20"
-          )}
-        >
-          <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={handleInputChange}
-            onFocus={handleInputFocus}
-            placeholder={placeholder}
+      <div className="flex items-center gap-2">
+        <form onSubmit={handleSubmit} className="relative flex-1">
+          <div
             className={cn(
-              "flex h-10 w-full rounded-md bg-transparent px-10 py-2 text-sm placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+              "relative flex items-center rounded-md border bg-background/10 backdrop-blur-sm transition-colors",
+              isFocused && "ring-2 ring-ring ring-offset-2",
+              "hover:bg-accent/20"
             )}
-            aria-label="Search products"
-            autoComplete="off"
-          />
-          {query && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="absolute right-1 h-8 w-8"
-              onClick={handleClear}
-              aria-label="Clear search"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          )}
-        </div>
-      </form>
+          >
+            <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={handleInputChange}
+              onFocus={handleInputFocus}
+              placeholder={placeholder}
+              className={cn(
+                "flex h-10 w-full rounded-md bg-transparent px-10 py-2 text-sm placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+              )}
+              aria-label="Search products"
+              autoComplete="off"
+            />
+            {query && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-1 h-8 w-8"
+                onClick={handleClear}
+                aria-label="Clear search"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        </form>
+        
+        {/* Mobile Cancel Button */}
+        {onClose && (
+          <Button
+            type="button"
+            variant="ghost"
+            className="md:hidden text-sm px-3 py-2 h-10"
+            onClick={onClose}
+          >
+            Cancel
+          </Button>
+        )}
+      </div>
 
       {/* Search Suggestions */}
       {showSuggestions && query.length > 0 && (

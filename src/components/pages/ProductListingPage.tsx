@@ -36,6 +36,20 @@ export function ProductListingPage() {
   const [sortBy, setSortBy] = useState('featured');
   const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false);
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
+
+  // Force mobile grid to 2 columns
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        // Mobile and tablet - always 2 columns
+        setGridColumns(2);
+      }
+    };
+
+    handleResize(); // Check on mount
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   // Filter State
   const [activeFilters, setActiveFilters] = useState<ActiveFilter[]>([]);
@@ -155,7 +169,7 @@ export function ProductListingPage() {
   };
 
   const FilterDrawer = () => (
-    <div className="w-64 space-y-6">
+    <div className="w-full lg:w-64 space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Filters</h3>
         {activeFilters.length > 0 && (
@@ -397,58 +411,27 @@ export function ProductListingPage() {
           </aside>
 
           {/* Main Content */}
-          <div className="flex-1">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-6">
-                <h1 className="text-2xl font-bold capitalize">
-                  {isSalePage ? 'Sale' : isNewInPage ? 'New In' : category}
-                </h1>
-                <p className="text-muted-foreground text-sm">
-                  Showing {products.length} of {totalProducts} results
-                </p>
-              </div>
-
-              <div className="flex items-center space-x-4">
-                {/* Mobile Filter Button */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsFilterDrawerOpen(true)}
-                  className="lg:hidden"
-                >
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filters
-                </Button>
-
-                {/* Grid Toggle */}
-                <div className="flex items-center border rounded-md">
+          <div className="flex-1 min-w-0">
+            {/* Header - Mobile Layout */}
+            <div className="mb-6">
+              {/* Mobile: Top row with filters and sort */}
+              <div className="flex items-center justify-between mb-4 lg:hidden">
+                <div className="flex items-center space-x-3">
+                  {/* Mobile Filter Button */}
                   <Button
-                    variant={gridColumns === 3 ? "default" : "ghost"}
+                    variant="outline"
                     size="sm"
-                    onClick={() => setGridColumns(3)}
-                    className="rounded-r-none"
+                    onClick={() => setIsFilterDrawerOpen(true)}
                   >
-                    {/* 3 Column Icon - 3 thick vertical rectangles */}
-                    <svg className="h-4 w-4" viewBox="0 0 16 16" fill="currentColor">
-                      <rect x="1" y="2" width="3" height="12" rx="0.5"/>
-                      <rect x="6" y="2" width="3" height="12" rx="0.5"/>
-                      <rect x="11" y="2" width="3" height="12" rx="0.5"/>
-                    </svg>
-                  </Button>
-                  <Button
-                    variant={gridColumns === 4 ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setGridColumns(4)}
-                    className="rounded-l-none"
-                  >
-                    {/* 4 Column Icon - 4 thin vertical rectangles */}
-                    <svg className="h-4 w-4" viewBox="0 0 16 16" fill="currentColor">
-                      <rect x="1" y="2" width="2" height="12" rx="0.5"/>
-                      <rect x="4.5" y="2" width="2" height="12" rx="0.5"/>
-                      <rect x="8" y="2" width="2" height="12" rx="0.5"/>
-                      <rect x="11.5" y="2" width="2" height="12" rx="0.5"/>
-                    </svg>
+                    <div className="relative mr-1">
+                      <Filter className="h-4 w-4" />
+                      {activeFilters.length > 0 && (
+                        <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-black text-white text-[8px] font-medium flex items-center justify-center">
+                          {activeFilters.length}
+                        </span>
+                      )}
+                    </div>
+                    Filters
                   </Button>
                 </div>
 
@@ -461,9 +444,9 @@ export function ProductListingPage() {
                       e.stopPropagation();
                       setIsSortDropdownOpen(!isSortDropdownOpen);
                     }}
-                    className="flex items-center space-x-2 min-w-[140px] justify-between"
+                    className="flex items-center space-x-2 min-w-[120px] justify-between"
                   >
-                    <span className="text-sm">
+                    <span className="text-sm truncate">
                       {sortBy === 'featured' && 'Curate Picks'}
                       {sortBy === 'newest' && 'Newest'}
                       {sortBy === 'price-low' && 'Price: Low to High'}
@@ -498,11 +481,112 @@ export function ProductListingPage() {
                   )}
                 </div>
               </div>
+
+              {/* Mobile: Bottom row with title and results */}
+              <div className="lg:hidden">
+                <h1 className="text-xl font-bold capitalize mb-1">
+                  {isSalePage ? 'Sale' : isNewInPage ? 'New In' : category}
+                </h1>
+                <p className="text-muted-foreground text-sm">
+                  Showing {products.length} of {totalProducts} results
+                </p>
+              </div>
+
+              {/* Desktop: Original layout */}
+              <div className="hidden lg:flex items-center justify-between">
+                <div className="flex items-center space-x-6">
+                  <h1 className="text-2xl font-bold capitalize">
+                    {isSalePage ? 'Sale' : isNewInPage ? 'New In' : category}
+                  </h1>
+                  <p className="text-muted-foreground text-sm">
+                    Showing {products.length} of {totalProducts} results
+                  </p>
+                </div>
+
+                <div className="flex items-center space-x-4">
+                  {/* Grid Toggle - Desktop Only */}
+                  <div className="hidden md:flex items-center border rounded-md">
+                    <Button
+                      variant={gridColumns === 3 ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setGridColumns(3)}
+                      className="rounded-r-none"
+                    >
+                      {/* 3 Column Icon - 3 thick vertical rectangles */}
+                      <svg className="h-4 w-4" viewBox="0 0 16 16" fill="currentColor">
+                        <rect x="1" y="2" width="3" height="12" rx="0.5"/>
+                        <rect x="6" y="2" width="3" height="12" rx="0.5"/>
+                        <rect x="11" y="2" width="3" height="12" rx="0.5"/>
+                      </svg>
+                    </Button>
+                    <Button
+                      variant={gridColumns === 4 ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setGridColumns(4)}
+                      className="rounded-l-none"
+                    >
+                      {/* 4 Column Icon - 4 thin vertical rectangles */}
+                      <svg className="h-4 w-4" viewBox="0 0 16 16" fill="currentColor">
+                        <rect x="1" y="2" width="2" height="12" rx="0.5"/>
+                        <rect x="4.5" y="2" width="2" height="12" rx="0.5"/>
+                        <rect x="8" y="2" width="2" height="12" rx="0.5"/>
+                        <rect x="11.5" y="2" width="2" height="12" rx="0.5"/>
+                      </svg>
+                    </Button>
+                  </div>
+
+                  {/* Sort Dropdown */}
+                  <div className="relative">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsSortDropdownOpen(!isSortDropdownOpen);
+                      }}
+                      className="flex items-center space-x-2 min-w-[140px] justify-between"
+                    >
+                      <span className="text-sm">
+                        {sortBy === 'featured' && 'Curate Picks'}
+                        {sortBy === 'newest' && 'Newest'}
+                        {sortBy === 'price-low' && 'Price: Low to High'}
+                        {sortBy === 'price-high' && 'Price: High to Low'}
+                      </span>
+                      <ChevronDown className={cn("h-4 w-4 transition-transform", isSortDropdownOpen && "rotate-180")} />
+                    </Button>
+                    
+                    {isSortDropdownOpen && (
+                      <div className="absolute right-0 top-full mt-1 w-48 bg-background border rounded-md shadow-lg z-10">
+                        {[
+                          { value: 'featured', label: 'Curate Picks' },
+                          { value: 'newest', label: 'Newest' },
+                          { value: 'price-low', label: 'Price: Low to High' },
+                          { value: 'price-high', label: 'Price: High to Low' }
+                        ].map((option) => (
+                          <button
+                            key={option.value}
+                            onClick={() => {
+                              setSortBy(option.value);
+                              setIsSortDropdownOpen(false);
+                            }}
+                            className={cn(
+                              "w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors first:rounded-t-md last:rounded-b-md",
+                              sortBy === option.value && "bg-muted font-medium"
+                            )}
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Products Grid */}
             {isLoading ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-4 sm:gap-6">
                 {[...Array(8)].map((_, i) => (
                   <div key={i} className="animate-pulse">
                     <div className="aspect-[3/4] bg-muted rounded-lg mb-3" />
@@ -513,8 +597,10 @@ export function ProductListingPage() {
               </div>
             ) : (
               <div className={cn(
-                "grid gap-6 mb-8",
-                gridColumns === 3 ? "grid-cols-2 md:grid-cols-3" : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+                "grid gap-x-3 gap-y-4 sm:gap-6 mb-8",
+                // Mobile: Always 2 columns, Desktop: Respect grid settings
+                "grid-cols-2",
+                gridColumns === 3 ? "lg:grid-cols-3" : "lg:grid-cols-3 xl:grid-cols-4"
               )}>
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
@@ -569,9 +655,8 @@ export function ProductListingPage() {
       {isFilterDrawerOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="fixed inset-0 bg-black/50" onClick={() => setIsFilterDrawerOpen(false)} />
-          <div className="fixed left-0 top-0 h-full w-80 bg-background p-6 shadow-lg overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold">Filters</h3>
+          <div className="fixed left-0 top-0 h-full w-[85vw] max-w-sm bg-background shadow-lg overflow-y-auto">
+            <div className="flex items-center justify-end p-4 border-b">
               <Button
                 variant="ghost"
                 size="icon"
@@ -580,7 +665,9 @@ export function ProductListingPage() {
                 <X className="h-5 w-5" />
               </Button>
             </div>
-            <FilterDrawer />
+            <div className="p-6">
+              <FilterDrawer />
+            </div>
           </div>
         </div>
       )}
@@ -602,7 +689,7 @@ function ProductCard({ product }: ProductCardProps) {
     <Link to={`/product/${product.id}`} className="block">
       <Card className="group cursor-pointer overflow-hidden border-0 shadow-none">
       <div 
-        className="relative aspect-[3/4] overflow-hidden rounded-lg bg-muted mb-3"
+        className="relative aspect-[3/4] overflow-hidden rounded-lg bg-muted mb-2 lg:mb-3"
         onMouseEnter={() => setHoveredImage(1)}
         onMouseLeave={() => setHoveredImage(0)}
       >
@@ -659,9 +746,27 @@ function ProductCard({ product }: ProductCardProps) {
 
       <CardContent className="p-0">
         <h3 className="font-medium text-sm mb-1 line-clamp-2">{product.title}</h3>
-        <p className="text-xs text-muted-foreground mb-2">{product.brand}</p>
+        <p className="text-xs text-muted-foreground mb-1 lg:mb-2">{product.brand}</p>
         
-        <div className="flex items-center justify-between">
+        {/* Mobile Price Layout */}
+        <div className="lg:hidden">
+          <div className="flex items-center space-x-1 flex-wrap">
+            <span className="font-semibold text-sm">{displayPrice.formattedAmount || displayPrice.amount + ' ' + displayPrice.currency}</span>
+            {product.originalPrice && (
+              <span className="text-[10px] text-muted-foreground line-through">
+                {product.originalPrice.formattedAmount || product.originalPrice.amount + ' ' + product.originalPrice.currency}
+              </span>
+            )}
+            {product.discount && (
+              <Badge className="bg-red-500 text-white text-[8px] font-semibold px-1 py-0.5 leading-none">
+                -{product.discount.value}%
+              </Badge>
+            )}
+          </div>
+        </div>
+
+        {/* Desktop Price Layout */}
+        <div className="hidden lg:flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="font-semibold">{displayPrice.formattedAmount || displayPrice.amount + ' ' + displayPrice.currency}</span>
             {product.originalPrice && (
@@ -675,8 +780,6 @@ function ProductCard({ product }: ProductCardProps) {
               </Badge>
             )}
           </div>
-          
-
         </div>
       </CardContent>
     </Card>
