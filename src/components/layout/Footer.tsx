@@ -7,7 +7,7 @@ const footerLinks = {
     { name: "About Us", href: "/about" },
     { name: "Partnership", href: "/partnership" },
     { name: "Store Locator", href: "/store-locator" },
-    { name: "Privacy Policy", href: "/privacy" },
+    { name: "Privacy Policy", href: "/privacy-policy" },
     { name: "Terms and Conditions", href: "/terms-conditions" },
   ],
   "Customer Service": [

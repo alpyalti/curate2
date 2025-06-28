@@ -11,6 +11,7 @@ import { FAQPage } from './components/pages/FAQPage';
 import { ShippingPoliciesPage } from './components/pages/ShippingPoliciesPage';
 import { ReturnsRefundsPage } from './components/pages/ReturnsRefundsPage';
 import { TermsConditionsPage } from './components/pages/TermsConditionsPage';
+import { PrivacyPolicyPage } from './components/pages/PrivacyPolicyPage';
 import { PartnershipPage } from './components/pages/PartnershipPage';
 import { ScrollToTop } from './components/ui/scroll-to-top';
 
@@ -43,6 +44,7 @@ function App() {
             <Route path="/shipping-policies" element={<ShippingPoliciesPage />} />
             <Route path="/returns-refunds" element={<ReturnsRefundsPage />} />
             <Route path="/terms-conditions" element={<TermsConditionsPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/partnership" element={<PartnershipPage />} />
           </Routes>
         </main>
