@@ -208,6 +208,34 @@ export function HomePage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Handle page visibility changes (for mobile optimization)
+  React.useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Page is hidden, pause all videos
+        videoRefs.current.forEach((video) => {
+          if (video && !video.paused) {
+            video.pause();
+          }
+        });
+      } else {
+        // Page is visible, resume current video
+        const currentVideo = videoRefs.current[currentSlide];
+        if (currentVideo && currentVideo.paused) {
+          currentVideo.play().catch((error) => {
+            console.log('Resume play failed:', error);
+          });
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [currentSlide]);
+
   React.useEffect(() => {
     console.log('Current slide changed to:', currentSlide, 'Link:', carouselSlides[currentSlide]?.buttonLink);
   }, [currentSlide]);
@@ -242,12 +270,32 @@ export function HomePage() {
 
   // Restart video when slide changes
   React.useEffect(() => {
+    // Pause all videos first
+    videoRefs.current.forEach((video, index) => {
+      if (video && index !== currentSlide) {
+        video.pause();
+        video.currentTime = 0;
+      }
+    });
+
+    // Play current slide video
     const currentVideo = videoRefs.current[currentSlide];
     if (currentVideo) {
       currentVideo.currentTime = 0;
-      currentVideo.play().catch(() => {
-        // Handle autoplay restrictions
-      });
+      
+      // For mobile devices, ensure video is ready before playing
+      if (currentVideo.readyState >= 3) {
+        currentVideo.play().catch((error) => {
+          console.log('Autoplay failed:', error);
+          // Autoplay restrictions - user interaction required
+        });
+      } else {
+        currentVideo.addEventListener('canplay', () => {
+          currentVideo.play().catch((error) => {
+            console.log('Autoplay failed:', error);
+          });
+        }, { once: true });
+      }
     }
   }, [currentSlide]);
 
@@ -347,7 +395,27 @@ export function HomePage() {
                         autoPlay
                         loop
                         muted
+                        playsInline
+                        controls={false}
+                        preload="metadata"
+                        webkit-playsinline="true"
+                        x5-video-player-type="h5"
+                        x5-video-player-fullscreen="false"
                         className="w-full h-full object-cover rounded-lg"
+                        style={{ objectFit: 'cover' }}
+                        onError={(e) => {
+                          console.log('Video load error:', e);
+                        }}
+                        onCanPlay={() => {
+                          if (index === currentSlide) {
+                            const video = videoRefs.current[index];
+                            if (video) {
+                              video.play().catch(() => {
+                                // Autoplay failed, user interaction required
+                              });
+                            }
+                          }
+                        }}
                       />
                     ) : (
                       <img
