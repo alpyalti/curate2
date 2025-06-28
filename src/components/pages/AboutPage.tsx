@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight, Globe, Sparkles, ShoppingBag, Heart, Zap, Star } from "lucide-react";
+import { ArrowRight, Globe, Sparkles, ShoppingBag, Zap } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
