@@ -3,19 +3,19 @@ import { Facebook, Twitter, Instagram, Youtube, Mail, Phone } from "lucide-react
 import { Button } from "../ui/button";
 
 const footerLinks = {
+  "About Curate": [
+    { name: "About Us", href: "/about" },
+    { name: "Partnership", href: "/partnership" },
+    { name: "Store Locator", href: "/store-locator" },
+    { name: "Privacy Policy", href: "/privacy" },
+    { name: "Terms and Conditions", href: "/terms-conditions" },
+  ],
   "Customer Service": [
     { name: "Shipping Policies", href: "/shipping-policies" },
     { name: "Returns and Refunds", href: "/returns-refunds" },
     { name: "Track your orders", href: "/track-order" },
     { name: "Contact Us", href: "/contact" },
     { name: "FAQ's", href: "/faq" },
-  ],
-  "About Curate": [
-    { name: "About Us", href: "/about" },
-    { name: "Partnership", href: "/partnership" },
-    { name: "Store Locator", href: "/store-locator" },
-    { name: "Privacy Policy", href: "/privacy" },
-    { name: "Terms and Conditions", href: "/terms" },
   ],
 };
 

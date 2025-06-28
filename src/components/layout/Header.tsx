@@ -91,262 +91,256 @@ export function Header({
               New In
             </a>
             <div className="relative">
-              <button
-                className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+              <div
                 onMouseEnter={() => setShowFashionMenu(true)}
                 onMouseLeave={() => setShowFashionMenu(false)}
-                onFocus={() => setShowFashionMenu(true)}
-                onBlur={() => setShowFashionMenu(false)}
               >
-                Fashion
-              </button>
-              {showFashionMenu && (
-                <div
-                  className="absolute top-full -left-3 pt-2 z-50"
-                  onMouseEnter={() => setShowFashionMenu(true)}
-                  onMouseLeave={() => setShowFashionMenu(false)}
+                <button
+                  className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+                  onFocus={() => setShowFashionMenu(true)}
+                  onBlur={() => setShowFashionMenu(false)}
                 >
-                  <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
-                    <nav className="space-y-1">
-                      <a
-                        href="/c/bags"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Bags & Luggage
-                      </a>
-                      <a
-                        href="/c/men"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Men
-                      </a>
-                      <a
-                        href="/c/women"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Women
-                      </a>
-                    </nav>
+                  Fashion
+                </button>
+                {showFashionMenu && (
+                  <div className="absolute top-full -left-3 pt-2 z-50">
+                    <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
+                      <nav className="space-y-1">
+                        <a
+                          href="/c/bags"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Bags & Luggage
+                        </a>
+                        <a
+                          href="/c/men"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Men
+                        </a>
+                        <a
+                          href="/c/women"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Women
+                        </a>
+                      </nav>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
             <div className="relative">
-              <button
-                className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+              <div
                 onMouseEnter={() => setShowBeautyMenu(true)}
                 onMouseLeave={() => setShowBeautyMenu(false)}
-                onFocus={() => setShowBeautyMenu(true)}
-                onBlur={() => setShowBeautyMenu(false)}
               >
-                Beauty
-              </button>
-              {showBeautyMenu && (
-                <div
-                  className="absolute top-full -left-3 pt-2 z-50"
-                  onMouseEnter={() => setShowBeautyMenu(true)}
-                  onMouseLeave={() => setShowBeautyMenu(false)}
+                <button
+                  className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+                  onFocus={() => setShowBeautyMenu(true)}
+                  onBlur={() => setShowBeautyMenu(false)}
                 >
-                  <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[200px]">
-                    <nav className="space-y-1">
-                      <a
-                        href="/c/skincare"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Skincare
-                      </a>
-                      <a
-                        href="/c/makeup"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Makeup
-                      </a>
-                      <a
-                        href="/c/eyebrow-shaping"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Eyebrow shaping service
-                      </a>
-                      <a
-                        href="/c/hair-care"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Hair Care
-                      </a>
-                    </nav>
+                  Beauty
+                </button>
+                {showBeautyMenu && (
+                  <div className="absolute top-full -left-3 pt-2 z-50">
+                    <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[200px]">
+                      <nav className="space-y-1">
+                        <a
+                          href="/c/skincare"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Skincare
+                        </a>
+                        <a
+                          href="/c/makeup"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Makeup
+                        </a>
+                        <a
+                          href="/c/eyebrow-shaping"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Eyebrow shaping service
+                        </a>
+                        <a
+                          href="/c/hair-care"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Hair Care
+                        </a>
+                      </nav>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
             <div className="relative">
-              <button
-                className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+              <div
                 onMouseEnter={() => setShowHomeMenu(true)}
                 onMouseLeave={() => setShowHomeMenu(false)}
-                onFocus={() => setShowHomeMenu(true)}
-                onBlur={() => setShowHomeMenu(false)}
               >
-                Home
-              </button>
-              {showHomeMenu && (
-                <div
-                  className="absolute top-full -left-3 pt-2 z-50"
-                  onMouseEnter={() => setShowHomeMenu(true)}
-                  onMouseLeave={() => setShowHomeMenu(false)}
+                <button
+                  className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+                  onFocus={() => setShowHomeMenu(true)}
+                  onBlur={() => setShowHomeMenu(false)}
                 >
-                  <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
-                    <nav className="space-y-1">
-                      <a
-                        href="/c/bath"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Bath
-                      </a>
-                      <a
-                        href="/c/home-decor"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Home Decor
-                      </a>
-                    </nav>
+                  Home
+                </button>
+                {showHomeMenu && (
+                  <div className="absolute top-full -left-3 pt-2 z-50">
+                    <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
+                      <nav className="space-y-1">
+                        <a
+                          href="/c/bath"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Bath
+                        </a>
+                        <a
+                          href="/c/home-decor"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Home Decor
+                        </a>
+                      </nav>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
             <div className="relative">
-              <button
-                className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+              <div
                 onMouseEnter={() => setShowSportsMenu(true)}
                 onMouseLeave={() => setShowSportsMenu(false)}
-                onFocus={() => setShowSportsMenu(true)}
-                onBlur={() => setShowSportsMenu(false)}
               >
-                Sports
-              </button>
-              {showSportsMenu && (
-                <div
-                  className="absolute top-full -left-3 pt-2 z-50"
-                  onMouseEnter={() => setShowSportsMenu(true)}
-                  onMouseLeave={() => setShowSportsMenu(false)}
+                <button
+                  className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+                  onFocus={() => setShowSportsMenu(true)}
+                  onBlur={() => setShowSportsMenu(false)}
                 >
-                  <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
-                    <nav className="space-y-1">
-                      <a
-                        href="/c/cycling"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Cycling
-                      </a>
-                    </nav>
+                  Sports
+                </button>
+                {showSportsMenu && (
+                  <div className="absolute top-full -left-3 pt-2 z-50">
+                    <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
+                      <nav className="space-y-1">
+                        <a
+                          href="/c/cycling"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Cycling
+                        </a>
+                      </nav>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
             <div className="relative">
-              <button
-                className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+              <div
                 onMouseEnter={() => setShowPreLovedMenu(true)}
                 onMouseLeave={() => setShowPreLovedMenu(false)}
-                onFocus={() => setShowPreLovedMenu(true)}
-                onBlur={() => setShowPreLovedMenu(false)}
               >
-                Pre Loved
-              </button>
-              {showPreLovedMenu && (
-                <div
-                  className="absolute top-full -left-3 pt-2 z-50"
-                  onMouseEnter={() => setShowPreLovedMenu(true)}
-                  onMouseLeave={() => setShowPreLovedMenu(false)}
+                <button
+                  className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+                  onFocus={() => setShowPreLovedMenu(true)}
+                  onBlur={() => setShowPreLovedMenu(false)}
                 >
-                  <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
-                    <nav className="space-y-1">
-                      <a
-                        href="/c/pre-loved-bags"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Bags
-                      </a>
-                    </nav>
+                  Pre Loved
+                </button>
+                {showPreLovedMenu && (
+                  <div className="absolute top-full -left-3 pt-2 z-50">
+                    <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
+                      <nav className="space-y-1">
+                        <a
+                          href="/c/pre-loved-bags"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Bags
+                        </a>
+                      </nav>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
             <div className="relative">
-              <button
-                className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+              <div
                 onMouseEnter={() => setShowDesignersMenu(true)}
                 onMouseLeave={() => setShowDesignersMenu(false)}
-                onFocus={() => setShowDesignersMenu(true)}
-                onBlur={() => setShowDesignersMenu(false)}
               >
-                Designers
-              </button>
-              {showDesignersMenu && (
-                <div
-                  className="absolute top-full -left-3 pt-2 z-50"
-                  onMouseEnter={() => setShowDesignersMenu(true)}
-                  onMouseLeave={() => setShowDesignersMenu(false)}
+                <button
+                  className="text-sm font-medium hover:text-primary transition-colors focus-ring"
+                  onFocus={() => setShowDesignersMenu(true)}
+                  onBlur={() => setShowDesignersMenu(false)}
                 >
-                  <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
-                    <nav className="space-y-1">
-                      <a
-                        href="/brand/lets-swim"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Lets Swim
-                      </a>
-                      <a
-                        href="/brand/nori-enomoto"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Nori Enomoto
-                      </a>
-                      <a
-                        href="/brand/capello"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Capello
-                      </a>
-                      <a
-                        href="/brand/muse-for-all"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Muse for All
-                      </a>
-                      <a
-                        href="/brand/tay-candles"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Tay Candles
-                      </a>
-                      <a
-                        href="/brand/iconic-london"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Iconic London
-                      </a>
-                      <a
-                        href="/brand/ibrou"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        İbrou
-                      </a>
-                      <a
-                        href="/brand/mixsoon"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Mixsoon
-                      </a>
-                      <a
-                        href="/brand/georgini"
-                        className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
-                      >
-                        Georgini
-                      </a>
-                    </nav>
+                  Designers
+                </button>
+                {showDesignersMenu && (
+                  <div className="absolute top-full -left-3 pt-2 z-50">
+                    <div className="bg-background border rounded-lg shadow-lg py-2 min-w-[180px]">
+                      <nav className="space-y-1">
+                        <a
+                          href="/brand/lets-swim"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Lets Swim
+                        </a>
+                        <a
+                          href="/brand/nori-enomoto"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Nori Enomoto
+                        </a>
+                        <a
+                          href="/brand/capello"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Capello
+                        </a>
+                        <a
+                          href="/brand/muse-for-all"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Muse for All
+                        </a>
+                        <a
+                          href="/brand/tay-candles"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Tay Candles
+                        </a>
+                        <a
+                          href="/brand/iconic-london"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Iconic London
+                        </a>
+                        <a
+                          href="/brand/ibrou"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          İbrou
+                        </a>
+                        <a
+                          href="/brand/mixsoon"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Mixsoon
+                        </a>
+                        <a
+                          href="/brand/georgini"
+                          className="block px-3 py-2 text-sm font-medium hover:text-primary transition-colors"
+                        >
+                          Georgini
+                        </a>
+                      </nav>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </nav>
 

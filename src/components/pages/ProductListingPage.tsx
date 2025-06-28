@@ -25,6 +25,9 @@ interface ActiveFilter {
 
 export function ProductListingPage() {
   const { category } = useParams();
+  const location = window.location.pathname;
+  const isSalePage = location === '/sale';
+  const currentCategory = isSalePage ? 'sale' : category;
   
   // UI State
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
@@ -50,12 +53,12 @@ export function ProductListingPage() {
   // Get products with filters
   const { data: products, total: totalProducts, isLoading } = useDummyProducts({
     filters: {
-      category: selectedCategories.length > 0 ? selectedCategories : (category ? [category] : undefined),
+      category: selectedCategories.length > 0 ? selectedCategories : (currentCategory ? [currentCategory] : undefined),
       brand: selectedBrands.length > 0 ? selectedBrands : undefined,
       color: selectedColors.length > 0 ? selectedColors : undefined,
       size: selectedSizes.length > 0 ? selectedSizes : undefined,
       price: priceRange[0] > 0 || priceRange[1] < 5000 ? { min: priceRange[0], max: priceRange[1] } : undefined,
-      discount: showSaleOnly || undefined,
+      discount: showSaleOnly || isSalePage || undefined,
       sortBy: sortBy as any
     },
     page: currentPage,
@@ -377,7 +380,7 @@ export function ProductListingPage() {
           <nav className="flex items-center space-x-2 text-sm text-muted-foreground">
             <a href="/" className="hover:text-foreground">Home</a>
             <span>/</span>
-            <span className="text-foreground font-medium capitalize">{category}</span>
+            <span className="text-foreground font-medium capitalize">{isSalePage ? 'Sale' : category}</span>
           </nav>
         </div>
       </div>
@@ -394,7 +397,7 @@ export function ProductListingPage() {
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-6">
-                <h1 className="text-2xl font-bold capitalize">{category}</h1>
+                <h1 className="text-2xl font-bold capitalize">{isSalePage ? 'Sale' : category}</h1>
                 <p className="text-muted-foreground text-sm">
                   Showing {products.length} of {totalProducts} results
                 </p>
@@ -455,7 +458,7 @@ export function ProductListingPage() {
                     className="flex items-center space-x-2 min-w-[140px] justify-between"
                   >
                     <span className="text-sm">
-                      {sortBy === 'featured' && 'Featured'}
+                      {sortBy === 'featured' && 'Curate Picks'}
                       {sortBy === 'newest' && 'Newest'}
                       {sortBy === 'price-low' && 'Price: Low to High'}
                       {sortBy === 'price-high' && 'Price: High to Low'}
@@ -466,7 +469,7 @@ export function ProductListingPage() {
                   {isSortDropdownOpen && (
                     <div className="absolute right-0 top-full mt-1 w-48 bg-background border rounded-md shadow-lg z-10">
                       {[
-                        { value: 'featured', label: 'Featured' },
+                        { value: 'featured', label: 'Curate Picks' },
                         { value: 'newest', label: 'Newest' },
                         { value: 'price-low', label: 'Price: Low to High' },
                         { value: 'price-high', label: 'Price: High to Low' }
@@ -588,8 +591,8 @@ function ProductCard({ product }: ProductCardProps) {
   const [hoveredImage, setHoveredImage] = useState(0);
 
   const hasDiscount = !!product.discount;
-  const displayPrice = hasDiscount ? product.discount.discountedPrice : product.price;
-  const originalPrice = hasDiscount ? product.discount.originalPrice : null;
+  const displayPrice = product.price; // Always use the current price (already discounted)
+  const originalPrice = hasDiscount ? product.originalPrice : null;
 
   return (
     <Link to={`/product/${product.id}`} className="block">
@@ -620,6 +623,8 @@ function ProductCard({ product }: ProductCardProps) {
             ))}
           </div>
         )}
+        
+
 
         {/* Wishlist Button */}
         <button
@@ -655,10 +660,15 @@ function ProductCard({ product }: ProductCardProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="font-semibold">{displayPrice.formattedAmount || displayPrice.amount + ' ' + displayPrice.currency}</span>
-            {originalPrice && (
+            {product.originalPrice && (
               <span className="text-xs text-muted-foreground line-through">
-                {originalPrice.formattedAmount || originalPrice.amount + ' ' + originalPrice.currency}
+                {product.originalPrice.formattedAmount || product.originalPrice.amount + ' ' + product.originalPrice.currency}
               </span>
+            )}
+            {product.discount && (
+              <Badge className="bg-red-500 text-white text-[10px] font-semibold px-1.5 py-0.5">
+                -{product.discount.value}%
+              </Badge>
             )}
           </div>
           

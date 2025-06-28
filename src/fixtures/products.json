@@ -9,7 +9,11 @@
     "price": { "amount": 1250, "currency": "AED", "formattedAmount": "1,250 AED" },
     "images": [
       { "url": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=500", "alt": "Satin Slip Dress" },
-      { "url": "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=500", "alt": "Satin Slip Dress - Back View" }
+      { "url": "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=500", "alt": "Satin Slip Dress - Back View" },
+      { "url": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=500", "alt": "Satin Slip Dress - Side View" },
+      { "url": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=500", "alt": "Satin Slip Dress - Fabric Texture" },
+      { "url": "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=500", "alt": "Satin Slip Dress - Full Length" },
+      { "url": "https://images.unsplash.com/photo-1591369822096-ffd140ec948f?w=500", "alt": "Satin Slip Dress - Styling" }
     ],
     "variants": [
       {"id": "var-w001-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "black"}], "available": true},
@@ -52,8 +56,8 @@
     "sku": "GAN-MPS-003",
     "price": { "amount": 690, "currency": "AED", "formattedAmount": "690 AED" },
     "images": [
-      { "url": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=500", "alt": "Pleated Skirt" },
-      { "url": "https://images.unsplash.com/photo-1583496661160-fb5886a13d16?w=500", "alt": "Pleated Skirt - Side View" }
+      { "url": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=500", "alt": "Pleated Skirt" },
+      { "url": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=500", "alt": "Pleated Skirt - Side View" }
     ],
     "variants": [{"id": "var-w003", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "navy"}]}],
     "rating": { "average": 4.4, "count": 203 },
@@ -101,6 +105,126 @@
     "availability": { "inStock": true, "quantity": 20 },
     "badges": [],
     "createdAt": "2024-01-05T10:30:00Z"
+  },
+  {
+    "id": "women-006",
+    "title": "Silk Blouse",
+    "description": "Elegant silk blouse with delicate button details.",
+    "brand": "EQUIPMENT",
+    "category": "women",
+    "sku": "EQP-SB-006",
+    "price": { "amount": 650, "currency": "AED", "formattedAmount": "650 AED" },
+    "originalPrice": { "amount": 850, "currency": "AED", "formattedAmount": "850 AED" },
+    "discount": { "type": "percentage", "value": 24 },
+    "images": [
+      { "url": "https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?w=500", "alt": "Silk Blouse" },
+      { "url": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=500", "alt": "Silk Blouse - Detail" }
+    ],
+    "variants": [
+      {"id": "var-w006-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "cream"}], "available": true},
+      {"id": "var-w006-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "cream"}], "available": true},
+      {"id": "var-w006-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "cream"}], "available": false}
+    ],
+    "rating": { "average": 4.5, "count": 89 },
+    "availability": { "inStock": true, "quantity": 8 },
+    "badges": [{ "type": "sale", "label": "SALE", "color": "#dc2626", "textColor": "#ffffff" }],
+    "createdAt": "2024-01-16T10:30:00Z"
+  },
+  {
+    "id": "women-007",
+    "title": "Wrap Dress",
+    "description": "Flattering wrap dress perfect for any occasion.",
+    "brand": "DIANE VON FURSTENBERG",
+    "category": "women",
+    "sku": "DVF-WD-007",
+    "price": { "amount": 980, "currency": "AED", "formattedAmount": "980 AED" },
+    "originalPrice": { "amount": 1400, "currency": "AED", "formattedAmount": "1,400 AED" },
+    "discount": { "type": "percentage", "value": 30 },
+    "images": [
+      { "url": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=500", "alt": "Wrap Dress" },
+      { "url": "https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?w=500", "alt": "Wrap Dress - Back View" }
+    ],
+    "variants": [
+      {"id": "var-w007-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "floral"}], "available": true},
+      {"id": "var-w007-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "floral"}], "available": true},
+      {"id": "var-w007-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "floral"}], "available": true}
+    ],
+    "rating": { "average": 4.8, "count": 156 },
+    "availability": { "inStock": true, "quantity": 12 },
+    "badges": [{ "type": "sale", "label": "SALE", "color": "#dc2626", "textColor": "#ffffff" }],
+    "createdAt": "2024-01-16T10:30:00Z"
+  },
+  {
+    "id": "women-008",
+    "title": "Leather Jacket",
+    "description": "Premium leather jacket with modern cut.",
+    "brand": "IRO",
+    "category": "women",
+    "sku": "IRO-LJ-008",
+    "price": { "amount": 1650, "currency": "AED", "formattedAmount": "1,650 AED" },
+    "originalPrice": { "amount": 2200, "currency": "AED", "formattedAmount": "2,200 AED" },
+    "discount": { "type": "percentage", "value": 25 },
+    "images": [
+      { "url": "https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?w=500", "alt": "Leather Jacket" },
+      { "url": "https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=500", "alt": "Leather Jacket - Detail" }
+    ],
+    "variants": [
+      {"id": "var-w008-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "black"}], "available": false},
+      {"id": "var-w008-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "black"}], "available": true},
+      {"id": "var-w008-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "black"}], "available": true}
+    ],
+    "rating": { "average": 4.7, "count": 203 },
+    "availability": { "inStock": true, "quantity": 5 },
+    "badges": [{ "type": "sale", "label": "SALE", "color": "#dc2626", "textColor": "#ffffff" }],
+    "createdAt": "2024-01-16T10:30:00Z"
+  },
+  {
+    "id": "women-009",
+    "title": "Maxi Dress",
+    "description": "Flowing maxi dress with elegant drape.",
+    "brand": "ZIMMERMANN",
+    "category": "women",
+    "sku": "ZIM-MD-009",
+    "price": { "amount": 1120, "currency": "AED", "formattedAmount": "1,120 AED" },
+    "originalPrice": { "amount": 1600, "currency": "AED", "formattedAmount": "1,600 AED" },
+    "discount": { "type": "percentage", "value": 30 },
+    "images": [
+      { "url": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=500", "alt": "Maxi Dress" },
+      { "url": "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500", "alt": "Maxi Dress - Flow" }
+    ],
+    "variants": [
+      {"id": "var-w009-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "burgundy"}], "available": true},
+      {"id": "var-w009-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "burgundy"}], "available": true},
+      {"id": "var-w009-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "burgundy"}], "available": false}
+    ],
+    "rating": { "average": 4.6, "count": 127 },
+    "availability": { "inStock": true, "quantity": 7 },
+    "badges": [{ "type": "sale", "label": "SALE", "color": "#dc2626", "textColor": "#ffffff" }],
+    "createdAt": "2024-01-16T10:30:00Z"
+  },
+  {
+    "id": "women-010",
+    "title": "Cashmere Cardigan",
+    "description": "Luxurious cashmere cardigan in soft knit.",
+    "brand": "THE ROW",
+    "category": "women",
+    "sku": "TR-CC-010",
+    "price": { "amount": 1890, "currency": "AED", "formattedAmount": "1,890 AED" },
+    "originalPrice": { "amount": 2700, "currency": "AED", "formattedAmount": "2,700 AED" },
+    "discount": { "type": "percentage", "value": 30 },
+    "images": [
+      { "url": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=500", "alt": "Cashmere Cardigan" },
+      { "url": "https://images.unsplash.com/photo-1564557287817-3785e38ec1f5?w=500", "alt": "Cashmere Cardigan - Detail" }
+    ],
+    "variants": [
+      {"id": "var-w010-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "beige"}], "available": true},
+      {"id": "var-w010-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "beige"}], "available": true},
+      {"id": "var-w010-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "beige"}], "available": true}
+    ],
+    "rating": { "average": 4.9, "count": 78 },
+    "availability": { "inStock": true, "quantity": 4 },
+    "badges": [{ "type": "sale", "label": "SALE", "color": "#dc2626", "textColor": "#ffffff" }],
+    "createdAt": "2024-01-16T10:30:00Z"
   },
   {
     "id": "men-001",
@@ -568,7 +692,7 @@
     "category": "jewellery",
     "sku": "ROL-W-005",
     "price": { "amount": 18500, "currency": "AED", "formattedAmount": "18,500 AED" },
-    "images": [{ "url": "https://images.unsplash.com/photo-1523170335258-f5c216654a90?w=500", "alt": "Luxury Watch" }],
+    "images": [{ "url": "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500", "alt": "Luxury Watch" }],
     "variants": [{"id": "var-j005", "attributes": [{"name": "size", "value": "40mm"}, {"name": "color", "value": "gold"}]}],
     "rating": { "average": 4.9, "count": 267 },
     "availability": { "inStock": true, "quantity": 3 },
@@ -649,5 +773,125 @@
     "availability": { "inStock": true, "quantity": 8 },
     "badges": [],
     "createdAt": "2024-01-06T10:30:00Z"
+  },
+  {
+    "id": "sale-001",
+    "title": "Silk Blouse",
+    "description": "Elegant silk blouse with delicate button details.",
+    "brand": "EQUIPMENT",
+    "category": "sale",
+    "sku": "EQP-SB-006",
+    "price": { "amount": 650, "currency": "AED", "formattedAmount": "650 AED" },
+    "originalPrice": { "amount": 850, "currency": "AED", "formattedAmount": "850 AED" },
+    "discount": { "type": "percentage", "value": 24 },
+    "images": [
+      { "url": "https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?w=500", "alt": "Silk Blouse" },
+      { "url": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=500", "alt": "Silk Blouse - Detail" }
+    ],
+    "variants": [
+      {"id": "var-s001-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "cream"}], "available": true},
+      {"id": "var-s001-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "cream"}], "available": true},
+      {"id": "var-s001-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "cream"}], "available": false}
+    ],
+    "rating": { "average": 4.5, "count": 89 },
+    "availability": { "inStock": true, "quantity": 8 },
+    "badges": [{ "type": "sale", "label": "SALE", "color": "#dc2626", "textColor": "#ffffff" }],
+    "createdAt": "2024-01-16T10:30:00Z"
+  },
+  {
+    "id": "sale-002",
+    "title": "Wrap Dress",
+    "description": "Flattering wrap dress perfect for any occasion.",
+    "brand": "DIANE VON FURSTENBERG",
+    "category": "sale",
+    "sku": "DVF-WD-007",
+    "price": { "amount": 980, "currency": "AED", "formattedAmount": "980 AED" },
+    "originalPrice": { "amount": 1400, "currency": "AED", "formattedAmount": "1,400 AED" },
+    "discount": { "type": "percentage", "value": 30 },
+    "images": [
+      { "url": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=500", "alt": "Wrap Dress" },
+      { "url": "https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?w=500", "alt": "Wrap Dress - Back View" }
+    ],
+    "variants": [
+      {"id": "var-s002-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "floral"}], "available": true},
+      {"id": "var-s002-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "floral"}], "available": true},
+      {"id": "var-s002-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "floral"}], "available": true}
+    ],
+    "rating": { "average": 4.8, "count": 156 },
+    "availability": { "inStock": true, "quantity": 12 },
+    "badges": [{ "type": "sale", "label": "SALE", "color": "#dc2626", "textColor": "#ffffff" }],
+    "createdAt": "2024-01-16T10:30:00Z"
+  },
+  {
+    "id": "sale-003",
+    "title": "Leather Jacket",
+    "description": "Premium leather jacket with modern cut.",
+    "brand": "IRO",
+    "category": "sale",
+    "sku": "IRO-LJ-008",
+    "price": { "amount": 1650, "currency": "AED", "formattedAmount": "1,650 AED" },
+    "originalPrice": { "amount": 2200, "currency": "AED", "formattedAmount": "2,200 AED" },
+    "discount": { "type": "percentage", "value": 25 },
+    "images": [
+      { "url": "https://images.unsplash.com/photo-1521223890158-f9f7c3d5d504?w=500", "alt": "Leather Jacket" },
+      { "url": "https://images.unsplash.com/photo-1551537482-f2075a1d41f2?w=500", "alt": "Leather Jacket - Detail" }
+    ],
+    "variants": [
+      {"id": "var-s003-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "black"}], "available": false},
+      {"id": "var-s003-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "black"}], "available": true},
+      {"id": "var-s003-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "black"}], "available": true}
+    ],
+    "rating": { "average": 4.7, "count": 203 },
+    "availability": { "inStock": true, "quantity": 5 },
+    "badges": [{ "type": "sale", "label": "SALE", "color": "#dc2626", "textColor": "#ffffff" }],
+    "createdAt": "2024-01-16T10:30:00Z"
+  },
+  {
+    "id": "sale-004",
+    "title": "Maxi Dress",
+    "description": "Flowing maxi dress with elegant drape.",
+    "brand": "ZIMMERMANN",
+    "category": "sale",
+    "sku": "ZIM-MD-009",
+    "price": { "amount": 1120, "currency": "AED", "formattedAmount": "1,120 AED" },
+    "originalPrice": { "amount": 1600, "currency": "AED", "formattedAmount": "1,600 AED" },
+    "discount": { "type": "percentage", "value": 30 },
+    "images": [
+      { "url": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=500", "alt": "Maxi Dress" },
+      { "url": "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500", "alt": "Maxi Dress - Flow" }
+    ],
+    "variants": [
+      {"id": "var-s004-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "burgundy"}], "available": true},
+      {"id": "var-s004-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "burgundy"}], "available": true},
+      {"id": "var-s004-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "burgundy"}], "available": false}
+    ],
+    "rating": { "average": 4.6, "count": 127 },
+    "availability": { "inStock": true, "quantity": 7 },
+    "badges": [{ "type": "sale", "label": "SALE", "color": "#dc2626", "textColor": "#ffffff" }],
+    "createdAt": "2024-01-16T10:30:00Z"
+  },
+  {
+    "id": "sale-005",
+    "title": "Cashmere Cardigan",
+    "description": "Luxurious cashmere cardigan in soft knit.",
+    "brand": "THE ROW",
+    "category": "sale",
+    "sku": "TR-CC-010",
+    "price": { "amount": 1890, "currency": "AED", "formattedAmount": "1,890 AED" },
+    "originalPrice": { "amount": 2700, "currency": "AED", "formattedAmount": "2,700 AED" },
+    "discount": { "type": "percentage", "value": 30 },
+    "images": [
+      { "url": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=500", "alt": "Cashmere Cardigan" },
+      { "url": "https://images.unsplash.com/photo-1564557287817-3785e38ec1f5?w=500", "alt": "Cashmere Cardigan - Detail" }
+    ],
+    "variants": [
+      {"id": "var-s005-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "beige"}], "available": true},
+      {"id": "var-s005-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "beige"}], "available": true},
+      {"id": "var-s005-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "beige"}], "available": true}
+    ],
+    "rating": { "average": 4.9, "count": 78 },
+    "availability": { "inStock": true, "quantity": 4 },
+    "badges": [{ "type": "sale", "label": "SALE", "color": "#dc2626", "textColor": "#ffffff" }],
+    "createdAt": "2024-01-16T10:30:00Z"
   }
 ] 

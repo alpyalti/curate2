@@ -10,6 +10,7 @@ export interface MiraklProduct {
   images: ProductImage[];
   variants: ProductVariant[];
   price: Price;
+  originalPrice?: Price;
   discount?: Discount;
   badges?: ProductBadge[];
   rating?: ProductRating;

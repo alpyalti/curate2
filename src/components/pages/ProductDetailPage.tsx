@@ -188,8 +188,8 @@ export function ProductDetailPage() {
   }
 
   const hasDiscount = !!product.discount;
-  const displayPrice = hasDiscount ? product.discount!.discountedPrice : product.price;
-  const originalPrice = hasDiscount ? product.discount!.originalPrice : null;
+  const displayPrice = product.price; // Always use the current price (already discounted)
+  const originalPrice = hasDiscount ? product.originalPrice : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -211,50 +211,18 @@ export function ProductDetailPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Product Images */}
-          <div className="space-y-4">
-            {/* Main Image */}
-            <div className="relative aspect-square overflow-hidden rounded-lg bg-muted">
-              <img
-                src={product.images[selectedImageIndex]?.url}
-                alt={product.images[selectedImageIndex]?.alt}
-                className="w-full h-full object-cover"
-              />
-              
-              {/* Navigation arrows */}
-              {product.images.length > 1 && (
-                <>
-                  <button
-                    className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all"
-                    onClick={() => setSelectedImageIndex(prev => 
-                      prev === 0 ? product.images.length - 1 : prev - 1
-                    )}
-                  >
-                    <ChevronLeft className="h-6 w-6 text-black" />
-                  </button>
-                  <button
-                    className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all"
-                    onClick={() => setSelectedImageIndex(prev => 
-                      prev === product.images.length - 1 ? 0 : prev + 1
-                    )}
-                  >
-                    <ChevronRight className="h-6 w-6 text-black" />
-                  </button>
-                </>
-              )}
-
-
-            </div>
-
-            {/* Thumbnail Strip */}
-            <div className="grid grid-cols-4 gap-2">
+          <div className="flex gap-4">
+            {/* Thumbnail Strip - Left Side */}
+            <div className="flex flex-col gap-2" style={{ width: '79px' }}>
               {product.images.map((image, index) => (
                 <button
                   key={image.id}
                   onClick={() => setSelectedImageIndex(index)}
                   className={cn(
-                    "aspect-square overflow-hidden rounded border-2 transition-all",
+                    "overflow-hidden rounded border-2 transition-all",
                     selectedImageIndex === index ? "border-primary" : "border-transparent hover:border-gray-300"
                   )}
+                  style={{ width: '79px', height: '118px' }}
                 >
                   <img
                     src={image.url}
@@ -263,6 +231,39 @@ export function ProductDetailPage() {
                   />
                 </button>
               ))}
+            </div>
+
+            {/* Main Image - Vertical */}
+            <div className="flex-1">
+              <div className="relative overflow-hidden rounded-lg bg-muted" style={{ aspectRatio: '480/720' }}>
+                <img
+                  src={product.images[selectedImageIndex]?.url}
+                  alt={product.images[selectedImageIndex]?.alt}
+                  className="w-full h-full object-cover"
+                />
+                
+                {/* Navigation arrows */}
+                {product.images.length > 1 && (
+                  <>
+                    <button
+                      className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all"
+                      onClick={() => setSelectedImageIndex(prev => 
+                        prev === 0 ? product.images.length - 1 : prev - 1
+                      )}
+                    >
+                      <ChevronLeft className="h-6 w-6 text-black" />
+                    </button>
+                    <button
+                      className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all"
+                      onClick={() => setSelectedImageIndex(prev => 
+                        prev === product.images.length - 1 ? 0 : prev + 1
+                      )}
+                    >
+                      <ChevronRight className="h-6 w-6 text-black" />
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
 
@@ -371,17 +372,14 @@ export function ProductDetailPage() {
               {/* Price */}
               <div className="flex items-center space-x-3 mb-4">
                 <span className="text-2xl font-bold">{displayPrice.formattedAmount}</span>
-                {originalPrice && (
+                {product.originalPrice && (
                   <span className="text-lg text-muted-foreground line-through">
-                    {originalPrice.formattedAmount}
+                    {product.originalPrice.formattedAmount}
                   </span>
                 )}
-                {hasDiscount && product.discount && (
-                  <Badge variant="sale">
-                    {product.discount.type === 'percentage' 
-                      ? `${product.discount.value}% OFF` 
-                      : `${product.discount.value} AED OFF`
-                    }
+                {product.discount && (
+                  <Badge className="bg-red-500 text-white">
+                    -{product.discount.value}%
                   </Badge>
                 )}
               </div>
@@ -726,8 +724,8 @@ function RelatedProductCard({ product }: RelatedProductCardProps) {
   const [hoveredImage, setHoveredImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const hasDiscount = !!product.discount;
-  const displayPrice = hasDiscount ? product.discount!.discountedPrice : product.price;
-  const originalPrice = hasDiscount ? product.discount!.originalPrice : null;
+  const displayPrice = product.price; // Always use the current price (already discounted)
+  const originalPrice = hasDiscount ? product.originalPrice : null;
 
   return (
     <a href={`/product/${product.id}`} className="group block">
@@ -742,6 +740,8 @@ function RelatedProductCard({ product }: RelatedProductCardProps) {
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
         />
+        
+
         
         {/* Wishlist Button */}
         <button
@@ -759,10 +759,15 @@ function RelatedProductCard({ product }: RelatedProductCardProps) {
       <p className="text-xs text-muted-foreground mb-2">{product.brand}</p>
       <div className="flex items-center space-x-2">
         <span className="font-semibold">{displayPrice.formattedAmount}</span>
-        {originalPrice && (
+        {product.originalPrice && (
           <span className="text-xs text-muted-foreground line-through">
-            {originalPrice.formattedAmount}
+            {product.originalPrice.formattedAmount}
           </span>
+        )}
+        {product.discount && (
+          <Badge className="bg-red-500 text-white text-[10px] font-semibold px-1.5 py-0.5">
+            -{product.discount.value}%
+          </Badge>
         )}
       </div>
     </a>

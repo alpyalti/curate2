@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { ArrowRight, ChevronLeft, ChevronRight, Heart } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Heart, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { cn } from "../../lib/utils";
 import { useDummyProducts } from "../../hooks/useDummyProducts";
+import { BrandCards } from "../ui/BrandCards";
 
 const categoryTiles = [
   {
@@ -102,6 +103,25 @@ const brands = [
   { 
     name: "Georgini", 
     logo: "https://api.cdc1so4tme-dimension1-p1-public.model-t.cc.commerce.ondemand.com/medias/Untitled-200-x-200-px-9-.png?context=bWFzdGVyfGltYWdlc3w0NTAwfGltYWdlL3BuZ3xhREUzTDJnMk1HODVNRFV5TXpZd05EQTVNVEU0TDFWdWRHbDBiR1ZrSUNneU1EQWdlQ0F5TURBZ2NIZ3BJQ2c1S1M1d2JtY3xmN2M5MDU4MTEwNzM1M2FlZDg5YzY0MTEyMmY3MGVlOTk3ZDdiNzNkMGI1ZTg1ZjdjODZhYzI0Yjc2OWZjODk1" 
+  }
+];
+
+const brandCards = [
+  {
+    id: "luxury-brands",
+    category: "Luxury",
+    title: "Luxury Brands",
+    description: "Discover premium collections from world-renowned luxury fashion houses and iconic designers.",
+    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop",
+    badge: "Premium Collection"
+  },
+  {
+    id: "emerging-designers",
+    category: "Emerging",
+    title: "Emerging Designers",
+    description: "Support innovative creators and discover unique pieces from tomorrow's fashion leaders.",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop",
+    badge: "New Talent"
   }
 ];
 
@@ -277,7 +297,7 @@ export function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Carousel */}
-      <section className="container-padding section-padding -mt-4">
+      <section className="container-padding py-4 md:py-6 lg:py-8 -mt-4">
         <div className="container mx-auto px-4">
           <div className="relative">
             <div className="relative h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
@@ -373,7 +393,7 @@ export function HomePage() {
       </section>
 
       {/* Hero Section with Bento Grid */}
-      <section className="container-padding pb-8 md:pb-12 lg:pb-16 -mt-4">
+      <section className="container-padding pt-4 pb-4 md:pt-2 md:pb-6 lg:pt-0.5 lg:pb-8 -mt-4">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[200px] md:auto-rows-[250px]">
             {categoryTiles.map((tile) => (
@@ -425,7 +445,7 @@ export function HomePage() {
 
       {/* Brand Carousel */}
       <section className="container-padding bg-muted/30">
-        <div className="container mx-auto px-4 py-12">
+        <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold">Shop by brand</h2>
             <a
@@ -500,6 +520,14 @@ export function HomePage() {
         className="bg-muted/20"
       />
       
+      {/* Brand Cards Section */}
+      <BrandCards 
+        title="Trending This Week"
+        subtitle=""
+        cards={brandCards}
+        viewAllHref="/trending"
+      />
+      
       <ProductSlider 
         title="Curate Picks" 
         products={curatePicksProducts} 
@@ -507,7 +535,7 @@ export function HomePage() {
       />
 
       {/* Editorial Banner */}
-      <section className="container-padding mb-16">
+      <section className="container-padding mb-8 mt-4">
         <div className="container mx-auto px-4">
           <div className="relative overflow-hidden rounded-lg aspect-[21/9]">
             <img
@@ -524,8 +552,11 @@ export function HomePage() {
                 <p className="text-lg md:text-xl mb-8 opacity-90">
                   Curated collections from the world's finest designers
                 </p>
-                <Button size="lg" className="bg-white text-black hover:bg-gray-100">
-                  Explore Collection
+                <Button size="lg" asChild className="bg-white text-black hover:bg-gray-100">
+                  <a href="https://g.co/kgs/ffGrMBK" target="_blank" rel="noopener noreferrer">
+                    Visit Store
+                    <MapPin className="ml-2 h-4 w-4" />
+                  </a>
                 </Button>
               </div>
             </div>
@@ -601,7 +632,7 @@ function ProductSlider({ title, products, viewAllHref, className }: ProductSlide
   };
 
   return (
-    <section className={cn("container-padding section-padding", className)}>
+    <section className={cn("container-padding py-6 md:py-8 lg:py-10", className)}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold">{title}</h2>
@@ -665,8 +696,8 @@ function ProductCard({ product, className }: ProductCardProps) {
   const [hoveredImage, setHoveredImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const hasDiscount = !!product.discount;
-  const displayPrice = hasDiscount ? product.discount.discountedPrice : product.price;
-  const originalPrice = hasDiscount ? product.discount.originalPrice : null;
+  const displayPrice = product.price; // Always use the current price (already discounted)
+  const originalPrice = hasDiscount ? product.originalPrice : null;
 
   return (
     <Link to={`/product/${product.id}`} className={cn("group cursor-pointer block", className)}>
@@ -694,6 +725,8 @@ function ProductCard({ product, className }: ProductCardProps) {
             ))}
           </div>
         )}
+        
+
         <button
           className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
           onClick={(e) => {
@@ -712,10 +745,15 @@ function ProductCard({ product, className }: ProductCardProps) {
         </h3>
         <div className="flex items-center space-x-2">
           <span className="text-sm font-semibold">{displayPrice.formattedAmount}</span>
-          {originalPrice && (
+          {product.originalPrice && (
             <span className="text-xs text-muted-foreground line-through">
-              {originalPrice.formattedAmount}
+              {product.originalPrice.formattedAmount}
             </span>
+          )}
+          {product.discount && (
+            <Badge className="bg-red-500 text-white text-[10px] font-semibold px-1.5 py-0.5">
+              -{product.discount.value}%
+            </Badge>
           )}
         </div>
       </div>
