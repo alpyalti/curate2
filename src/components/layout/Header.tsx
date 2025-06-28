@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Search, User, Heart, ShoppingBag, Menu, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
@@ -57,8 +58,8 @@ export function Header({
 
           {/* Logo */}
           <div className="flex items-center">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="flex items-center space-x-2"
               aria-label="Curate Home"
             >
@@ -73,7 +74,7 @@ export function Header({
                   <path d="M569.58,298.79c-6.24,0-10.9,2.21-13.97,6.64-3.07,4.42-4.61,10.27-4.61,17.53v32.55h-20.95v-75.16h20.95v9.92c2.7-3.07,6.08-5.68,10.13-7.82,4.05-2.14,8.17-3.26,12.36-3.35l.14,19.7h-4.05Z"/>
                 </g>
               </svg>
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
@@ -377,16 +378,19 @@ export function Header({
               size="icon"
               className="relative"
               aria-label={`Wishlist (${wishlistItemCount} items)`}
+              asChild
             >
-              <Heart className="h-5 w-5" />
-              {wishlistItemCount > 0 && (
-                <Badge
-                  variant="default"
-                  className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
-                >
-                  {wishlistItemCount > 99 ? "99+" : wishlistItemCount}
-                </Badge>
-              )}
+              <Link to="/wishlist">
+                <Heart className="h-5 w-5" />
+                {wishlistItemCount > 0 && (
+                  <Badge
+                    variant="default"
+                    className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                  >
+                    {wishlistItemCount > 99 ? "99+" : wishlistItemCount}
+                  </Badge>
+                )}
+              </Link>
             </Button>
 
             {/* Shopping Bag */}
@@ -395,16 +399,19 @@ export function Header({
               size="icon"
               className="relative"
               aria-label={`Shopping bag (${cartItemCount} items)`}
+              asChild
             >
-              <ShoppingBag className="h-5 w-5" />
-              {cartItemCount > 0 && (
-                <Badge
-                  variant="default"
-                  className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
-                >
-                  {cartItemCount > 99 ? "99+" : cartItemCount}
-                </Badge>
-              )}
+              <Link to="/cart">
+                <ShoppingBag className="h-5 w-5" />
+                {cartItemCount > 0 && (
+                  <Badge
+                    variant="default"
+                    className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                  >
+                    {cartItemCount > 99 ? "99+" : cartItemCount}
+                  </Badge>
+                )}
+              </Link>
             </Button>
           </div>
         </div>

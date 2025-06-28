@@ -6,6 +6,8 @@ import { HomePage } from './components/pages/HomePage';
 import { ProductListingPage } from './components/pages/ProductListingPage';
 import { ProductDetailPage } from './components/pages/ProductDetailPage';
 import { BrandPage } from './components/pages/BrandPage';
+import { CartPage } from './components/pages/CartPage';
+import { WishlistPage } from './components/pages/WishlistPage';
 import { AboutPage } from './components/pages/AboutPage';
 import { ContactPage } from './components/pages/ContactPage';
 import { FAQPage } from './components/pages/FAQPage';
@@ -27,7 +29,7 @@ function App() {
     <Router>
       <div className="min-h-screen bg-background">
         <Header
-          cartItemCount={2}
+          cartItemCount={3}
           wishlistItemCount={5}
           onMenuToggle={handleMenuToggle}
           isMenuOpen={isMobileMenuOpen}
@@ -41,6 +43,8 @@ function App() {
             <Route path="/new-in" element={<ProductListingPage />} />
             <Route path="/product/:id" element={<ProductDetailPage />} />
             <Route path="/brand/:brandId" element={<BrandPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />

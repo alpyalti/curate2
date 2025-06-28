@@ -47,6 +47,17 @@ const brandInfos: Record<string, BrandInfo> = {
     founder: "Nori Enomoto",
     origin: "Tokyo, Japan",
     specialty: "Sculptural Handbags"
+  },
+  "lets-swim": {
+    id: "lets-swim",
+    name: "Lets Swim",
+    description: "Luxury Swimwear & Lifestyle",
+    longDescription: "LET'S SWIM is a swimwear and lifestyle brand from Founder and Creative Director, David Koma. The brand creates sophisticated swimwear that combines high-fashion aesthetics with functional design, perfect for the modern woman who values both style and comfort.",
+    image: "https://letsswim.co/cdn/shop/files/SECOND_IMAGE_OPTION_1.jpg?crop=center&height=1800&v=1713169197&width=1800",
+    foundedYear: "2020",
+    founder: "David Koma",
+    origin: "London, UK",
+    specialty: "Luxury Swimwear"
   }
 };
 

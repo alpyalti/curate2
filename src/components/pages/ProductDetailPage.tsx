@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-
+import { SizeGuideModal } from '../ui/size-guide-modal';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { cn } from '../../lib/utils';
 import { useDummyProduct, useDummyProducts } from '../../hooks/useDummyProducts';
@@ -36,6 +36,7 @@ export function ProductDetailPage() {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [isShareDropdownOpen, setIsShareDropdownOpen] = useState(false);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
 
   useEffect(() => {
     if (product?.variants?.[0]) {
@@ -450,7 +451,12 @@ export function ProductDetailPage() {
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <span className="font-medium">Size: {selectedSize}</span>
-                  <Button variant="ghost" size="sm" className="text-xs">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-xs"
+                    onClick={() => setShowSizeGuide(true)}
+                  >
                     <Ruler className="h-3 w-3 mr-1" />
                     Size Guide
                   </Button>
@@ -637,6 +643,13 @@ export function ProductDetailPage() {
           </div>
         </div>
       )}
+
+      {/* Size Guide Modal */}
+      <SizeGuideModal
+        isOpen={showSizeGuide}
+        onClose={() => setShowSizeGuide(false)}
+        category={product?.category || "women"}
+      />
     </div>
   );
 }

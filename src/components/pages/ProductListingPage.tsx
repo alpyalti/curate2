@@ -632,14 +632,14 @@ function ProductCard({ product }: ProductCardProps) {
 
         {/* Wishlist Button */}
         <button
-          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
+          className="absolute top-2 right-2 transition-all duration-200 hover:scale-110"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             setIsWishlisted(!isWishlisted);
           }}
         >
-          <Heart className={cn("h-6 w-6 text-white drop-shadow-md hover:text-red-500 transition-colors duration-200", isWishlisted && "fill-current text-red-500")} />
+          <Heart className={cn("h-5 w-5 text-black drop-shadow-md hover:text-red-500 transition-colors duration-200 stroke-[1.5]", isWishlisted && "fill-current text-red-500")} />
         </button>
 
         {/* Color Variants */}

@@ -932,5 +932,51 @@
     "availability": { "inStock": true, "quantity": 4 },
     "badges": [{ "type": "exclusive", "label": "EXCLUSIVE", "color": "#000000", "textColor": "#ffffff" }],
     "createdAt": "2024-01-18T10:30:00Z"
+  },
+  {
+    "id": "swimwear-001",
+    "title": "Black Let's Swim Triangle Bikini Top",
+    "description": "Stylish triangle bikini top with adjustable straps for the perfect fit.",
+    "brand": "LETS SWIM",
+    "category": "women",
+    "sku": "LS-BTT-001",
+    "price": { "amount": 450, "currency": "AED", "formattedAmount": "450 AED" },
+    "images": [
+      { "url": "https://letsswim.co/cdn/shop/files/LET_SSWIM-BLACKLET_SSWIMTRIANGLEBIKINITOP-6.jpg?v=1721327749", "alt": "Black Triangle Bikini Top" },
+      { "url": "https://letsswim.co/cdn/shop/files/LET_SSWIM-BLACKLET_SSWIMTRIANGLEBIKINITOP-4_a90cff19-ea1e-4b9d-b43d-a4b4f4154c50.jpg?v=1721327750", "alt": "Black Triangle Bikini Top - Detail" }
+    ],
+    "variants": [
+      {"id": "var-sw001-xs", "attributes": [{"name": "size", "value": "XS"}, {"name": "color", "value": "black"}], "available": true},
+      {"id": "var-sw001-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "black"}], "available": true},
+      {"id": "var-sw001-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "black"}], "available": true},
+      {"id": "var-sw001-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "black"}], "available": false}
+    ],
+    "rating": { "average": 4.6, "count": 42 },
+    "availability": { "inStock": true, "quantity": 15 },
+    "badges": [{ "type": "new", "label": "NEW", "color": "#000000", "textColor": "#ffffff" }],
+    "createdAt": "2024-01-19T10:30:00Z"
+  },
+  {
+    "id": "swimwear-002",
+    "title": "Red Wired Balconette Swimsuit",
+    "description": "Elegant one-piece swimsuit with underwire support and balconette design.",
+    "brand": "LETS SWIM",
+    "category": "women",
+    "sku": "LS-RWB-002",
+    "price": { "amount": 750, "currency": "AED", "formattedAmount": "750 AED" },
+    "images": [
+      { "url": "https://letsswim.co/cdn/shop/files/LET_SSWIM-REDWIREDBALCONETTESWIMSUIT-1.jpg?v=1713187512", "alt": "Red Wired Balconette Swimsuit" },
+      { "url": "https://letsswim.co/cdn/shop/files/LET_SSWIM-REDWIREDBALCONETTESWIMSUIT-2.jpg?v=1713177063", "alt": "Red Wired Balconette Swimsuit - Back View" }
+    ],
+    "variants": [
+      {"id": "var-sw002-xs", "attributes": [{"name": "size", "value": "XS"}, {"name": "color", "value": "red"}], "available": true},
+      {"id": "var-sw002-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "red"}], "available": true},
+      {"id": "var-sw002-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "red"}], "available": true},
+      {"id": "var-sw002-l", "attributes": [{"name": "size", "value": "L"}, {"name": "color", "value": "red"}], "available": true}
+    ],
+    "rating": { "average": 4.8, "count": 31 },
+    "availability": { "inStock": true, "quantity": 2 },
+    "badges": [{ "type": "exclusive", "label": "EXCLUSIVE", "color": "#000000", "textColor": "#ffffff" }],
+    "createdAt": "2024-01-19T10:30:00Z"
   }
 ] 
