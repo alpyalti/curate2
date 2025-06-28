@@ -1,0 +1,670 @@
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { 
+  Filter, 
+  X, 
+  Heart,
+  ArrowLeft,
+  ArrowRight,
+  ChevronDown
+} from "lucide-react";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { Card, CardContent } from "../ui/card";
+import { Checkbox } from "../ui/checkbox";
+import { Slider } from "../ui/slider";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
+import { cn } from "../../lib/utils";
+import { useDummyProducts } from "../../hooks/useDummyProducts";
+
+interface ActiveFilter {
+  key: string;
+  value: string;
+  label: string;
+}
+
+interface BrandInfo {
+  id: string;
+  name: string;
+  description: string;
+  longDescription: string;
+  image: string;
+  foundedYear: string;
+  founder: string;
+  origin: string;
+  specialty: string;
+}
+
+// Brand information database
+const brandInfos: Record<string, BrandInfo> = {
+  "nori-enomoto": {
+    id: "nori-enomoto",
+    name: "Nori Enomoto",
+    description: "Picturesque Accessories",
+    longDescription: "Nori Enomoto creates distinctive handbags that blur the line between functional accessories and sculptural art. Each piece is meticulously crafted with unique curved forms and premium materials, making everyday moments feel extraordinary.",
+    image: "https://nori-enomoto.com/cdn/shop/files/nori_web__LOGO__1_de5bdecc-f585-4c0f-9db5-5ef6fda43fc0.png",
+    foundedYear: "2019",
+    founder: "Nori Enomoto",
+    origin: "Tokyo, Japan",
+    specialty: "Sculptural Handbags"
+  }
+};
+
+export function BrandPage() {
+  const { brandId } = useParams();
+  const brandInfo = brandInfos[brandId || ""] || brandInfos["nori-enomoto"];
+  
+  // UI State
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+  const [gridColumns, setGridColumns] = useState(4);
+  const [sortBy, setSortBy] = useState('featured');
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
+  
+  // Filter State
+  const [activeFilters, setActiveFilters] = useState<ActiveFilter[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState([0, 5000]);
+  const [tempPriceRange, setTempPriceRange] = useState([0, 5000]);
+  const [showSaleOnly, setShowSaleOnly] = useState(false);
+  
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 20;
+
+  // Get products with filters - filter by brand
+  const { data: products, total: totalProducts, isLoading } = useDummyProducts({
+    filters: {
+      brand: [brandInfo.name.toUpperCase()],
+      category: selectedCategories.length > 0 ? selectedCategories : undefined,
+      color: selectedColors.length > 0 ? selectedColors : undefined,
+      size: selectedSizes.length > 0 ? selectedSizes : undefined,
+      price: priceRange[0] > 0 || priceRange[1] < 5000 ? { min: priceRange[0], max: priceRange[1] } : undefined,
+      discount: showSaleOnly || undefined,
+      sortBy: sortBy as any
+    },
+    page: currentPage,
+    size: pageSize
+  });
+  const totalPages = Math.ceil(totalProducts / pageSize);
+
+  // Mock filter data
+  const filterData = {
+    colors: ['Black', 'White', 'Red', 'Blue', 'Green', 'Pink', 'Yellow'],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    categories: ['Tops', 'Bottoms', 'Dresses', 'Outerwear', 'Shoes', 'Accessories']
+  };
+
+  // Update active filters when selections change
+  useEffect(() => {
+    const filters: ActiveFilter[] = [];
+    
+    selectedCategories.forEach(cat => 
+      filters.push({ key: 'category', value: cat, label: cat })
+    );
+    selectedColors.forEach(color => 
+      filters.push({ key: 'color', value: color, label: color })
+    );
+    selectedSizes.forEach(size => 
+      filters.push({ key: 'size', value: size, label: size })
+    );
+    if (showSaleOnly) {
+      filters.push({ key: 'sale', value: 'true', label: 'Sale Items' });
+    }
+    if (priceRange[0] > 0 || priceRange[1] < 5000) {
+      filters.push({ 
+        key: 'price', 
+        value: `${priceRange[0]}-${priceRange[1]}`, 
+        label: `AED ${priceRange[0]} - AED ${priceRange[1]}` 
+      });
+    }
+    
+    setActiveFilters(filters);
+  }, [selectedCategories, selectedColors, selectedSizes, showSaleOnly, priceRange]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isSortDropdownOpen) {
+        setIsSortDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isSortDropdownOpen]);
+
+  const removeFilter = (filterToRemove: ActiveFilter) => {
+    switch (filterToRemove.key) {
+      case 'category':
+        setSelectedCategories(prev => prev.filter(c => c !== filterToRemove.value));
+        break;
+      case 'color':
+        setSelectedColors(prev => prev.filter(c => c !== filterToRemove.value));
+        break;
+      case 'size':
+        setSelectedSizes(prev => prev.filter(s => s !== filterToRemove.value));
+        break;
+      case 'sale':
+        setShowSaleOnly(false);
+        break;
+      case 'price':
+        setPriceRange([0, 5000]);
+        setTempPriceRange([0, 5000]);
+        break;
+    }
+  };
+
+  const clearAllFilters = () => {
+    setSelectedCategories([]);
+    setSelectedColors([]);
+    setSelectedSizes([]);
+    setShowSaleOnly(false);
+    setPriceRange([0, 5000]);
+    setTempPriceRange([0, 5000]);
+  };
+
+  const FilterDrawer = () => (
+    <div className="w-64 space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold">Filters</h3>
+        {activeFilters.length > 0 && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={clearAllFilters}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Clear All
+          </Button>
+        )}
+      </div>
+
+      {/* Active Filters */}
+      {activeFilters.length > 0 && (
+        <div className="border-b pb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-sm font-medium">Active filters:</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {activeFilters.map((filter, index) => (
+              <Badge key={index} variant="secondary" className="pr-1">
+                {filter.label}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removeFilter(filter)}
+                  className="h-auto p-0 ml-1 hover:bg-transparent group"
+                >
+                  <X className="h-3 w-3 text-white group-hover:text-gray-300" />
+                </Button>
+              </Badge>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <Accordion type="multiple" className="w-full">
+        {/* Category Filter */}
+        <AccordionItem value="category">
+          <AccordionTrigger>Category</AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
+              {filterData.categories.map((category) => (
+                <div key={category} className="flex items-center space-x-2">
+                  <Checkbox 
+                    id={`category-${category}`}
+                    checked={selectedCategories.includes(category)}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setSelectedCategories(prev => [...prev, category]);
+                      } else {
+                        setSelectedCategories(prev => prev.filter(c => c !== category));
+                      }
+                    }}
+                  />
+                  <label htmlFor={`category-${category}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    {category}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Color Filter */}
+        <AccordionItem value="color">
+          <AccordionTrigger>Color</AccordionTrigger>
+          <AccordionContent>
+            <div className="grid grid-cols-4 gap-2" onClick={(e) => e.stopPropagation()}>
+              {filterData.colors.map((color) => (
+                <button
+                  key={color}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (selectedColors.includes(color)) {
+                      setSelectedColors(prev => prev.filter(c => c !== color));
+                    } else {
+                      setSelectedColors(prev => [...prev, color]);
+                    }
+                  }}
+                  className={cn(
+                    "w-8 h-8 rounded-full border-2 transition-all",
+                    selectedColors.includes(color) ? "border-primary scale-110" : "border-gray-300 hover:border-gray-400"
+                  )}
+                  style={{ backgroundColor: color.toLowerCase() }}
+                  title={color}
+                />
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Size Filter */}
+        <AccordionItem value="size">
+          <AccordionTrigger>Size</AccordionTrigger>
+          <AccordionContent>
+            <div className="flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
+              {filterData.sizes.map((size) => (
+                <Button
+                  key={size}
+                  variant={selectedSizes.includes(size) ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => {
+                    if (selectedSizes.includes(size)) {
+                      setSelectedSizes(prev => prev.filter(s => s !== size));
+                    } else {
+                      setSelectedSizes(prev => [...prev, size]);
+                    }
+                  }}
+                  className="text-xs"
+                >
+                  {size}
+                </Button>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Price Filter */}
+        <AccordionItem value="price">
+          <AccordionTrigger>Price</AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-4" onClick={(e) => e.stopPropagation()}>
+              <div className="px-3">
+                <Slider
+                  defaultValue={[0, 5000]}
+                  max={5000}
+                  step={50}
+                  value={tempPriceRange}
+                  onValueChange={setTempPriceRange}
+                  className="w-full"
+                />
+                <div className="flex items-center justify-between text-sm text-muted-foreground mt-2">
+                  <span>AED {tempPriceRange[0]}</span>
+                  <span>AED {tempPriceRange[1]}</span>
+                </div>
+              </div>
+              <Button 
+                size="sm" 
+                onClick={() => setPriceRange(tempPriceRange)}
+                className="w-full"
+              >
+                Apply Price Range
+              </Button>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Sale Items */}
+        <AccordionItem value="offers">
+          <AccordionTrigger>Offers</AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="sale-items"
+                  checked={showSaleOnly}
+                  onCheckedChange={(checked) => setShowSaleOnly(checked === true)}
+                />
+                <label htmlFor="sale-items" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Sale Items Only
+                </label>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Breadcrumb */}
+      <div className="border-b bg-muted/30">
+        <div className="container mx-auto px-4 py-3">
+          <nav className="flex items-center space-x-2 text-sm text-muted-foreground">
+            <a href="/" className="hover:text-foreground">Home</a>
+            <span>/</span>
+            <a href="/brands" className="hover:text-foreground">Brands</a>
+            <span>/</span>
+            <span className="text-foreground font-medium">{brandInfo.name}</span>
+          </nav>
+        </div>
+      </div>
+
+      {/* Brand Hero Section - Single Card */}
+      <section className="py-6 md:py-8">
+        <div className="container mx-auto px-4">
+          <div className="relative overflow-hidden rounded-lg aspect-[10/3] border border-gray-200 flex">
+            {/* Brand Image Half */}
+            <div className="w-1/2 h-full">
+              <img
+                src={brandInfo.image}
+                alt={brandInfo.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            
+            {/* Brand Info Half */}
+            <div className="w-1/2 h-full p-6 flex flex-col justify-center text-center">
+              <h1 className="text-2xl font-bold mb-3">{brandInfo.name}</h1>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Founded by {brandInfo.founder} in {brandInfo.foundedYear} in {brandInfo.origin}, specializing in {brandInfo.specialty.toLowerCase()}. {brandInfo.longDescription}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex gap-8">
+          {/* Desktop Filter Sidebar */}
+          <aside className="hidden lg:block flex-shrink-0">
+            <FilterDrawer />
+          </aside>
+
+          {/* Main Content */}
+          <div className="flex-1">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-6">
+                <h1 className="text-2xl font-bold">{brandInfo.name}</h1>
+                <p className="text-muted-foreground text-sm">
+                  Showing {products.length} of {totalProducts} results
+                </p>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                {/* Mobile Filter Button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsFilterDrawerOpen(true)}
+                  className="lg:hidden"
+                >
+                  <Filter className="h-4 w-4 mr-2" />
+                  Filters
+                </Button>
+
+                {/* Grid Toggle */}
+                <div className="flex items-center border rounded-md">
+                  <Button
+                    variant={gridColumns === 3 ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setGridColumns(3)}
+                    className="rounded-r-none"
+                  >
+                    {/* 3 Column Icon - 3 thick vertical rectangles */}
+                    <svg className="h-4 w-4" viewBox="0 0 16 16" fill="currentColor">
+                      <rect x="1" y="2" width="3" height="12" rx="0.5"/>
+                      <rect x="6" y="2" width="3" height="12" rx="0.5"/>
+                      <rect x="11" y="2" width="3" height="12" rx="0.5"/>
+                    </svg>
+                  </Button>
+                  <Button
+                    variant={gridColumns === 4 ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setGridColumns(4)}
+                    className="rounded-l-none"
+                  >
+                    {/* 4 Column Icon - 4 thin vertical rectangles */}
+                    <svg className="h-4 w-4" viewBox="0 0 16 16" fill="currentColor">
+                      <rect x="1" y="2" width="2" height="12" rx="0.5"/>
+                      <rect x="4.5" y="2" width="2" height="12" rx="0.5"/>
+                      <rect x="8" y="2" width="2" height="12" rx="0.5"/>
+                      <rect x="11.5" y="2" width="2" height="12" rx="0.5"/>
+                    </svg>
+                  </Button>
+                </div>
+
+                {/* Sort Dropdown */}
+                <div className="relative">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsSortDropdownOpen(!isSortDropdownOpen);
+                    }}
+                    className="flex items-center space-x-2 min-w-[140px] justify-between"
+                  >
+                    <span className="text-sm">
+                      {sortBy === 'featured' && 'Curate Picks'}
+                      {sortBy === 'newest' && 'Newest'}
+                      {sortBy === 'price-low' && 'Price: Low to High'}
+                      {sortBy === 'price-high' && 'Price: High to Low'}
+                    </span>
+                    <ChevronDown className={cn("h-4 w-4 transition-transform", isSortDropdownOpen && "rotate-180")} />
+                  </Button>
+                  
+                  {isSortDropdownOpen && (
+                    <div className="absolute right-0 top-full mt-1 w-48 bg-background border rounded-md shadow-lg z-10">
+                      {[
+                        { value: 'featured', label: 'Curate Picks' },
+                        { value: 'newest', label: 'Newest' },
+                        { value: 'price-low', label: 'Price: Low to High' },
+                        { value: 'price-high', label: 'Price: High to Low' }
+                      ].map((option) => (
+                        <button
+                          key={option.value}
+                          onClick={() => {
+                            setSortBy(option.value);
+                            setIsSortDropdownOpen(false);
+                          }}
+                          className={cn(
+                            "w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors first:rounded-t-md last:rounded-b-md",
+                            sortBy === option.value && "bg-muted font-medium"
+                          )}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Products Grid */}
+            {isLoading ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="aspect-[3/4] bg-muted rounded-lg mb-3" />
+                    <div className="h-4 bg-muted rounded mb-2" />
+                    <div className="h-4 bg-muted rounded w-2/3" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className={cn(
+                "grid gap-6 mb-8",
+                gridColumns === 3 ? "grid-cols-2 md:grid-cols-3" : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+              )}>
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Previous
+                </Button>
+                
+                {[...Array(Math.min(5, totalPages))].map((_, i) => {
+                  const pageNum = i + 1;
+                  return (
+                    <Button
+                      key={pageNum}
+                      variant={currentPage === pageNum ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(pageNum)}
+                      className="w-10"
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                })}
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Filter Drawer */}
+      {isFilterDrawerOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="fixed inset-0 bg-black/50" onClick={() => setIsFilterDrawerOpen(false)} />
+          <div className="fixed left-0 top-0 h-full w-80 bg-background p-6 shadow-lg overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold">Filters</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsFilterDrawerOpen(false)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            <FilterDrawer />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface ProductCardProps {
+  product: any;
+}
+
+function ProductCard({ product }: ProductCardProps) {
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [hoveredImage, setHoveredImage] = useState(0);
+
+  const displayPrice = product.price; // Always use the current price (already discounted)
+
+  return (
+    <Link to={`/product/${product.id}`} className="block">
+      <Card className="group cursor-pointer overflow-hidden border-0 shadow-none">
+      <div 
+        className="relative aspect-[3/4] overflow-hidden rounded-lg bg-muted mb-3"
+        onMouseEnter={() => setHoveredImage(1)}
+        onMouseLeave={() => setHoveredImage(0)}
+      >
+        <img
+          src={product.images[hoveredImage]?.url || product.images[0]?.url}
+          alt={product.images[hoveredImage]?.alt || product.images[0]?.alt}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
+        />
+        
+        {/* Badges */}
+        {product.badges && product.badges.length > 0 && (
+          <div className="absolute top-2 left-2 flex flex-col gap-1">
+            {product.badges.slice(0, 2).map((badge: any, index: number) => (
+              <Badge
+                key={index}
+                variant={badge.type as any}
+                className="text-xs"
+              >
+                {badge.label}
+              </Badge>
+            ))}
+          </div>
+        )}
+        
+        {/* Wishlist Button */}
+        <button
+          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsWishlisted(!isWishlisted);
+          }}
+        >
+          <Heart className={cn("h-6 w-6 text-white drop-shadow-md hover:text-red-500 transition-colors duration-200", isWishlisted && "fill-current text-red-500")} />
+        </button>
+
+        {/* Color Variants */}
+        {product.variants?.colors && product.variants.colors.length > 1 && (
+          <div className="absolute bottom-2 left-2 flex space-x-1">
+            {product.variants.colors.slice(0, 4).map((color: any, index: number) => (
+              <div
+                key={index}
+                className="w-4 h-4 rounded-full border border-white shadow-sm"
+                style={{ backgroundColor: color.value }}
+                title={color.name}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <CardContent className="p-0">
+        <h3 className="font-medium text-sm mb-1 line-clamp-2">{product.title}</h3>
+        <p className="text-xs text-muted-foreground mb-2">{product.brand}</p>
+        
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <span className="font-semibold">{displayPrice.formattedAmount || displayPrice.amount + ' ' + displayPrice.currency}</span>
+            {product.originalPrice && (
+              <span className="text-xs text-muted-foreground line-through">
+                {product.originalPrice.formattedAmount || product.originalPrice.amount + ' ' + product.originalPrice.currency}
+              </span>
+            )}
+            {product.discount && (
+              <Badge className="bg-red-500 text-white text-[10px] font-semibold px-1.5 py-0.5">
+                -{product.discount.value}%
+              </Badge>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+    </Link>
+  );
+} 

@@ -339,7 +339,7 @@
     "category": "sports",
     "sku": "LUL-YL-002",
     "price": { "amount": 390, "currency": "AED", "formattedAmount": "390 AED" },
-    "images": [{ "url": "https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=500", "alt": "Yoga Leggings" }],
+    "images": [{ "url": "https://images.pexels.com/photos/4327020/pexels-photo-4327020.jpeg?auto=compress&cs=tinysrgb&w=500", "alt": "Yoga Leggings" }],
     "variants": [
       {"id": "var-s002-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "black"}], "available": false},
       {"id": "var-s002-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "black"}], "available": true},
@@ -358,7 +358,7 @@
     "category": "sports",
     "sku": "ADI-TS-003",
     "price": { "amount": 220, "currency": "AED", "formattedAmount": "220 AED" },
-    "images": [{ "url": "https://images.unsplash.com/photo-1506629905607-c281b35c8db6?w=500", "alt": "Training Shorts" }],
+    "images": [{ "url": "https://images.pexels.com/photos/6740821/pexels-photo-6740821.jpeg?auto=compress&cs=tinysrgb&w=500", "alt": "Training Shorts" }],
     "variants": [
       {"id": "var-s003-s", "attributes": [{"name": "size", "value": "S"}, {"name": "color", "value": "black"}], "available": true},
       {"id": "var-s003-m", "attributes": [{"name": "size", "value": "M"}, {"name": "color", "value": "black"}], "available": false},
@@ -572,7 +572,7 @@
     "category": "beauty",
     "sku": "TO-FS-002",
     "price": { "amount": 120, "currency": "AED", "formattedAmount": "120 AED" },
-    "images": [{ "url": "https://images.unsplash.com/photo-1560750123-c4b8df555b84?w=500", "alt": "Face Serum" }],
+    "images": [{ "url": "https://images.pexels.com/photos/3685175/pexels-photo-3685175.jpeg?auto=compress&cs=tinysrgb&w=500", "alt": "Face Serum" }],
     "variants": [{"id": "var-b002", "attributes": [{"name": "size", "value": "30ml"}, {"name": "color", "value": "clear"}]}],
     "rating": { "average": 4.8, "count": 189 },
     "availability": { "inStock": true, "quantity": 20 },
@@ -587,7 +587,7 @@
     "category": "beauty",
     "sku": "UD-EP-003",
     "price": { "amount": 220, "currency": "AED", "formattedAmount": "220 AED" },
-    "images": [{ "url": "https://images.unsplash.com/photo-1583847317281-7ace8cb7dac1?w=500", "alt": "Eyeshadow Palette" }],
+    "images": [{ "url": "https://images.pexels.com/photos/2113855/pexels-photo-2113855.jpeg?auto=compress&cs=tinysrgb&w=500", "alt": "Eyeshadow Palette" }],
     "variants": [{"id": "var-b003", "attributes": [{"name": "size", "value": "standard"}, {"name": "color", "value": "neutral"}]}],
     "rating": { "average": 4.6, "count": 156 },
     "availability": { "inStock": true, "quantity": 18 },
@@ -893,5 +893,44 @@
     "availability": { "inStock": true, "quantity": 4 },
     "badges": [{ "type": "sale", "label": "SALE", "color": "#dc2626", "textColor": "#ffffff" }],
     "createdAt": "2024-01-16T10:30:00Z"
+  },
+  {
+    "id": "bags-001",
+    "title": "Mardi Matin Lemon Yellow",
+    "description": "Picturesque handbag with unique curved design in vibrant lemon yellow.",
+    "brand": "NORI ENOMOTO",
+    "category": "bags",
+    "sku": "NE-MM-LY-001",
+    "price": { "amount": 1850, "currency": "AED", "formattedAmount": "1,850 AED" },
+    "images": [
+      { "url": "https://nori-enomoto.com/cdn/shop/files/nori_mardi-matin_lemon-yellow_main_02.png?v=1750655214&width=2400", "alt": "Mardi Matin Lemon Yellow" }
+    ],
+    "variants": [
+      {"id": "var-b001", "attributes": [{"name": "color", "value": "lemon yellow"}], "available": true}
+    ],
+    "rating": { "average": 4.8, "count": 23 },
+    "availability": { "inStock": true, "quantity": 6 },
+    "badges": [{ "type": "new", "label": "NEW", "color": "#000000", "textColor": "#ffffff" }],
+    "createdAt": "2024-01-18T10:30:00Z"
+  },
+  {
+    "id": "bags-002",
+    "title": "Mardi Matin Dress",
+    "description": "Elegant handbag with sculptural form, perfect for special occasions.",
+    "brand": "NORI ENOMOTO",
+    "category": "bags",
+    "sku": "NE-MM-D-002",
+    "price": { "amount": 1950, "currency": "AED", "formattedAmount": "1,950 AED" },
+    "images": [
+      { "url": "https://nori-enomoto.com/cdn/shop/files/nori_mardi-matin_dress_main_02.jpg?v=1750651100&width=5000", "alt": "Mardi Matin Dress" },
+      { "url": "https://nori-enomoto.com/cdn/shop/files/nori_mardi-matin_dress_main_03.jpg?v=1750651108&width=5000", "alt": "Mardi Matin Dress - Detail View" }
+    ],
+    "variants": [
+      {"id": "var-b002", "attributes": [{"name": "color", "value": "cream"}], "available": true}
+    ],
+    "rating": { "average": 4.9, "count": 18 },
+    "availability": { "inStock": true, "quantity": 4 },
+    "badges": [{ "type": "exclusive", "label": "EXCLUSIVE", "color": "#000000", "textColor": "#ffffff" }],
+    "createdAt": "2024-01-18T10:30:00Z"
   }
 ] 

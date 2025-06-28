@@ -46,7 +46,13 @@ export function ProductDetailPage() {
       const sizeAttr = product.variants[0].attributes.find(attr => attr.name === 'size');
       
       if (colorAttr) setSelectedColor(colorAttr.value);
-      if (sizeAttr) setSelectedSize(sizeAttr.value);
+      
+      // For bags category, don't require size selection
+      if (product.category === 'bags') {
+        setSelectedSize('one-size'); // Set a default value for bags
+      } else if (sizeAttr) {
+        setSelectedSize(sizeAttr.value);
+      }
     }
   }, [product]);
 
@@ -107,7 +113,13 @@ export function ProductDetailPage() {
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
-    setSelectedSize(''); // Reset size when color changes
+    
+    // For bags category, don't reset size, keep as 'one-size'
+    if (product?.category === 'bags') {
+      setSelectedSize('one-size');
+    } else {
+      setSelectedSize(''); // Reset size when color changes for other categories
+    }
     
     // Find variant with new color
     const newVariant = product?.variants?.find(variant => 
@@ -132,10 +144,21 @@ export function ProductDetailPage() {
   };
 
   const handleAddToCart = () => {
-    if (!selectedColor || !selectedSize) {
-      alert('Please select color and size');
-      return;
+    // For bags category, only color is required
+    const isBagsCategory = product?.category === 'bags';
+    
+    if (isBagsCategory) {
+      if (!selectedColor) {
+        alert('Please select color');
+        return;
+      }
+    } else {
+      if (!selectedColor || !selectedSize) {
+        alert('Please select color and size');
+        return;
+      }
     }
+    
     console.log('Adding to cart:', {
       product: product?.id,
       variant: selectedVariant?.id,
@@ -145,7 +168,9 @@ export function ProductDetailPage() {
     });
   };
 
-  const canAddToCart = selectedColor && selectedSize && product?.availability.inStock;
+  const canAddToCart = product?.category === 'bags' 
+    ? selectedColor && product?.availability.inStock
+    : selectedColor && selectedSize && product?.availability.inStock;
 
   if (isLoading) {
     return (
@@ -420,8 +445,8 @@ export function ProductDetailPage() {
               </div>
             )}
 
-            {/* Size Selection */}
-            {availableSizes.length > 0 && (
+            {/* Size Selection - Hide for bags category */}
+            {availableSizes.length > 0 && product?.category !== 'bags' && (
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <span className="font-medium">Size: {selectedSize}</span>
@@ -473,10 +498,18 @@ export function ProductDetailPage() {
                 </Button>
               </div>
 
-              {(!selectedColor || !selectedSize) && (
-                <p className="text-sm text-muted-foreground">
-                  Please select {!selectedColor && 'color'} {!selectedColor && !selectedSize && 'and'} {!selectedSize && 'size'}
-                </p>
+              {product?.category === 'bags' ? (
+                !selectedColor && (
+                  <p className="text-sm text-muted-foreground">
+                    Please select color
+                  </p>
+                )
+              ) : (
+                (!selectedColor || !selectedSize) && (
+                  <p className="text-sm text-muted-foreground">
+                    Please select {!selectedColor && 'color'} {!selectedColor && !selectedSize && 'and'} {!selectedSize && 'size'}
+                  </p>
+                )
               )}
             </div>
 

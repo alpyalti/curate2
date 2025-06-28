@@ -5,6 +5,7 @@ import { Footer } from './components/layout/Footer';
 import { HomePage } from './components/pages/HomePage';
 import { ProductListingPage } from './components/pages/ProductListingPage';
 import { ProductDetailPage } from './components/pages/ProductDetailPage';
+import { BrandPage } from './components/pages/BrandPage';
 import { AboutPage } from './components/pages/AboutPage';
 import { ContactPage } from './components/pages/ContactPage';
 import { FAQPage } from './components/pages/FAQPage';
@@ -37,7 +38,9 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/c/:category" element={<ProductListingPage />} />
             <Route path="/sale" element={<ProductListingPage />} />
+            <Route path="/new-in" element={<ProductListingPage />} />
             <Route path="/product/:id" element={<ProductDetailPage />} />
+            <Route path="/brand/:brandId" element={<BrandPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />

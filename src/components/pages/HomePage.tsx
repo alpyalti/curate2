@@ -20,49 +20,49 @@ const categoryTiles = [
     id: "women",
     title: "Women",
     href: "/c/women",
-    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=400&fit=crop",
+    image: "/images/women.png",
     className: "col-span-1 row-span-1"
   },
   {
     id: "men",
     title: "Men",
     href: "/c/men",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop",
+    image: "/images/men.png",
     className: "col-span-1 row-span-1"
   },
   {
     id: "beauty",
     title: "Beauty",
     href: "/c/beauty",
-    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&h=400&fit=crop&auto=format&q=80",
+    image: "/images/beauty.png",
     className: "col-span-1 row-span-1"
   },
   {
     id: "bags",
     title: "Bags",
     href: "/c/bags",
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=400&fit=crop",
+    image: "/images/bags.png",
     className: "col-span-1 row-span-1"
   },
   {
     id: "home",
     title: "Home",
     href: "/c/home",
-    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop",
+    image: "/images/home.png",
     className: "col-span-1 row-span-1"
   },
   {
     id: "sports",
     title: "Sports",
     href: "/c/sports",
-    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop&auto=format&q=80",
+    image: "/images/sports.png",
     className: "col-span-1 row-span-1"
   },
   {
     id: "pre-loved",
     title: "Pre Loved",
     href: "/c/pre-loved",
-    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&h=400&fit=crop&auto=format&q=80",
+    image: "/images/preloved.png",
     className: "col-span-1 row-span-1"
   }
 ];
@@ -108,20 +108,20 @@ const brands = [
 
 const brandCards = [
   {
-    id: "luxury-brands",
-    category: "Luxury",
-    title: "Luxury Brands",
-    description: "Discover premium collections from world-renowned luxury fashion houses and iconic designers.",
-    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop",
-    badge: "Premium Collection"
+    id: "nori-enomoto",
+    category: "Accessories",
+    title: "Nori Enomoto",
+    description: "Picturesque Accessories",
+    image: "https://nori-enomoto.com/cdn/shop/files/nori_web__LOGO__1_de5bdecc-f585-4c0f-9db5-5ef6fda43fc0.png",
+    badge: "Bags & Luggage"
   },
   {
-    id: "emerging-designers",
-    category: "Emerging",
-    title: "Emerging Designers",
-    description: "Support innovative creators and discover unique pieces from tomorrow's fashion leaders.",
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop",
-    badge: "New Talent"
+    id: "lets-swim",
+    category: "Swimwear",
+    title: "Lets Swim",
+    description: "LET'S SWIM is a swimwear and lifestyle brand from Founder and Creative Director, David Koma.",
+    image: "https://letsswim.co/cdn/shop/files/SECOND_IMAGE_OPTION_1.jpg?crop=center&height=1800&v=1713169197&width=1800",
+    badge: "Women's Fashion"
   }
 ];
 
@@ -178,7 +178,7 @@ export function HomePage() {
       id: 3,
       title: "Designer Bags & Accessories",
       subtitle: "Elevate your style with premium accessories",
-      image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1920&h=800&fit=crop&auto=format&q=80",
+      image: "/images/bags.png",
       buttonText: "Shop Bags",
       buttonLink: "/c/bags"
     },
@@ -191,6 +191,16 @@ export function HomePage() {
       buttonLink: "/sale"
     }
   ];
+
+  // Debug: Log carousel slides and current slide
+  React.useEffect(() => {
+    console.log('Carousel slides:', carouselSlides);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  React.useEffect(() => {
+    console.log('Current slide changed to:', currentSlide, 'Link:', carouselSlides[currentSlide]?.buttonLink);
+  }, [currentSlide]);
 
   React.useEffect(() => {
     const updateBrandScrollState = () => {
@@ -275,7 +285,7 @@ export function HomePage() {
     if (!brandScrollRef.current) return;
     
     const container = brandScrollRef.current;
-    const cardWidth = 176; // w-44 = 176px
+    const cardWidth = 181; // 176px + 5px = 181px
     const gap = 16; // space-x-4 = 16px
     const scrollAmount = cardWidth + gap;
     
@@ -302,15 +312,19 @@ export function HomePage() {
           <div className="relative">
             <div className="relative h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
               <div className="relative w-full h-full">
-                {carouselSlides.map((slide, index) => (
+{carouselSlides.map((slide, index) => (
                   <div
                     key={slide.id}
                     className={cn(
                       "absolute inset-0 transition-all duration-1000 ease-in-out rounded-lg",
                       index === currentSlide 
-                        ? "opacity-100 scale-100" 
-                        : "opacity-0 scale-105"
+                        ? "opacity-100 scale-100 z-10" 
+                        : "opacity-0 scale-105 z-0"
                     )}
+                    style={{ 
+                      pointerEvents: index === currentSlide ? 'auto' : 'none',
+                      zIndex: index === currentSlide ? 10 : 0
+                    }}
                   >
                     {slide.video ? (
                       <video
@@ -339,7 +353,17 @@ export function HomePage() {
                         <p className="text-base md:text-lg mb-6 opacity-90 max-w-2xl mx-auto">
                           {slide.subtitle}
                         </p>
-                        <Link to={slide.buttonLink}>
+                        <Link 
+                          to={slide.buttonLink}
+                          onClick={(e) => {
+                            console.log('Button clicked! Navigating to:', slide.buttonLink, 'from slide:', index);
+                            console.log('Current slide is:', currentSlide);
+                            if (index !== currentSlide) {
+                              e.preventDefault();
+                              console.log('Prevented navigation - not current slide');
+                            }
+                          }}
+                        >
                           <Button size="lg" className="bg-white text-black hover:bg-gray-100 font-semibold px-6 py-2">
                             {slide.buttonText}
                           </Button>
@@ -351,14 +375,16 @@ export function HomePage() {
               </div>
 
               {/* Progress Indicators */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+              <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
                 {carouselSlides.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => handleSlideChange(index)}
                     className={cn(
                       "relative h-1 transition-all duration-300 rounded-full overflow-hidden",
-                      index === currentSlide ? "w-10 bg-white/30" : "w-6 bg-white/50 hover:bg-white/70"
+                      index === currentSlide 
+                        ? "w-12 bg-white/30" 
+                        : "w-6 bg-white/50 hover:bg-white/70 hover:w-8"
                     )}
                   >
                     {index === currentSlide && (
@@ -467,7 +493,8 @@ export function HomePage() {
               {brands.map((brand, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 w-44 h-32 bg-background rounded-lg border flex items-center justify-center cursor-pointer p-3 hover:border-primary/50 transition-colors duration-300"
+                  className="flex-shrink-0 bg-background rounded-lg border flex items-center justify-center cursor-pointer p-3 hover:border-primary/50 transition-colors duration-300"
+                  style={{ width: '181px', height: '133px' }}
                 >
                   <img
                     src={brand.logo}

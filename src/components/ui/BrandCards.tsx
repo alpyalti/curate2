@@ -40,7 +40,11 @@ export function BrandCards({
 
         <div className="grid lg:grid-cols-2 gap-6">
           {cards.map((card) => (
-            <div key={card.id} className="group relative overflow-hidden rounded-lg aspect-[4/3]">
+            <a 
+              key={card.id} 
+              href={`/brand/${card.id}`}
+              className="group relative overflow-hidden rounded-lg aspect-[4/3] cursor-pointer"
+            >
               <img
                 src={card.image}
                 alt={card.title}
@@ -51,12 +55,27 @@ export function BrandCards({
                 <Badge variant="secondary" className="mb-3 bg-white/20 text-white border-white/30">
                   {card.badge}
                 </Badge>
-                <h3 className="text-2xl font-bold mb-3">{card.title}</h3>
+                <div className="flex items-center mb-3">
+                  <h3 className="text-2xl font-bold">{card.title}</h3>
+                  <svg 
+                    className="ml-2 w-6 h-6 transition-transform duration-300 group-hover:translate-x-1" 
+                    viewBox="0 0 20 20" 
+                    fill="none"
+                  >
+                    <path 
+                      d="M7 4l6 6-6 6" 
+                      stroke="currentColor" 
+                      strokeWidth="1.5" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
                 <p className="text-white/90 leading-relaxed">
                   {card.description}
                 </p>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>

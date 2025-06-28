@@ -27,7 +27,8 @@ export function ProductListingPage() {
   const { category } = useParams();
   const location = window.location.pathname;
   const isSalePage = location === '/sale';
-  const currentCategory = isSalePage ? 'sale' : category;
+  const isNewInPage = location === '/new-in';
+  const currentCategory = isSalePage ? 'sale' : isNewInPage ? 'new-in' : category;
   
   // UI State
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
@@ -53,13 +54,14 @@ export function ProductListingPage() {
   // Get products with filters
   const { data: products, total: totalProducts, isLoading } = useDummyProducts({
     filters: {
-      category: selectedCategories.length > 0 ? selectedCategories : (currentCategory ? [currentCategory] : undefined),
+      category: selectedCategories.length > 0 ? selectedCategories : 
+                (currentCategory && !isNewInPage ? [currentCategory] : undefined),
       brand: selectedBrands.length > 0 ? selectedBrands : undefined,
       color: selectedColors.length > 0 ? selectedColors : undefined,
       size: selectedSizes.length > 0 ? selectedSizes : undefined,
       price: priceRange[0] > 0 || priceRange[1] < 5000 ? { min: priceRange[0], max: priceRange[1] } : undefined,
       discount: showSaleOnly || isSalePage || undefined,
-      sortBy: sortBy as any
+      sortBy: isNewInPage ? 'newest' : sortBy as any
     },
     page: currentPage,
     size: pageSize
@@ -380,7 +382,9 @@ export function ProductListingPage() {
           <nav className="flex items-center space-x-2 text-sm text-muted-foreground">
             <a href="/" className="hover:text-foreground">Home</a>
             <span>/</span>
-            <span className="text-foreground font-medium capitalize">{isSalePage ? 'Sale' : category}</span>
+            <span className="text-foreground font-medium capitalize">
+              {isSalePage ? 'Sale' : isNewInPage ? 'New In' : category}
+            </span>
           </nav>
         </div>
       </div>
@@ -397,7 +401,9 @@ export function ProductListingPage() {
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-6">
-                <h1 className="text-2xl font-bold capitalize">{isSalePage ? 'Sale' : category}</h1>
+                <h1 className="text-2xl font-bold capitalize">
+                  {isSalePage ? 'Sale' : isNewInPage ? 'New In' : category}
+                </h1>
                 <p className="text-muted-foreground text-sm">
                   Showing {products.length} of {totalProducts} results
                 </p>
