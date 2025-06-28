@@ -186,9 +186,9 @@ export function CartPage() {
   };
 
   if (cartItems.length === 0) {
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8">
+      return (
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
           <div className="text-center py-16">
             <ShoppingBag className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
             <h2 className="text-2xl font-bold mb-2">Your bag is empty</h2>
@@ -411,7 +411,7 @@ export function CartPage() {
                     </div>
 
                     <Button 
-                      className="w-full h-12 md:h-auto" 
+                      className="w-full h-12 md:h-14 text-base md:text-lg font-semibold" 
                       size="lg"
                       onClick={proceedToCheckout}
                     >
@@ -431,22 +431,22 @@ export function CartPage() {
         ) : (
           /* Checkout View */
           <>
-            <div className="flex items-center gap-4 mb-8">
-              <Button variant="ghost" size="sm" onClick={backToCart}>
+            <div className="flex flex-col gap-4 mb-6 md:mb-8">
+              <Button variant="ghost" size="sm" onClick={backToCart} className="self-start w-auto">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Bag
               </Button>
               <h1 className="text-2xl md:text-3xl font-bold">Checkout</h1>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-4 lg:gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
               {/* Checkout Form */}
-              <div className="lg:col-span-2 order-1">
+              <div className="lg:col-span-2 order-2 lg:order-1">
                 {/* Checkout Steps - Left column only */}
                 <div className="mb-6 lg:mb-8">
-                  <div className="flex justify-between overflow-x-auto pb-2">
-                    {checkoutSteps.map((step, index) => (
-                      <div key={step.id} className="flex items-center min-w-0 flex-shrink-0">
+                  <div className="flex justify-between overflow-x-auto pb-2 px-1 -mx-1">
+                                          {checkoutSteps.map((step, index) => (
+                        <div key={step.id} className="flex items-center min-w-0 flex-shrink-0 px-1">
                         <div className="flex items-center">
                           <div className={cn(
                             "w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-medium",
@@ -485,7 +485,7 @@ export function CartPage() {
                       {checkoutSteps[currentStep].title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="p-4 md:p-6">
+                  <CardContent className="p-4 md:p-6 space-y-4">
                     {/* Shipping Address Form */}
                     {currentStep === 0 && (
                       <div className="space-y-4">
@@ -863,12 +863,12 @@ export function CartPage() {
                       </div>
                     )}
 
-                    <div className="flex flex-col sm:flex-row justify-between pt-6 gap-3">
+                    <div className="flex flex-col-reverse sm:flex-row justify-between pt-6 gap-3 border-t">
                       <Button 
                         variant="outline" 
                         onClick={prevStep}
                         disabled={currentStep === 0}
-                        className="h-12 md:h-10 order-2 sm:order-1"
+                        className="h-12 md:h-10 w-full sm:w-auto"
                         size="lg"
                       >
                         Previous
@@ -876,7 +876,7 @@ export function CartPage() {
                       <Button 
                         onClick={nextStep}
                         disabled={currentStep === checkoutSteps.length - 1}
-                        className="h-12 md:h-10 order-1 sm:order-2"
+                        className="h-12 md:h-10 w-full sm:w-auto"
                         size="lg"
                       >
                         {currentStep === checkoutSteps.length - 1 ? 'Place Order' : 'Continue'}
@@ -887,12 +887,12 @@ export function CartPage() {
               </div>
 
               {/* Order Summary (Checkout) */}
-              <div className="lg:col-span-1 order-2">
+              <div className="lg:col-span-1 order-1 lg:order-2">
                 <Card className="lg:sticky lg:top-24">
-                  <CardHeader>
-                    <CardTitle>Order Summary</CardTitle>
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg">Order Summary</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 pt-0">
                     {/* Mini product list */}
                     <div className="space-y-3 max-h-40 lg:max-h-64 overflow-y-auto">
                       {cartItems.map((item) => (
