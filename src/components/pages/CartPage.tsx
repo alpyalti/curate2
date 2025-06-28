@@ -447,7 +447,7 @@ export function CartPage() {
                   <div className="flex justify-between overflow-x-auto pb-2 px-1 -mx-1">
                                           {checkoutSteps.map((step, index) => (
                         <div key={step.id} className="flex items-center min-w-0 flex-shrink-0 px-1">
-                        <div className="flex items-center">
+                        <div className="flex items-center sm:flex-col">
                           <div className={cn(
                             "w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-medium",
                             index <= currentStep ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
@@ -455,18 +455,18 @@ export function CartPage() {
                             {index < currentStep ? <CheckCircle className="h-3 w-3 md:h-4 md:w-4" /> : index + 1}
                           </div>
                           <span className={cn(
-                            "ml-1 md:ml-2 text-xs md:text-sm font-medium whitespace-nowrap",
+                            "ml-1 sm:ml-0 sm:mt-1 md:ml-2 md:mt-0 text-xs md:text-sm font-medium whitespace-nowrap text-center",
                             index <= currentStep ? "text-foreground" : "text-muted-foreground"
                           )}>
-                            <span className="hidden sm:inline">{step.title}</span>
-                            <span className="sm:hidden">
+                            <span className="hidden md:inline">{step.title}</span>
+                            <span className="md:hidden">
                               {step.title.split(' ')[0]}
                             </span>
                           </span>
                         </div>
                         {index < checkoutSteps.length - 1 && (
                           <div className={cn(
-                            "h-px w-4 md:w-8 mx-2 md:mx-4 flex-shrink-0",
+                            "h-px w-4 md:w-8 mx-2 md:mx-4 flex-shrink-0 sm:hidden md:block",
                             index < currentStep ? "bg-primary" : "bg-muted"
                           )} />
                         )}
