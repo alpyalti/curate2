@@ -140,7 +140,7 @@ export function CartPage() {
 
   // Calculate totals
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const deliveryFee = subtotal > 999 ? 0 : 25; // Free delivery over 999 AED
+  const deliveryFee = deliveryMode === 'pickup' ? 0 : (subtotal > 500 ? 0 : 20); // Free delivery over 500 AED or pickup
   const promoDiscount = promoApplied ? Math.round(subtotal * 0.1) : 0; // 10% discount
   const total = subtotal + deliveryFee - promoDiscount;
 
@@ -369,10 +369,16 @@ export function CartPage() {
                       <span>{deliveryFee === 0 ? 'Free' : `${deliveryFee} AED`}</span>
                     </div>
 
-                    {deliveryFee === 0 && (
+                    {deliveryFee === 0 && deliveryMode !== 'pickup' && (
                       <div className="text-sm text-green-600 flex items-center gap-1">
                         <CheckCircle className="h-4 w-4" />
-                        Free delivery on orders over 999 AED
+                        Free delivery on orders over 500 AED
+                      </div>
+                    )}
+                    {deliveryMode === 'pickup' && (
+                      <div className="text-sm text-blue-600 flex items-center gap-1">
+                        <CheckCircle className="h-4 w-4" />
+                        Store pickup is always free
                       </div>
                     )}
 
@@ -411,8 +417,7 @@ export function CartPage() {
                     </div>
 
                     <Button 
-                      className="w-full h-12 md:h-14 text-base md:text-lg font-semibold" 
-                      size="lg"
+                      className="w-full" 
                       onClick={proceedToCheckout}
                     >
                       Proceed to Checkout
@@ -447,7 +452,7 @@ export function CartPage() {
                   <div className="flex justify-between overflow-x-auto pb-2 px-1 -mx-1">
                                           {checkoutSteps.map((step, index) => (
                         <div key={step.id} className="flex items-center min-w-0 flex-shrink-0 px-1">
-                        <div className="flex items-center sm:flex-col">
+                        <div className="flex flex-col items-center md:flex-row md:items-center">
                           <div className={cn(
                             "w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-medium",
                             index <= currentStep ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
@@ -455,18 +460,18 @@ export function CartPage() {
                             {index < currentStep ? <CheckCircle className="h-3 w-3 md:h-4 md:w-4" /> : index + 1}
                           </div>
                           <span className={cn(
-                            "ml-1 sm:ml-0 sm:mt-1 md:ml-2 md:mt-0 text-xs md:text-sm font-medium whitespace-nowrap text-center",
+                            "mt-1 md:mt-0 md:ml-2 text-xs md:text-sm font-medium whitespace-nowrap",
                             index <= currentStep ? "text-foreground" : "text-muted-foreground"
                           )}>
-                            <span className="hidden md:inline">{step.title}</span>
-                            <span className="md:hidden">
+                            <span className="hidden sm:inline">{step.title}</span>
+                            <span className="sm:hidden">
                               {step.title.split(' ')[0]}
                             </span>
                           </span>
                         </div>
                         {index < checkoutSteps.length - 1 && (
                           <div className={cn(
-                            "h-px w-4 md:w-8 mx-2 md:mx-4 flex-shrink-0 sm:hidden md:block",
+                            "hidden md:block h-px w-4 md:w-8 mx-2 md:mx-4 flex-shrink-0",
                             index < currentStep ? "bg-primary" : "bg-muted"
                           )} />
                         )}
@@ -619,54 +624,32 @@ export function CartPage() {
                                 )} />
                                 <div>
                                   <h3 className="font-medium">Standard Delivery</h3>
-                                  <p className="text-sm text-muted-foreground">3-5 business days</p>
-                                </div>
-                              </div>
-                              <span className="font-medium">25 AED</span>
-                            </div>
-                          </div>
-                          
-                          <div 
-                            className={cn(
-                              "border rounded-lg p-4 cursor-pointer transition-all touch-manipulation",
-                              deliveryMode === 'express' ? "border-primary bg-primary/5" : "border-muted hover:border-gray-300"
-                            )}
-                            onClick={() => setDeliveryMode('express')}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <div className={cn(
-                                  "w-5 h-5 rounded-full border-2",
-                                  deliveryMode === 'express' ? "border-primary bg-primary" : "border-muted"
-                                )} />
-                                <div>
-                                  <h3 className="font-medium">Express Delivery</h3>
                                   <p className="text-sm text-muted-foreground">1-2 business days</p>
                                 </div>
                               </div>
-                              <span className="font-medium">75 AED</span>
+                              <span className="font-medium">20 AED</span>
                             </div>
                           </div>
                           
                           <div 
                             className={cn(
                               "border rounded-lg p-4 cursor-pointer transition-all touch-manipulation",
-                              deliveryMode === 'same-day' ? "border-primary bg-primary/5" : "border-muted hover:border-gray-300"
+                              deliveryMode === 'pickup' ? "border-primary bg-primary/5" : "border-muted hover:border-gray-300"
                             )}
-                            onClick={() => setDeliveryMode('same-day')}
+                            onClick={() => setDeliveryMode('pickup')}
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
                                 <div className={cn(
                                   "w-5 h-5 rounded-full border-2",
-                                  deliveryMode === 'same-day' ? "border-primary bg-primary" : "border-muted"
+                                  deliveryMode === 'pickup' ? "border-primary bg-primary" : "border-muted"
                                 )} />
                                 <div>
-                                  <h3 className="font-medium">Same Day Delivery</h3>
-                                  <p className="text-sm text-muted-foreground">Within Dubai only, order before 2 PM</p>
+                                  <h3 className="font-medium">Pick-up</h3>
+                                  <p className="text-sm text-muted-foreground">Pick it up from the pickup location</p>
                                 </div>
                               </div>
-                              <span className="font-medium">150 AED</span>
+                              <span className="font-medium">Free</span>
                             </div>
                           </div>
                         </div>
@@ -674,7 +657,7 @@ export function CartPage() {
                         <div className="bg-muted/30 p-4 rounded-lg">
                           <h4 className="font-medium mb-2">Delivery Notes</h4>
                           <p className="text-sm text-muted-foreground">
-                            Free delivery on orders over 999 AED. Delivery times may vary based on location and product availability.
+                            Free delivery on orders over 500 AED. Pick-up location details will be provided after order confirmation.
                           </p>
                         </div>
                       </div>
@@ -826,11 +809,12 @@ export function CartPage() {
                         <div className="bg-muted/30 p-4 rounded-lg">
                           <h4 className="font-medium mb-3">Delivery Method</h4>
                           <div className="text-sm">
-                            <p className="capitalize">{deliveryMode.replace('-', ' ')} Delivery</p>
+                            <p className="capitalize">
+                              {deliveryMode === 'pickup' ? 'Store Pickup' : `${deliveryMode.replace('-', ' ')} Delivery`}
+                            </p>
                             <p className="text-muted-foreground">
-                              {deliveryMode === 'standard' && '3-5 business days - 25 AED'}
-                              {deliveryMode === 'express' && '1-2 business days - 75 AED'}
-                              {deliveryMode === 'same-day' && 'Same day delivery - 150 AED'}
+                                                          {deliveryMode === 'standard' && '1-2 business days - 20 AED'}
+                            {deliveryMode === 'pickup' && 'Pick-up from location - Free'}
                             </p>
                           </div>
                         </div>

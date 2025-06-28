@@ -120,7 +120,7 @@ export function Header({
             </Button>
 
             {/* Logo */}
-            <div className="flex items-center lg:pl-2">
+            <div className="flex items-center">
             <Link
               to="/"
               className="flex items-center space-x-2"
