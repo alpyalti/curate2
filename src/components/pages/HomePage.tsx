@@ -185,14 +185,6 @@ export function HomePage() {
       buttonLink: "/new-in"
     },
     {
-      id: 2,
-      title: "Luxury Beauty Collection",
-      subtitle: "Premium skincare and makeup essentials",
-      video: "https://videos.pexels.com/video-files/4154239/4154239-uhd_2732_1440_25fps.mp4",
-      buttonText: "Explore Beauty",
-      buttonLink: "/c/beauty"
-    },
-    {
       id: 3,
       title: "Designer Bags & Accessories",
       subtitle: "Elevate your style with premium accessories",
