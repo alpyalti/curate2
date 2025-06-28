@@ -590,9 +590,7 @@ function ProductCard({ product }: ProductCardProps) {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [hoveredImage, setHoveredImage] = useState(0);
 
-  const hasDiscount = !!product.discount;
   const displayPrice = product.price; // Always use the current price (already discounted)
-  const originalPrice = hasDiscount ? product.originalPrice : null;
 
   return (
     <Link to={`/product/${product.id}`} className="block">

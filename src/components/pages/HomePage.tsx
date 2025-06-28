@@ -695,9 +695,7 @@ interface ProductCardProps {
 function ProductCard({ product, className }: ProductCardProps) {
   const [hoveredImage, setHoveredImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const hasDiscount = !!product.discount;
   const displayPrice = product.price; // Always use the current price (already discounted)
-  const originalPrice = hasDiscount ? product.originalPrice : null;
 
   return (
     <Link to={`/product/${product.id}`} className={cn("group cursor-pointer block", className)}>

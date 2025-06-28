@@ -187,9 +187,7 @@ export function ProductDetailPage() {
     );
   }
 
-  const hasDiscount = !!product.discount;
   const displayPrice = product.price; // Always use the current price (already discounted)
-  const originalPrice = hasDiscount ? product.originalPrice : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -723,9 +721,7 @@ interface RelatedProductCardProps {
 function RelatedProductCard({ product }: RelatedProductCardProps) {
   const [hoveredImage, setHoveredImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const hasDiscount = !!product.discount;
   const displayPrice = product.price; // Always use the current price (already discounted)
-  const originalPrice = hasDiscount ? product.originalPrice : null;
 
   return (
     <a href={`/product/${product.id}`} className="group block">

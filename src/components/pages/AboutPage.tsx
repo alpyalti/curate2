@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight, Globe, Sparkles, Users, ShoppingBag, Heart, Zap, Shield, Star, CheckCircle } from "lucide-react";
+import { ArrowRight, Globe, Sparkles, ShoppingBag, Heart, Zap, Star } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
@@ -28,22 +28,7 @@ export function AboutPage() {
     }
   ];
 
-  const benefits = [
-    {
-      category: "For Brands",
-      icon: <Star className="h-8 w-8 text-primary" />,
-      title: "Agile Platform",
-      description: "Tech-enabled ecosystem that reduces overheads, simplifies logistics, and ensures visibility across both in-store and digital fronts—without the risk.",
-      points: ["Reduced overheads", "Simplified logistics", "Digital & physical visibility", "Risk-free entry"]
-    },
-    {
-      category: "For Shoppers",
-      icon: <Heart className="h-8 w-8 text-primary" />,
-      title: "Complete Control",
-      description: "Browse, discover, and shop the way you prefer—on-ground for a tactile touch or online for on-the-go ease.",
-      points: ["Tactile in-store experience", "Convenient online shopping", "Quality assurance", "Style & innovation focus"]
-    }
-  ];
+
 
   return (
     <div className="min-h-screen bg-background">
