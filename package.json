@@ -1,7 +1,22 @@
 {
-  "name": "curate2",
-  "version": "0.1.0",
+  "name": "curate",
+  "version": "1.0.0",
   "private": true,
+  "description": "Premium Fashion, Beauty & Lifestyle Marketplace - Discover curated fashion, beauty, bags, home decor and lifestyle products from premium brands",
+  "keywords": [
+    "fashion",
+    "beauty",
+    "ecommerce",
+    "marketplace",
+    "lifestyle",
+    "luxury",
+    "bags",
+    "accessories",
+    "clothing",
+    "skincare"
+  ],
+  "author": "Curate Team",
+  "homepage": "https://curate.com",
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
@@ -53,7 +68,16 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:analyze": "npm run build && npx bundle-analyzer build/static/js/*.js",
+    "build:prod": "GENERATE_SOURCEMAP=false npm run build",
     "test": "react-scripts test",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,scss,json}",
+    "type-check": "tsc --noEmit",
+    "pre-commit": "npm run lint && npm run type-check && npm run test:coverage",
+    "serve": "npx serve -s build -l 3000",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

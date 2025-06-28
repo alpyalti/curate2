@@ -217,11 +217,6 @@ Tests are written using:
 - **React Testing Library** for component testing
 - **MSW** for API mocking
 
-### Storybook
-```bash
-npm run storybook
-```
-
 Component documentation and visual testing with Storybook.
 
 ## 🚀 Deployment
@@ -231,45 +226,6 @@ Component documentation and visual testing with Storybook.
 npm run build
 ```
 
-### Deployment Checklist
-- [ ] Set production environment variables
-- [ ] Configure Mirakl API endpoints
-- [ ] Set up analytics (if enabled)
-- [ ] Configure CDN for assets
-- [ ] Set up error monitoring
-
-## 🎯 Features Roadmap
-
-### Phase 1 (Current)
-- [x] Core product browsing
-- [x] Shopping cart functionality
-- [x] Responsive design
-- [x] Search and filtering
-
-### Phase 2 (Next)
-- [ ] User authentication
-- [ ] Checkout flow
-- [ ] Payment integration
-- [ ] Order management
-
-### Phase 3 (Future)
-- [ ] PWA capabilities
-- [ ] Social features
-- [ ] Advanced analytics
-- [ ] Multi-language support
-
 ## 📄 License
 
 This project is built for Mirakl marketplace integration. Please refer to your Mirakl license agreement for usage terms.
-
-## 🤝 Contributing
-
-1. Follow the existing code style and conventions
-2. Write tests for new components
-3. Update Storybook documentation
-4. Ensure accessibility compliance
-5. Test on multiple devices and browsers
-
-## 📞 Support
-
-For technical support or questions about Mirakl integration, please refer to the Mirakl documentation or contact your Mirakl representative.

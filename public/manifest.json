@@ -1,12 +1,15 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Curate",
+  "name": "Curate - Premium Fashion, Beauty & Lifestyle Marketplace",
+  "description": "Discover curated fashion, beauty, bags, home decor and lifestyle products from premium brands",
+  "categories": ["shopping", "lifestyle"],
   "icons": [
     {
       "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
+
     {
       "src": "logo192.png",
       "type": "image/png",
@@ -20,6 +23,53 @@
   ],
   "start_url": ".",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "lang": "en",
+  "scope": "/",
+  "screenshots": [
+    {
+      "src": "screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshot-mobile.png", 
+      "sizes": "360x640",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Arrivals",
+      "short_name": "New In",
+      "description": "Browse the latest fashion arrivals",
+      "url": "/new-in",
+      "icons": [{"src": "logo192.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "Sale",
+      "short_name": "Sale",
+      "description": "Shop discounted items",
+      "url": "/sale",
+      "icons": [{"src": "logo192.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "Women's Fashion",
+      "short_name": "Women",
+      "description": "Shop women's clothing and accessories",
+      "url": "/c/women",
+      "icons": [{"src": "logo192.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "Beauty",
+      "short_name": "Beauty",
+      "description": "Explore beauty and skincare products",
+      "url": "/c/beauty",
+      "icons": [{"src": "logo192.png", "sizes": "192x192"}]
+    }
+  ]
 }
