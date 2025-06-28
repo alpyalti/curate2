@@ -5,6 +5,7 @@ import { Footer } from './components/layout/Footer';
 import { HomePage } from './components/pages/HomePage';
 import { ProductListingPage } from './components/pages/ProductListingPage';
 import { ProductDetailPage } from './components/pages/ProductDetailPage';
+import { AboutPage } from './components/pages/AboutPage';
 import { ScrollToTop } from './components/ui/scroll-to-top';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/c/:category" element={<ProductListingPage />} />
             <Route path="/product/:id" element={<ProductDetailPage />} />
+            <Route path="/about" element={<AboutPage />} />
           </Routes>
         </main>
 

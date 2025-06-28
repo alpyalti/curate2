@@ -114,6 +114,9 @@ export function HomePage() {
   // Carousel state
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const [progress, setProgress] = React.useState(0);
+  const videoRefs = React.useRef<(HTMLVideoElement | null)[]>([]);
+  const progressStartTime = React.useRef<number>(Date.now());
+  const isManualChange = React.useRef<boolean>(false);
 
   const { data: newInProducts } = useDummyProducts({ 
     filters: { sortBy: "newest" }, 
@@ -139,7 +142,7 @@ export function HomePage() {
       id: 1,
       title: "New Season Arrivals",
       subtitle: "Discover the latest fashion trends",
-      video: "/hero2.mp4",
+      video: "https://videos.pexels.com/video-files/10678925/10678925-uhd_2732_1440_25fps.mp4",
       buttonText: "Shop Now",
       buttonLink: "/new-in"
     },
@@ -147,7 +150,7 @@ export function HomePage() {
       id: 2,
       title: "Luxury Beauty Collection",
       subtitle: "Premium skincare and makeup essentials",
-      image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1920&h=800&fit=crop&auto=format&q=80",
+      video: "https://videos.pexels.com/video-files/4154239/4154239-uhd_2732_1440_25fps.mp4",
       buttonText: "Explore Beauty",
       buttonLink: "/c/beauty"
     },
@@ -163,7 +166,7 @@ export function HomePage() {
       id: 4,
       title: "Sale - Up to 70% Off",
       subtitle: "Limited time offers on selected items",
-      image: "https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?w=1920&h=800&fit=crop&auto=format&q=80",
+      video: "https://videos.pexels.com/video-files/5649214/5649214-uhd_2560_1440_25fps.mp4",
       buttonText: "Shop Sale",
       buttonLink: "/sale"
     }
@@ -197,29 +200,54 @@ export function HomePage() {
     }
   }, []);
 
-  // Carousel auto-play effect with progress
+  // Restart video when slide changes
   React.useEffect(() => {
-    const duration = 10000; // 10 seconds
-    const interval = 50; // Update every 50ms for smooth progress
+    const currentVideo = videoRefs.current[currentSlide];
+    if (currentVideo) {
+      currentVideo.currentTime = 0;
+      currentVideo.play().catch(() => {
+        // Handle autoplay restrictions
+      });
+    }
+  }, [currentSlide]);
+
+  // Single continuous progress interval
+  React.useEffect(() => {
+    const duration = 9000; // 9 seconds
+    const interval = 50; // Update every 50ms
+    
+    progressStartTime.current = Date.now();
     
     const progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        const newProgress = prev + (interval / duration) * 100;
-        if (newProgress >= 100) {
-          // Move to next slide and reset progress
-          setCurrentSlide((current) => (current + 1) % carouselSlides.length);
-          return 0; // Reset progress immediately
-        }
-        return newProgress;
-      });
+      if (isManualChange.current) {
+        // Skip this cycle if manual change happened
+        isManualChange.current = false;
+        progressStartTime.current = Date.now();
+        setProgress(0);
+        return;
+      }
+      
+      const elapsed = Date.now() - progressStartTime.current;
+      const newProgress = (elapsed / duration) * 100;
+      
+      if (newProgress >= 100) {
+        // Move to next slide
+        setCurrentSlide((current) => (current + 1) % carouselSlides.length);
+        progressStartTime.current = Date.now();
+        setProgress(0);
+      } else {
+        setProgress(newProgress);
+      }
     }, interval);
 
     return () => clearInterval(progressInterval);
-  }, [carouselSlides.length]); // Remove currentSlide dependency
+  }, [carouselSlides.length]);
 
   // Reset progress when slide changes manually
   const handleSlideChange = (index: number) => {
     setCurrentSlide(index);
+    isManualChange.current = true;
+    progressStartTime.current = Date.now();
     setProgress(0);
   };
 
@@ -266,6 +294,9 @@ export function HomePage() {
                   >
                     {slide.video ? (
                       <video
+                        ref={(el) => {
+                          videoRefs.current[index] = el;
+                        }}
                         src={slide.video}
                         autoPlay
                         loop
@@ -280,12 +311,12 @@ export function HomePage() {
                       />
                     )}
                     <div className="absolute inset-0 bg-black/40 rounded-lg" />
-                    <div className="absolute inset-0 flex items-center justify-start px-8 md:px-16">
-                      <div className="text-left text-white max-w-2xl">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center text-white max-w-4xl px-6">
                         <h1 className="text-3xl md:text-5xl font-bold mb-4 leading-tight">
                           {slide.title}
                         </h1>
-                        <p className="text-base md:text-lg mb-6 opacity-90">
+                        <p className="text-base md:text-lg mb-6 opacity-90 max-w-2xl mx-auto">
                           {slide.subtitle}
                         </p>
                         <Link to={slide.buttonLink}>
