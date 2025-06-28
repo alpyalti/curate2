@@ -13,7 +13,7 @@ interface SearchBarProps {
 
 export function SearchBar({
   className,
-  placeholder = "Search for products, brands, categories...",
+  placeholder = "Search for products...",
   onSearch
 }: SearchBarProps) {
   const [query, setQuery] = useState("");
@@ -72,14 +72,7 @@ export function SearchBar({
     inputRef.current?.focus();
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
-    setQuery(suggestion);
-    setShowSuggestions(false);
-    if (onSearch) {
-      onSearch(suggestion);
-    }
-    inputRef.current?.blur();
-  };
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -161,7 +154,7 @@ export function SearchBar({
                     </div>
                   </div>
                   <div className="text-sm font-medium">
-                    {product.discount?.discountedPrice.formattedAmount || product.price.formattedAmount}
+                    {product.price.formattedAmount}
                   </div>
                 </Link>
               ))}
