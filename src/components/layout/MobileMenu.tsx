@@ -93,7 +93,7 @@ const menuItems: MenuItemProps[] = [
 ];
 
 const secondaryMenuItems = [
-  { title: "Track Orders", href: "/track-orders", icon: Package },
+  { title: "Track Orders", href: "/track-order", icon: Package },
   { title: "Need Help?", href: "/contact", icon: HelpCircle },
   { title: "FAQ", href: "/faq", icon: FileText },
   { title: "Shipping Policy", href: "/shipping-policies", icon: Truck },
