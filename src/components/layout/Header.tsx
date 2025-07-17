@@ -511,50 +511,56 @@ export function Header({
                       </div>
                       
                       {/* Scrollable Products Area */}
-                      <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-80">
-                        {cartItems.map((item) => (
-                          <div key={item.id} className="flex gap-3">
-                            <Link to={`/product/${item.id}`} className="flex-shrink-0">
-                              <img 
-                                src={item.image} 
-                                alt={item.name}
-                                className="w-16 h-20 object-cover rounded"
-                              />
-                            </Link>
-                            <div className="flex-1 min-w-0">
-                              <Link 
-                                to={`/product/${item.id}`}
-                                className="font-medium text-sm hover:text-primary transition-colors line-clamp-2"
-                              >
-                                {item.name}
+                      <div className="flex-1 overflow-y-auto p-4 max-h-80">
+                        {cartItems.map((item, index) => (
+                          <div key={item.id}>
+                            <div className="flex gap-3 py-2">
+                              <Link to={`/product/${item.id}`} className="flex-shrink-0">
+                                <img 
+                                  src={item.image} 
+                                  alt={item.name}
+                                  className="w-16 h-20 object-cover rounded"
+                                />
                               </Link>
-                              <p className="text-xs text-muted-foreground mt-1">{item.brand}</p>
-                              <p className="text-xs text-muted-foreground">
-                                {item.color} • {item.size}
-                              </p>
-                              {item.isLowStock && (
-                                <div className="flex items-center gap-1 mt-1">
-                                  <Clock className="h-3 w-3 text-orange-500" />
-                                  <p className="text-xs text-orange-600">
-                                    Low in stock: only {item.stockCount} left
+                              <div className="flex-1 min-w-0">
+                                <Link 
+                                  to={`/product/${item.id}`}
+                                  className="font-medium text-sm hover:text-primary transition-colors line-clamp-2"
+                                >
+                                  {item.name}
+                                </Link>
+                                <p className="text-xs text-muted-foreground mt-1">{item.brand}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  {item.color} • {item.size}
+                                </p>
+                                {item.isLowStock && (
+                                  <div className="flex items-center gap-1 mt-1">
+                                    <Clock className="h-3 w-3 text-orange-500" />
+                                    <p className="text-xs text-orange-600">
+                                      Low in stock: only {item.stockCount} left
+                                    </p>
+                                  </div>
+                                )}
+                                <div className="flex items-center justify-between mt-2">
+                                  <div className="flex items-center gap-2">
+                                    <Button variant="outline" size="icon" className="h-6 w-6">
+                                      <Minus className="h-3 w-3" />
+                                    </Button>
+                                    <span className="text-sm">{item.quantity}</span>
+                                    <Button variant="outline" size="icon" className="h-6 w-6">
+                                      <Plus className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                  <p className="font-semibold text-sm">
+                                    {item.price} AED
                                   </p>
                                 </div>
-                              )}
-                              <div className="flex items-center justify-between mt-2">
-                                <div className="flex items-center gap-2">
-                                  <Button variant="outline" size="icon" className="h-6 w-6">
-                                    <Minus className="h-3 w-3" />
-                                  </Button>
-                                  <span className="text-sm">{item.quantity}</span>
-                                  <Button variant="outline" size="icon" className="h-6 w-6">
-                                    <Plus className="h-3 w-3" />
-                                  </Button>
-                                </div>
-                                <p className="font-semibold text-sm">
-                                  {item.price} AED
-                                </p>
                               </div>
                             </div>
+                            {/* Divider line - show for all items except the last one */}
+                            {index < cartItems.length - 1 && (
+                              <div className="border-t border-gray-200 my-2"></div>
+                            )}
                           </div>
                         ))}
                       </div>

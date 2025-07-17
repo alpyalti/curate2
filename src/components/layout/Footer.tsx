@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, ChevronDown } from "lucide-react";
+import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, ChevronDown, Check } from "lucide-react";
 import { Button } from "../ui/button";
 
 const footerLinks = {
@@ -31,6 +31,8 @@ const languages = ["English", "العربية", "Français"];
 
 export function Footer() {
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [subscriptionState, setSubscriptionState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [email, setEmail] = useState('');
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => 
@@ -38,6 +40,21 @@ export function Footer() {
         ? prev.filter(s => s !== section)
         : [...prev, section]
     );
+  };
+
+  const handleSubscribe = async () => {
+    if (!email || !email.includes('@')) {
+      setSubscriptionState('error');
+      return;
+    }
+
+    setSubscriptionState('loading');
+    
+    // Simulate API call
+    setTimeout(() => {
+      setSubscriptionState('success');
+      setEmail('');
+    }, 1000);
   };
 
   const AccordionSection = ({ title, children }: { title: string; children: React.ReactNode }) => {
@@ -88,20 +105,55 @@ export function Footer() {
             
             {/* Newsletter - Accordion */}
             <AccordionSection title="Stay in the loop">
-              <p className="text-sm text-muted-foreground mb-4">
-                Be the first to know about new arrivals, exclusive sales, and special events.
-              </p>
-              <div className="space-y-3">
-                <input
-                  type="email"
-                  placeholder="Enter your email address"
-                  className="w-full h-10 px-3 rounded-md border border-input bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-sm"
-                />
-                <Button size="sm" className="w-full">Subscribe</Button>
-              </div>
-              <p className="text-xs text-muted-foreground mt-3">
-                By subscribing, you agree to our Privacy Policy and consent to receive updates.
-              </p>
+              {subscriptionState === 'success' ? (
+                <div className="py-2">
+                  <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
+                    <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                      <Check className="h-4 w-4 text-green-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h5 className="font-semibold text-sm text-green-800 mb-1">Successfully subscribed!</h5>
+                      <p className="text-xs text-green-700">
+                        You'll be the first to know about new arrivals and exclusive offers.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Be the first to know about new arrivals, exclusive sales, and special events.
+                  </p>
+                  <div className="space-y-3">
+                    <input
+                      type="email"
+                      placeholder="Enter your email address"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (subscriptionState === 'error') setSubscriptionState('idle');
+                      }}
+                      className={`w-full h-10 px-3 rounded-md border bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-sm ${
+                        subscriptionState === 'error' ? 'border-red-500' : 'border-input'
+                      }`}
+                    />
+                    <Button 
+                      size="sm" 
+                      className="w-full" 
+                      onClick={handleSubscribe}
+                      disabled={subscriptionState === 'loading'}
+                    >
+                      {subscriptionState === 'loading' ? 'Subscribing...' : 'Subscribe'}
+                    </Button>
+                    {subscriptionState === 'error' && (
+                      <p className="text-xs text-red-600">Please enter a valid email address.</p>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-3">
+                    By subscribing, you agree to our Privacy Policy and consent to receive updates.
+                  </p>
+                </>
+              )}
             </AccordionSection>
           </div>
 
@@ -269,20 +321,55 @@ export function Footer() {
           {/* Newsletter Section */}
           <div>
             <h4 className="font-semibold mb-4">Stay in the loop</h4>
-            <p className="text-sm text-muted-foreground mb-4">
-              Be the first to know about new arrivals, exclusive sales, and special events.
-            </p>
-            <div className="space-y-3">
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                className="w-full h-10 px-3 rounded-md border border-input bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-sm"
-              />
-              <Button size="sm" className="w-full">Subscribe</Button>
-            </div>
-            <p className="text-xs text-muted-foreground mt-3">
-              By subscribing, you agree to our Privacy Policy and consent to receive updates.
-            </p>
+            {subscriptionState === 'success' ? (
+              <div className="py-2">
+                <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                    <Check className="h-4 w-4 text-green-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h5 className="font-semibold text-sm text-green-800 mb-1">Successfully subscribed!</h5>
+                    <p className="text-xs text-green-700">
+                      You'll be the first to know about new arrivals and exclusive offers.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Be the first to know about new arrivals, exclusive sales, and special events.
+                </p>
+                <div className="space-y-3">
+                  <input
+                    type="email"
+                    placeholder="Enter your email address"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (subscriptionState === 'error') setSubscriptionState('idle');
+                    }}
+                    className={`w-full h-10 px-3 rounded-md border bg-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-sm ${
+                      subscriptionState === 'error' ? 'border-red-500' : 'border-input'
+                    }`}
+                  />
+                  <Button 
+                    size="sm" 
+                    className="w-full" 
+                    onClick={handleSubscribe}
+                    disabled={subscriptionState === 'loading'}
+                  >
+                    {subscriptionState === 'loading' ? 'Subscribing...' : 'Subscribe'}
+                  </Button>
+                  {subscriptionState === 'error' && (
+                    <p className="text-xs text-red-600">Please enter a valid email address.</p>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground mt-3">
+                  By subscribing, you agree to our Privacy Policy and consent to receive updates.
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>
