@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { 
   Minus, 
@@ -20,7 +20,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Label } from "../ui/label";
-import { Checkbox } from "../ui/checkbox";
 import { cn } from "../../lib/utils";
 
 interface CartItem {
@@ -108,7 +107,7 @@ const mockCartItems: CartItem[] = [
 const checkoutSteps: CheckoutStep[] = [
   { id: "shipping", title: "Shipping Address", completed: false, active: false },
   { id: "delivery", title: "Delivery Mode", completed: false, active: false },
-  { id: "payment", title: "Payment", completed: false, active: false },
+  { id: "payment", title: "Payment Method", completed: false, active: false },
   { id: "review", title: "Review Order", completed: false, active: false }
 ];
 
@@ -122,33 +121,17 @@ export function CartPage() {
   
   // Checkout form states
   const [shippingAddress, setShippingAddress] = useState({
-    title: '',
     firstName: '',
     lastName: '',
     email: '',
-    countryCode: '+971',
     phone: '',
     address: '',
     apartment: '',
     city: '',
     country: 'United Arab Emirates',
-    isDefault: false
+    emirate: '',
+    postalCode: ''
   });
-
-  const [billingAddress, setBillingAddress] = useState({
-    title: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    countryCode: '+971',
-    phone: '',
-    address: '',
-    apartment: '',
-    city: '',
-    country: 'United Arab Emirates'
-  });
-
-  const [sameAsShipping, setSameAsShipping] = useState(true);
 
   // Mock saved addresses
   const [savedAddresses] = useState<SavedAddress[]>([
@@ -195,110 +178,6 @@ export function CartPage() {
 
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
-  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
-  const [countrySearch, setCountrySearch] = useState('');
-
-  // Close country dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Element;
-      if (showCountryDropdown && !target.closest('.country-dropdown-container')) {
-        setShowCountryDropdown(false);
-        setCountrySearch('');
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, [showCountryDropdown]);
-
-  // Country codes data
-  const countryCodes = [
-    { code: '+971', name: 'UAE', flag: '🇦🇪' },
-    { code: '+966', name: 'Saudi Arabia', flag: '🇸🇦' },
-    { code: '+974', name: 'Qatar', flag: '🇶🇦' },
-    { code: '+973', name: 'Bahrain', flag: '🇧🇭' },
-    { code: '+965', name: 'Kuwait', flag: '🇰🇼' },
-    { code: '+968', name: 'Oman', flag: '🇴🇲' },
-    { code: '+1', name: 'USA', flag: '🇺🇸' },
-    { code: '+44', name: 'UK', flag: '🇬🇧' },
-    { code: '+91', name: 'India', flag: '🇮🇳' },
-    { code: '+86', name: 'China', flag: '🇨🇳' },
-    { code: '+81', name: 'Japan', flag: '🇯🇵' },
-    { code: '+49', name: 'Germany', flag: '🇩🇪' },
-    { code: '+33', name: 'France', flag: '🇫🇷' },
-    { code: '+39', name: 'Italy', flag: '🇮🇹' },
-    { code: '+34', name: 'Spain', flag: '🇪🇸' },
-    { code: '+31', name: 'Netherlands', flag: '🇳🇱' },
-    { code: '+32', name: 'Belgium', flag: '🇧🇪' },
-    { code: '+41', name: 'Switzerland', flag: '🇨🇭' },
-    { code: '+43', name: 'Austria', flag: '🇦🇹' },
-    { code: '+46', name: 'Sweden', flag: '🇸🇪' },
-    { code: '+47', name: 'Norway', flag: '🇳🇴' },
-    { code: '+45', name: 'Denmark', flag: '🇩🇰' },
-    { code: '+358', name: 'Finland', flag: '🇫🇮' },
-    { code: '+48', name: 'Poland', flag: '🇵🇱' },
-    { code: '+420', name: 'Czech Republic', flag: '🇨🇿' },
-    { code: '+36', name: 'Hungary', flag: '🇭🇺' },
-    { code: '+30', name: 'Greece', flag: '🇬🇷' },
-    { code: '+351', name: 'Portugal', flag: '🇵🇹' },
-    { code: '+353', name: 'Ireland', flag: '🇮🇪' },
-    { code: '+61', name: 'Australia', flag: '🇦🇺' },
-    { code: '+64', name: 'New Zealand', flag: '🇳🇿' },
-    { code: '+27', name: 'South Africa', flag: '🇿🇦' },
-    { code: '+52', name: 'Mexico', flag: '🇲🇽' },
-    { code: '+55', name: 'Brazil', flag: '🇧🇷' },
-    { code: '+54', name: 'Argentina', flag: '🇦🇷' },
-    { code: '+56', name: 'Chile', flag: '🇨🇱' },
-    { code: '+57', name: 'Colombia', flag: '🇨🇴' },
-    { code: '+58', name: 'Venezuela', flag: '🇻🇪' },
-    { code: '+593', name: 'Ecuador', flag: '🇪🇨' },
-    { code: '+51', name: 'Peru', flag: '🇵🇪' },
-    { code: '+591', name: 'Bolivia', flag: '🇧🇴' },
-    { code: '+595', name: 'Paraguay', flag: '🇵🇾' },
-    { code: '+598', name: 'Uruguay', flag: '🇺🇾' },
-    { code: '+593', name: 'Ecuador', flag: '🇪🇨' },
-    { code: '+507', name: 'Panama', flag: '🇵🇦' },
-    { code: '+506', name: 'Costa Rica', flag: '🇨🇷' },
-    { code: '+502', name: 'Guatemala', flag: '🇬🇹' },
-    { code: '+503', name: 'El Salvador', flag: '🇸🇻' },
-    { code: '+504', name: 'Honduras', flag: '🇭🇳' },
-    { code: '+505', name: 'Nicaragua', flag: '🇳🇮' },
-    { code: '+501', name: 'Belize', flag: '🇧🇿' },
-    { code: '+509', name: 'Haiti', flag: '🇭🇹' },
-    { code: '+1-809', name: 'Dominican Republic', flag: '🇩🇴' },
-    { code: '+1-876', name: 'Jamaica', flag: '🇯🇲' },
-    { code: '+1-868', name: 'Trinidad and Tobago', flag: '🇹🇹' },
-    { code: '+1-246', name: 'Barbados', flag: '🇧🇧' },
-    { code: '+1-473', name: 'Grenada', flag: '🇬🇩' },
-    { code: '+1-784', name: 'Saint Vincent', flag: '🇻🇨' },
-    { code: '+1-758', name: 'Saint Lucia', flag: '🇱🇨' },
-    { code: '+1-767', name: 'Dominica', flag: '🇩🇲' },
-    { code: '+1-664', name: 'Montserrat', flag: '🇲🇸' },
-    { code: '+1-649', name: 'Turks and Caicos', flag: '🇹🇨' },
-    { code: '+1-284', name: 'British Virgin Islands', flag: '🇻🇬' },
-    { code: '+1-340', name: 'U.S. Virgin Islands', flag: '🇻🇮' },
-    { code: '+1-242', name: 'Bahamas', flag: '🇧🇸' },
-    { code: '+1-441', name: 'Bermuda', flag: '🇧🇲' },
-    { code: '+1-345', name: 'Cayman Islands', flag: '🇰🇾' },
-    { code: '+1-809', name: 'Dominican Republic', flag: '🇩🇴' },
-    { code: '+1-876', name: 'Jamaica', flag: '🇯🇲' },
-    { code: '+1-868', name: 'Trinidad and Tobago', flag: '🇹🇹' },
-    { code: '+1-246', name: 'Barbados', flag: '🇧🇧' },
-    { code: '+1-473', name: 'Grenada', flag: '🇬🇩' },
-    { code: '+1-784', name: 'Saint Vincent', flag: '🇻🇨' },
-    { code: '+1-758', name: 'Saint Lucia', flag: '🇱🇨' },
-    { code: '+1-767', name: 'Dominica', flag: '🇩🇲' },
-    { code: '+1-664', name: 'Montserrat', flag: '🇲🇸' },
-    { code: '+1-649', name: 'Turks and Caicos', flag: '🇹🇨' },
-    { code: '+1-284', name: 'British Virgin Islands', flag: '🇻🇬' },
-    { code: '+1-340', name: 'U.S. Virgin Islands', flag: '🇻🇮' },
-    { code: '+1-242', name: 'Bahamas', flag: '🇧🇸' },
-    { code: '+1-441', name: 'Bermuda', flag: '🇧🇲' },
-    { code: '+1-345', name: 'Cayman Islands', flag: '🇰🇾' }
-  ];
   
   const [deliveryMode, setDeliveryMode] = useState('standard');
   const [paymentMethod, setPaymentMethod] = useState('');
@@ -370,17 +249,16 @@ export function CartPage() {
   const selectAddress = (address: SavedAddress) => {
     setSelectedAddressId(address.id);
     setShippingAddress({
-      title: '',
       firstName: address.firstName,
       lastName: address.lastName,
       email: address.email,
-      countryCode: '+971',
       phone: address.phone,
       address: address.address,
       apartment: address.apartment || '',
       city: address.city,
       country: 'United Arab Emirates',
-      isDefault: address.isDefault || false
+      emirate: address.emirate,
+      postalCode: address.postalCode || ''
     });
     setShowNewAddressForm(false);
   };
@@ -389,17 +267,16 @@ export function CartPage() {
     setSelectedAddressId(null);
     setShowNewAddressForm(true);
     setShippingAddress({
-      title: '',
       firstName: '',
       lastName: '',
       email: '',
-      countryCode: '+971',
       phone: '',
       address: '',
       apartment: '',
       city: '',
       country: 'United Arab Emirates',
-      isDefault: false
+      emirate: '',
+      postalCode: ''
     });
   };
 
@@ -713,107 +590,66 @@ export function CartPage() {
                     {currentStep === 0 && (
                       <div className="space-y-6">
                         {/* Select Shipping Address Section */}
-                        {!showNewAddressForm && (
-                          <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                              <h3 className="text-lg font-semibold">Select your Shipping Address</h3>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={handleAddNewAddress}
-                                className="text-sm"
-                              >
-                                + Add New Address
-                              </Button>
-                            </div>
-                            
-                            {/* Saved Addresses - 2x2 Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              {savedAddresses.map((address) => (
-                                <div
-                                  key={address.id}
-                                  className={cn(
-                                    "border rounded-lg p-4 cursor-pointer transition-all",
-                                    selectedAddressId === address.id 
-                                      ? "border-primary bg-primary/5" 
-                                      : "border-muted hover:border-gray-300"
-                                  )}
-                                  onClick={() => selectAddress(address)}
-                                >
-                                  <div className="flex items-start justify-between">
-                                    <div className="flex-1">
-                                      <div className="flex items-center gap-2 mb-2">
-                                        <h4 className="font-medium">{address.firstName} {address.lastName}</h4>
-                                        {address.isDefault && (
-                                          <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded">
-                                            Default
-                                          </span>
-                                        )}
-                                      </div>
-                                      <div className="text-sm space-y-1 text-muted-foreground">
-                                        <p>{address.address}</p>
-                                        {address.apartment && <p>{address.apartment}</p>}
-                                        <p>{address.city}, {address.emirate}</p>
-                                        <p className="flex items-center gap-2">
-                                          <div className="w-4 h-4 rounded-full overflow-hidden flex-shrink-0">
-                                            <div className="w-full h-full relative">
-                                              {/* Sol dikey kırmızı şerit */}
-                                              <div className="absolute left-0 top-0 w-1/4 h-full bg-red-600"></div>
-                                              {/* Sağ tarafta yatay şeritler */}
-                                              <div className="absolute left-1/4 top-0 w-3/4 h-1/3 bg-green-600"></div>
-                                              <div className="absolute left-1/4 top-1/3 w-3/4 h-1/3 bg-white"></div>
-                                              <div className="absolute left-1/4 top-2/3 w-3/4 h-1/3 bg-black"></div>
-                                            </div>
-                                          </div>
-                                          {address.phone}
-                                        </p>
-                                      </div>
-                                    </div>
-                                    <div className={cn(
-                                      "w-5 h-5 rounded-full border-2 ml-4",
-                                      selectedAddressId === address.id 
-                                        ? "border-primary bg-primary" 
-                                        : "border-muted"
-                                    )} />
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <h3 className="text-lg font-semibold">Select your Shipping Address</h3>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={handleAddNewAddress}
+                              className="text-sm"
+                            >
+                              + Add New Address
+                            </Button>
                           </div>
-                        )}
+                          
+                          {/* Saved Addresses */}
+                          <div className="grid gap-3">
+                            {savedAddresses.map((address) => (
+                              <div
+                                key={address.id}
+                                className={cn(
+                                  "border rounded-lg p-4 cursor-pointer transition-all",
+                                  selectedAddressId === address.id 
+                                    ? "border-primary bg-primary/5" 
+                                    : "border-muted hover:border-gray-300"
+                                )}
+                                onClick={() => selectAddress(address)}
+                              >
+                                <div className="flex items-start justify-between">
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <h4 className="font-medium">{address.name}</h4>
+                                      {address.isDefault && (
+                                        <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded">
+                                          Default
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="text-sm space-y-1 text-muted-foreground">
+                                      <p>{address.firstName} {address.lastName}</p>
+                                      <p>{address.address}</p>
+                                      {address.apartment && <p>{address.apartment}</p>}
+                                      <p>{address.city}, {address.emirate}</p>
+                                      <p>{address.phone}</p>
+                                    </div>
+                                  </div>
+                                  <div className={cn(
+                                    "w-5 h-5 rounded-full border-2 ml-4",
+                                    selectedAddressId === address.id 
+                                      ? "border-primary bg-primary" 
+                                      : "border-muted"
+                                  )} />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
 
                         {/* New Address Form */}
                         {showNewAddressForm && (
-                          <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                              <h3 className="text-lg font-semibold">Add New Address</h3>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setShowNewAddressForm(false)}
-                                className="text-sm"
-                              >
-                                ← Back
-                              </Button>
-                            </div>
-                            {/* Title Dropdown */}
-                            <div>
-                              <Label htmlFor="title">Title (Optional)</Label>
-                              <Select value={shippingAddress.title} onValueChange={(value) => setShippingAddress(prev => ({...prev, title: value}))}>
-                                <SelectTrigger className="h-12 md:h-10">
-                                  <SelectValue placeholder="Select title" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="Mr.">Mr.</SelectItem>
-                                  <SelectItem value="Mrs.">Mrs.</SelectItem>
-                                  <SelectItem value="Ms.">Ms.</SelectItem>
-                                  <SelectItem value="Miss">Miss</SelectItem>
-                                  <SelectItem value="Rev.">Rev.</SelectItem>
-                                  <SelectItem value="Dr.">Dr.</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-
+                          <div className="space-y-4 border-t pt-6">
+                            <h3 className="text-lg font-semibold">Add New Address</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <div>
                                 <Label htmlFor="firstName">First Name *</Label>
@@ -851,76 +687,13 @@ export function CartPage() {
                             
                             <div>
                               <Label htmlFor="phone">Phone Number *</Label>
-                              <div className="flex gap-2">
-                                {/* Country Code Selector */}
-                                <div className="relative country-dropdown-container">
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setShowCountryDropdown(!showCountryDropdown);
-                                    }}
-                                    className="flex items-center gap-2 px-3 py-2 border border-input bg-background rounded-md h-12 md:h-10 min-w-[100px] hover:bg-accent"
-                                  >
-                                    <span className="text-lg">{countryCodes.find(c => c.code === shippingAddress.countryCode)?.flag || '🇦🇪'}</span>
-                                    <span className="text-sm font-medium">{shippingAddress.countryCode}</span>
-                                    <svg className="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                  </button>
-                                  
-                                  {/* Country Dropdown */}
-                                  {showCountryDropdown && (
-                                    <div className="absolute top-full left-0 mt-1 w-80 bg-background border rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
-                                      {/* Search Input */}
-                                      <div className="p-3 border-b">
-                                        <input
-                                          type="text"
-                                          placeholder="Search countries..."
-                                          value={countrySearch}
-                                          onChange={(e) => setCountrySearch(e.target.value)}
-                                          onClick={(e) => e.stopPropagation()}
-                                          className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                        />
-                                      </div>
-                                      
-                                      {/* Country List */}
-                                      <div className="py-1">
-                                        {countryCodes
-                                          .filter(country => 
-                                            country.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
-                                            country.code.includes(countrySearch)
-                                          )
-                                          .map((country) => (
-                                            <button
-                                              key={country.code}
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                setShippingAddress(prev => ({...prev, countryCode: country.code}));
-                                                setShowCountryDropdown(false);
-                                                setCountrySearch('');
-                                              }}
-                                              className="flex items-center gap-3 w-full px-3 py-2 text-left hover:bg-accent"
-                                            >
-                                              <span className="text-lg">{country.flag}</span>
-                                              <span className="text-sm font-medium">{country.code}</span>
-                                              <span className="text-sm text-muted-foreground">{country.name}</span>
-                                            </button>
-                                          ))}
-                                      </div>
-                                    </div>
-                                  )}
-                                </div>
-                                
-                                {/* Phone Number Input */}
-                                <Input
-                                  id="phone"
-                                  value={shippingAddress.phone}
-                                  onChange={(e) => setShippingAddress(prev => ({...prev, phone: e.target.value}))}
-                                  placeholder="XX XXX XXXX"
-                                  className="h-12 md:h-10 flex-1"
-                                />
-                              </div>
+                              <Input
+                                id="phone"
+                                value={shippingAddress.phone}
+                                onChange={(e) => setShippingAddress(prev => ({...prev, phone: e.target.value}))}
+                                placeholder="+971 XX XXX XXXX"
+                                className="h-12 md:h-10"
+                              />
                             </div>
                             
                             <div>
@@ -945,36 +718,45 @@ export function CartPage() {
                               />
                             </div>
                             
-                            <div>
-                              <Label htmlFor="city">City *</Label>
-                              <Select value={shippingAddress.city} onValueChange={(value) => setShippingAddress(prev => ({...prev, city: value}))}>
-                                <SelectTrigger className="h-12 md:h-10">
-                                  <SelectValue placeholder="Select city" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="Abu Dhabi">Abu Dhabi</SelectItem>
-                                  <SelectItem value="Dubai">Dubai</SelectItem>
-                                  <SelectItem value="Sharjah">Sharjah</SelectItem>
-                                  <SelectItem value="Ajman">Ajman</SelectItem>
-                                  <SelectItem value="Umm Al Quwain">Umm Al Quwain</SelectItem>
-                                  <SelectItem value="Ras Al Khaimah">Ras Al Khaimah</SelectItem>
-                                  <SelectItem value="Fujairah">Fujairah</SelectItem>
-                                </SelectContent>
-                              </Select>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor="city">City *</Label>
+                                <Input
+                                  id="city"
+                                  value={shippingAddress.city}
+                                  onChange={(e) => setShippingAddress(prev => ({...prev, city: e.target.value}))}
+                                  placeholder="Enter city"
+                                  className="h-12 md:h-10"
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="emirate">Emirate *</Label>
+                                <Select value={shippingAddress.emirate} onValueChange={(value) => setShippingAddress(prev => ({...prev, emirate: value}))}>
+                                  <SelectTrigger className="h-12 md:h-10">
+                                    <SelectValue placeholder="Select emirate" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="abu-dhabi">Abu Dhabi</SelectItem>
+                                    <SelectItem value="dubai">Dubai</SelectItem>
+                                    <SelectItem value="sharjah">Sharjah</SelectItem>
+                                    <SelectItem value="ajman">Ajman</SelectItem>
+                                    <SelectItem value="umm-al-quwain">Umm Al Quwain</SelectItem>
+                                    <SelectItem value="ras-al-khaimah">Ras Al Khaimah</SelectItem>
+                                    <SelectItem value="fujairah">Fujairah</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
                             </div>
                             
-                            {/* Set as Default Checkbox */}
-                            <div className="flex items-center space-x-2 pt-2">
-                              <Checkbox
-                                id="isDefault"
-                                checked={shippingAddress.isDefault}
-                                onCheckedChange={(checked) => 
-                                  setShippingAddress(prev => ({...prev, isDefault: checked as boolean}))
-                                }
+                            <div>
+                              <Label htmlFor="postalCode">Postal Code (optional)</Label>
+                              <Input
+                                id="postalCode"
+                                value={shippingAddress.postalCode}
+                                onChange={(e) => setShippingAddress(prev => ({...prev, postalCode: e.target.value}))}
+                                placeholder="Enter postal code"
+                                className="h-12 md:h-10"
                               />
-                              <Label htmlFor="isDefault" className="text-sm font-normal">
-                                Set as default address
-                              </Label>
                             </div>
                           </div>
                         )}
@@ -984,7 +766,7 @@ export function CartPage() {
                     {/* Delivery Mode Form */}
                     {currentStep === 1 && (
                       <div className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-4">
                           <div 
                             className={cn(
                               "border rounded-lg p-4 cursor-pointer transition-all touch-manipulation",
@@ -1029,14 +811,20 @@ export function CartPage() {
                             </div>
                           </div>
                         </div>
+                        
+                        <div className="bg-muted/30 p-4 rounded-lg">
+                          <h4 className="font-medium mb-2">Delivery Notes</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Free delivery on orders over 500 AED. Pick-up location details will be provided after order confirmation.
+                          </p>
+                        </div>
                       </div>
                     )}
 
-                    {/* Payment Form */}
+                    {/* Payment Method Form */}
                     {currentStep === 2 && (
                       <div className="space-y-6">
-                        {/* Payment Method Selection */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-4">
                           <div 
                             className={cn(
                               "border rounded-lg p-4 cursor-pointer transition-all touch-manipulation",
@@ -1051,244 +839,165 @@ export function CartPage() {
                               )} />
                               <div className="flex items-center gap-2">
                                 <CreditCard className="h-5 w-5" />
-                                <span className="font-medium">Pay online</span>
+                                <span className="font-medium">Credit / Debit Card</span>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2 mt-3">
-                              <img src="/Container.png" alt="Payment Methods" className="h-8" />
-                            </div>
                           </div>
-                        </div>
-
-                        {/* Billing Address Section */}
-                        <div className="space-y-4">
-                          <h4 className="font-medium">Billing address</h4>
                           
-                          {/* Same as Shipping Checkbox */}
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="sameAsShipping"
-                              checked={sameAsShipping}
-                              onCheckedChange={(checked) => {
-                                setSameAsShipping(checked as boolean);
-                                if (checked) {
-                                  setBillingAddress(shippingAddress);
-                                }
-                              }}
-                            />
-                            <Label htmlFor="sameAsShipping" className="text-sm font-normal">
-                              Same as shipping address
-                            </Label>
+                          <div 
+                            className={cn(
+                              "border rounded-lg p-4 cursor-pointer transition-all touch-manipulation",
+                              paymentMethod === 'apple-pay' ? "border-primary bg-primary/5" : "border-muted hover:border-gray-300"
+                            )}
+                            onClick={() => setPaymentMethod('apple-pay')}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className={cn(
+                                "w-5 h-5 rounded-full border-2",
+                                paymentMethod === 'apple-pay' ? "border-primary bg-primary" : "border-muted"
+                              )} />
+                              <div className="flex items-center gap-2">
+                                <svg className="h-5 w-5" viewBox="0 0 32 32" fill="currentColor">
+                                  <path d="M16.789 13.911c0 0.956-0.583 1.506-1.611 1.506h-1.35v-3.011h1.356c1.022 0 1.605 0.544 1.605 1.505zM19.428 17.389c0 0.461 0.4 0.761 1.028 0.761 0.8 0 1.4-0.505 1.4-1.217v-0.428l-1.306 0.083c-0.739 0.050-1.122 0.322-1.122 0.8zM32 6.167v19.556c0 1.472-1.194 2.667-2.667 2.667h-26.667c-1.472 0-2.667-1.194-2.667-2.667v-19.556c0-1.472 1.194-2.667 2.667-2.667h26.667c1.472 0 2.667 1.194 2.667 2.667zM7.1 12.733c0.467 0.039 0.933-0.233 1.228-0.578 0.289-0.356 0.478-0.833 0.428-1.317-0.411 0.017-0.922 0.272-1.217 0.628-0.267 0.306-0.494 0.8-0.439 1.267zM10.467 16.872c-0.011-0.011-1.089-0.422-1.1-1.667-0.011-1.039 0.85-1.539 0.889-1.567-0.489-0.722-1.245-0.8-1.506-0.817-0.678-0.039-1.256 0.383-1.578 0.383-0.328 0-0.817-0.367-1.35-0.355-0.694 0.011-1.344 0.406-1.694 1.033-0.728 1.256-0.189 3.111 0.517 4.133 0.344 0.505 0.761 1.061 1.306 1.039 0.516-0.022 0.722-0.333 1.344-0.333 0.628 0 0.806 0.333 1.35 0.328 0.567-0.011 0.917-0.505 1.267-1.011 0.383-0.578 0.544-1.133 0.556-1.167zM17.989 13.906c0-1.478-1.028-2.489-2.495-2.489h-2.844v7.578h1.178v-2.589h1.628c1.489 0 2.533-1.022 2.533-2.5zM22.989 15.222c0-1.094-0.878-1.8-2.222-1.8-1.25 0-2.172 0.717-2.206 1.694h1.061c0.089-0.467 0.522-0.772 1.111-0.772 0.722 0 1.122 0.333 1.122 0.956v0.417l-1.467 0.089c-1.367 0.083-2.105 0.645-2.105 1.617 0 0.983 0.761 1.633 1.855 1.633 0.739 0 1.422-0.372 1.733-0.967h0.022v0.911h1.089v-3.778zM28.667 13.494h-1.194l-1.383 4.478h-0.022l-1.383-4.478h-1.239l1.994 5.517-0.105 0.333c-0.178 0.567-0.472 0.789-0.994 0.789-0.095 0-0.272-0.011-0.345-0.017v0.911c0.067 0.022 0.361 0.028 0.45 0.028 1.15 0 1.689-0.439 2.161-1.767z"/>
+                                </svg>
+                                <span className="font-medium">Apple Pay</span>
+                              </div>
+                            </div>
                           </div>
-
-                          {/* Billing Address Display */}
-                          {sameAsShipping && (
-                            <div className="bg-muted/30 p-4 rounded-lg">
-                              <div className="text-sm space-y-1">
-                                <p className="font-medium">Ahmed Al Mansouri</p>
-                                <p>123 Sheikh Zayed Street</p>
-                                <p>Abu Dhabi, UAE</p>
+                          
+                          <div 
+                            className={cn(
+                              "border rounded-lg p-4 cursor-pointer transition-all touch-manipulation",
+                              paymentMethod === 'google-pay' ? "border-primary bg-primary/5" : "border-muted hover:border-gray-300"
+                            )}
+                            onClick={() => setPaymentMethod('google-pay')}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className={cn(
+                                "w-5 h-5 rounded-full border-2",
+                                paymentMethod === 'google-pay' ? "border-primary bg-primary" : "border-muted"
+                              )} />
+                              <div className="flex items-center gap-2">
+                                <svg className="h-5 w-5" viewBox="0 -9 58 58" fill="none">
+                                  <rect x="0.5" y="0.5" width="57" height="39" rx="3.5" fill="white" stroke="#F3F3F3"/>
+                                  <path fillRule="evenodd" clipRule="evenodd" d="M27.9174 24.1182V19.6071V19.6062H30.3578C31.3639 19.6068 32.2095 19.2907 32.8945 18.6578C33.5868 18.0571 33.9738 17.1935 33.9541 16.2934C33.9678 15.3982 33.5815 14.541 32.8945 13.9422C32.2155 13.3059 31.3023 12.9587 30.3578 12.9778H26.4404V24.1182H27.9174ZM27.9174 18.2382V14.3494V14.3485H30.3945C30.9466 14.3334 31.4788 14.5487 31.856 14.9396C32.2355 15.2971 32.4496 15.7881 32.4496 16.3009C32.4496 16.8137 32.2355 17.3048 31.856 17.6622C31.4741 18.0449 30.9436 18.254 30.3945 18.2382H27.9174Z" fill="#5F6368"/>
+                                  <path fillRule="evenodd" clipRule="evenodd" d="M39.9431 17.0951C39.3113 16.5297 38.4496 16.2471 37.3578 16.2471C35.9554 16.2471 34.8963 16.7448 34.1807 17.7404L35.4817 18.5342C35.9624 17.8598 36.6153 17.5226 37.4404 17.5226C37.9664 17.5167 38.4755 17.703 38.8661 18.0444C39.2555 18.3564 39.4795 18.8215 39.4762 19.3111V19.6382C38.9086 19.3271 38.1863 19.1715 37.3092 19.1715C36.2817 19.1727 35.4603 19.4062 34.845 19.872C34.2297 20.3377 33.922 20.965 33.922 21.7537C33.9086 22.4719 34.2302 23.1577 34.7973 23.6204C35.3807 24.1182 36.1058 24.3671 36.9725 24.3671C37.9878 24.3671 38.8012 23.9315 39.4129 23.0604H39.4771V24.1182H40.8899V19.4204C40.8905 18.4355 40.5749 17.6604 39.9431 17.0951ZM35.9367 22.7182C35.6273 22.5021 35.4448 22.1544 35.4468 21.7848C35.4468 21.3697 35.6477 21.024 36.0523 20.7395C36.4529 20.4592 36.9532 20.3191 37.5532 20.3191C38.3771 20.3191 39.0193 20.4968 39.4798 20.8524C39.4798 21.4533 39.2352 21.9768 38.7459 22.4231C38.3052 22.8501 37.7077 23.0905 37.0844 23.0915C36.6689 23.099 36.2634 22.9672 35.9367 22.7182Z" fill="#5F6368"/>
+                                  <path fillRule="evenodd" clipRule="evenodd" d="M49 16.496L44.0679 27.4782H42.5431L44.3734 23.6355L41.1303 16.496H42.7358L45.0798 21.9715H45.1119L47.3917 16.496H49Z" fill="#5F6368"/>
+                                  <path fillRule="evenodd" clipRule="evenodd" d="M21.9486 18.6347C21.9492 18.1986 21.9111 17.7632 21.8349 17.3334H15.6055V19.7983H19.1734C19.0259 20.5938 18.5493 21.2964 17.8541 21.7432V23.3432H19.9835C21.2303 22.2294 21.9486 20.5823 21.9486 18.6347Z" fill="#4285F4"/>
+                                  <path fillRule="evenodd" clipRule="evenodd" d="M15.6055 24.8889C17.3881 24.8889 18.889 24.3217 19.9835 23.344L17.8541 21.744C17.2615 22.1333 16.4982 22.3555 15.6055 22.3555C13.8826 22.3555 12.4202 21.2302 11.8973 19.7137H9.70367V21.3626C10.8249 23.5244 13.1085 24.8887 15.6055 24.8889Z" fill="#34A853"/>
+                                  <path fillRule="evenodd" clipRule="evenodd" d="M11.8973 19.7138C11.6208 18.9192 11.6208 18.0586 11.8973 17.264V15.6151H9.70367C8.76585 17.4232 8.76585 19.5546 9.70367 21.3627L11.8973 19.7138Z" fill="#FBBC04"/>
+                                  <path fillRule="evenodd" clipRule="evenodd" d="M15.6055 14.6223C16.5475 14.6073 17.4577 14.9522 18.1395 15.5823V15.5823L20.0248 13.7556C18.8293 12.6677 17.2455 12.0704 15.6055 12.0889C13.1085 12.089 10.8249 13.4534 9.70367 15.6151L11.8973 17.264C12.4202 15.7476 13.8826 14.6223 15.6055 14.6223Z" fill="#EA4335"/>
+                                </svg>
+                                <span className="font-medium">Google Pay</span>
                               </div>
                             </div>
-                          )}
-
-                          {/* Billing Address Form */}
-                          {!sameAsShipping && (
-                            <div className="space-y-4 border rounded-lg p-4">
-                              {/* Title Dropdown */}
-                              <div>
-                                <Label htmlFor="billingTitle">Title (Optional)</Label>
-                                <Select value={billingAddress.title} onValueChange={(value) => setBillingAddress(prev => ({...prev, title: value}))}>
-                                  <SelectTrigger className="h-12 md:h-10">
-                                    <SelectValue placeholder="Select title" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="Mr.">Mr.</SelectItem>
-                                    <SelectItem value="Mrs.">Mrs.</SelectItem>
-                                    <SelectItem value="Ms.">Ms.</SelectItem>
-                                    <SelectItem value="Miss">Miss</SelectItem>
-                                    <SelectItem value="Rev.">Rev.</SelectItem>
-                                    <SelectItem value="Dr.">Dr.</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
-
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                  <Label htmlFor="billingFirstName">First Name *</Label>
-                                  <Input
-                                    id="billingFirstName"
-                                    value={billingAddress.firstName}
-                                    onChange={(e) => setBillingAddress(prev => ({...prev, firstName: e.target.value}))}
-                                    placeholder="Enter first name"
-                                    className="h-12 md:h-10"
-                                  />
-                                </div>
-                                <div>
-                                  <Label htmlFor="billingLastName">Last Name *</Label>
-                                  <Input
-                                    id="billingLastName"
-                                    value={billingAddress.lastName}
-                                    onChange={(e) => setBillingAddress(prev => ({...prev, lastName: e.target.value}))}
-                                    placeholder="Enter last name"
-                                    className="h-12 md:h-10"
-                                  />
-                                </div>
-                              </div>
-                              
-                              <div>
-                                <Label htmlFor="billingEmail">Email *</Label>
-                                <Input
-                                  id="billingEmail"
-                                  type="email"
-                                  value={billingAddress.email}
-                                  onChange={(e) => setBillingAddress(prev => ({...prev, email: e.target.value}))}
-                                  placeholder="Enter email address"
-                                  className="h-12 md:h-10"
-                                />
-                              </div>
-                              
-                              <div>
-                                <Label htmlFor="billingPhone">Phone Number *</Label>
-                                <div className="flex gap-2">
-                                  <div className="relative">
-                                    <button
-                                      type="button"
-                                      className="flex items-center gap-2 px-3 py-2 border border-input bg-background rounded-md h-12 md:h-10 min-w-[100px] hover:bg-accent"
-                                    >
-                                      <span className="text-lg">🇦🇪</span>
-                                      <span className="text-sm font-medium">+971</span>
-                                    </button>
-                                  </div>
-                                  <Input
-                                    id="billingPhone"
-                                    value={billingAddress.phone}
-                                    onChange={(e) => setBillingAddress(prev => ({...prev, phone: e.target.value}))}
-                                    placeholder="XX XXX XXXX"
-                                    className="h-12 md:h-10 flex-1"
-                                  />
-                                </div>
-                              </div>
-                              
-                              <div>
-                                <Label htmlFor="billingAddress">Address *</Label>
-                                <Input
-                                  id="billingAddress"
-                                  value={billingAddress.address}
-                                  onChange={(e) => setBillingAddress(prev => ({...prev, address: e.target.value}))}
-                                  placeholder="Street address"
-                                  className="h-12 md:h-10"
-                                />
-                              </div>
-                              
-                              <div>
-                                <Label htmlFor="billingApartment">Apartment, suite, etc. (optional)</Label>
-                                <Input
-                                  id="billingApartment"
-                                  value={billingAddress.apartment}
-                                  onChange={(e) => setBillingAddress(prev => ({...prev, apartment: e.target.value}))}
-                                  placeholder="Apartment, suite, unit, building, floor, etc."
-                                  className="h-12 md:h-10"
-                                />
-                              </div>
-                              
-                              <div>
-                                <Label htmlFor="billingCity">City *</Label>
-                                <Select value={billingAddress.city} onValueChange={(value) => setBillingAddress(prev => ({...prev, city: value}))}>
-                                  <SelectTrigger className="h-12 md:h-10">
-                                    <SelectValue placeholder="Select city" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="Abu Dhabi">Abu Dhabi</SelectItem>
-                                    <SelectItem value="Dubai">Dubai</SelectItem>
-                                    <SelectItem value="Sharjah">Sharjah</SelectItem>
-                                    <SelectItem value="Ajman">Ajman</SelectItem>
-                                    <SelectItem value="Umm Al Quwain">Umm Al Quwain</SelectItem>
-                                    <SelectItem value="Ras Al Khaimah">Ras Al Khaimah</SelectItem>
-                                    <SelectItem value="Fujairah">Fujairah</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                            </div>
-                          )}
+                          </div>
                         </div>
                         
-
+                        {paymentMethod === 'card' && (
+                          <div className="space-y-4 border-t pt-4">
+                            <div>
+                              <Label htmlFor="cardNumber">Card Number *</Label>
+                              <Input
+                                id="cardNumber"
+                                value={paymentDetails.cardNumber}
+                                onChange={(e) => setPaymentDetails(prev => ({...prev, cardNumber: e.target.value}))}
+                                placeholder="1234 5678 9012 3456"
+                                maxLength={19}
+                                className="h-12 md:h-10"
+                              />
+                            </div>
+                            
+                            <div>
+                              <Label htmlFor="cardholderName">Cardholder Name *</Label>
+                              <Input
+                                id="cardholderName"
+                                value={paymentDetails.cardholderName}
+                                onChange={(e) => setPaymentDetails(prev => ({...prev, cardholderName: e.target.value}))}
+                                placeholder="Enter cardholder name"
+                                className="h-12 md:h-10"
+                              />
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <Label htmlFor="expiryDate">Expiry Date *</Label>
+                                <Input
+                                  id="expiryDate"
+                                  value={paymentDetails.expiryDate}
+                                  onChange={(e) => setPaymentDetails(prev => ({...prev, expiryDate: e.target.value}))}
+                                  placeholder="MM/YY"
+                                  maxLength={5}
+                                  className="h-12 md:h-10"
+                                />
+                              </div>
+                              <div>
+                                <Label htmlFor="cvv">CVV *</Label>
+                                <Input
+                                  id="cvv"
+                                  value={paymentDetails.cvv}
+                                  onChange={(e) => setPaymentDetails(prev => ({...prev, cvv: e.target.value}))}
+                                  placeholder="123"
+                                  maxLength={4}
+                                  className="h-12 md:h-10"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
 
                     {/* Review Order */}
                     {currentStep === 3 && (
                       <div className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="bg-muted/30 p-4 rounded-lg">
-                            <h4 className="font-medium mb-3">Shipping Address</h4>
-                            <div className="text-sm space-y-1">
-                              <p>{shippingAddress.firstName} {shippingAddress.lastName}</p>
-                              <p>{shippingAddress.address}</p>
-                              {shippingAddress.apartment && <p>{shippingAddress.apartment}</p>}
-                              <p>{shippingAddress.city}</p>
-                              <p>{shippingAddress.country}</p>
-                              <p>{shippingAddress.phone}</p>
-                              <p>{shippingAddress.email}</p>
-                            </div>
+                        <div className="bg-muted/30 p-4 rounded-lg">
+                          <h4 className="font-medium mb-3">Shipping Address</h4>
+                          <div className="text-sm space-y-1">
+                            <p>{shippingAddress.firstName} {shippingAddress.lastName}</p>
+                            <p>{shippingAddress.address}</p>
+                            {shippingAddress.apartment && <p>{shippingAddress.apartment}</p>}
+                            <p>{shippingAddress.city}, {shippingAddress.emirate}</p>
+                            <p>{shippingAddress.country}</p>
+                            <p>{shippingAddress.phone}</p>
+                            <p>{shippingAddress.email}</p>
                           </div>
-                          
-                          <div className="bg-muted/30 p-4 rounded-lg">
-                            <h4 className="font-medium mb-3">Billing Address</h4>
-                            <div className="text-sm space-y-1">
-                              {sameAsShipping ? (
-                                <>
-                                  <p>Ahmed Al Mansouri</p>
-                                  <p>123 Sheikh Zayed Street</p>
-                                  <p>Abu Dhabi, UAE</p>
-                                </>
-                              ) : (
-                                <>
-                                  <p>{billingAddress.firstName} {billingAddress.lastName}</p>
-                                  <p>{billingAddress.address}</p>
-                                  {billingAddress.apartment && <p>{billingAddress.apartment}</p>}
-                                  <p>{billingAddress.city}</p>
-                                  <p>{billingAddress.country}</p>
-                                  <p>{billingAddress.phone}</p>
-                                  <p>{billingAddress.email}</p>
-                                </>
-                              )}
-                            </div>
+                        </div>
+                        
+                        <div className="bg-muted/30 p-4 rounded-lg">
+                          <h4 className="font-medium mb-3">Delivery Method</h4>
+                          <div className="text-sm">
+                            <p className="capitalize">
+                              {deliveryMode === 'pickup' ? 'Store Pickup' : `${deliveryMode.replace('-', ' ')} Delivery`}
+                            </p>
+                            <p className="text-muted-foreground">
+                                                          {deliveryMode === 'standard' && '1-2 business days - 20 AED'}
+                            {deliveryMode === 'pickup' && 'Pick-up from location - Free'}
+                            </p>
                           </div>
-                          
-                          <div className="bg-muted/30 p-4 rounded-lg">
-                            <h4 className="font-medium mb-3">Delivery Method</h4>
-                            <div className="text-sm">
-                              <p className="capitalize">
-                                {deliveryMode === 'pickup' ? 'Store Pickup' : `${deliveryMode.replace('-', ' ')} Delivery`}
-                              </p>
+                        </div>
+                        
+                        <div className="bg-muted/30 p-4 rounded-lg">
+                          <h4 className="font-medium mb-3">Payment Method</h4>
+                          <div className="text-sm">
+                            <p>
+                              {paymentMethod === 'card' && 'Credit / Debit Card'}
+                              {paymentMethod === 'apple-pay' && 'Apple Pay'}
+                              {paymentMethod === 'google-pay' && 'Google Pay'}
+                              {!paymentMethod && 'No payment method selected'}
+                            </p>
+                            {paymentMethod === 'card' && paymentDetails.cardNumber && (
                               <p className="text-muted-foreground">
-                                {deliveryMode === 'standard' && '1-2 business days - 20 AED'}
-                                {deliveryMode === 'pickup' && 'Pick-up from location - Free'}
+                                **** **** **** {paymentDetails.cardNumber.slice(-4)}
                               </p>
-                            </div>
-                          </div>
-                          
-                          <div className="bg-muted/30 p-4 rounded-lg">
-                            <h4 className="font-medium mb-3">Payment Method</h4>
-                            <div className="text-sm">
-                              <p>
-                                {paymentMethod === 'card' && 'Pay online'}
-                                {paymentMethod === 'apple-pay' && 'Apple Pay'}
-                                {paymentMethod === 'google-pay' && 'Google Pay'}
-                                {!paymentMethod && 'No payment method selected'}
-                              </p>
-                            </div>
+                            )}
                           </div>
                         </div>
                         
                         <div className="border-t pt-4">
-                          <div className="flex items-center space-x-2 mb-4">
-                            <Checkbox
-                              id="terms"
-                            />
-                            <Label htmlFor="terms" className="text-sm font-normal">
+                          <div className="flex items-center gap-2 mb-4">
+                            <input type="checkbox" id="terms" className="rounded" />
+                            <Label htmlFor="terms" className="text-sm">
                               I agree to the <a href="/terms-conditions" className="text-primary hover:underline">Terms and Conditions</a> and <a href="/privacy-policy" className="text-primary hover:underline">Privacy Policy</a>
                             </Label>
                           </div>
@@ -1296,22 +1005,16 @@ export function CartPage() {
                       </div>
                     )}
 
-                    <div className={cn(
-                      "pt-6 gap-3 border-t",
-                      currentStep === 0 
-                        ? "flex justify-end" 
-                        : "flex flex-col-reverse sm:flex-row justify-between"
-                    )}>
-                      {currentStep > 0 && (
-                        <Button 
-                          variant="outline" 
-                          onClick={prevStep}
-                          className="h-12 md:h-10 w-full sm:w-auto"
-                          size="lg"
-                        >
-                          Previous
-                        </Button>
-                      )}
+                    <div className="flex flex-col-reverse sm:flex-row justify-between pt-6 gap-3 border-t">
+                      <Button 
+                        variant="outline" 
+                        onClick={prevStep}
+                        disabled={currentStep === 0}
+                        className="h-12 md:h-10 w-full sm:w-auto"
+                        size="lg"
+                      >
+                        Previous
+                      </Button>
                       <Button 
                         onClick={nextStep}
                         disabled={currentStep === checkoutSteps.length - 1}

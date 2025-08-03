@@ -37,6 +37,7 @@ export function ProductDetailPage() {
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [isShareDropdownOpen, setIsShareDropdownOpen] = useState(false);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   // Touch/swipe handling
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -148,7 +149,7 @@ export function ProductDetailPage() {
     }
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     // For bags category, only color is required
     const isBagsCategory = product?.category === 'bags';
     
@@ -164,6 +165,11 @@ export function ProductDetailPage() {
       }
     }
     
+    setIsAddingToCart(true);
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
     console.log('Adding to cart:', {
       product: product?.id,
       variant: selectedVariant?.id,
@@ -171,6 +177,8 @@ export function ProductDetailPage() {
       color: selectedColor,
       size: selectedSize
     });
+    
+    setIsAddingToCart(false);
   };
 
   const canAddToCart = product?.category === 'bags' 
@@ -618,12 +626,21 @@ export function ProductDetailPage() {
               <div className="flex space-x-3">
                 <Button
                   onClick={handleAddToCart}
-                  disabled={!canAddToCart}
+                  disabled={!canAddToCart || isAddingToCart}
                   className="flex-1"
                   size="lg"
                 >
-                  <ShoppingBag className="h-5 w-5 mr-2" />
-                  Add to Cart
+                  {isAddingToCart ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
+                      Adding...
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingBag className="h-5 w-5 mr-2" />
+                      Add to Cart
+                    </>
+                  )}
                 </Button>
                 <Button variant="outline" size="lg">
                   Buy Now
@@ -761,10 +778,17 @@ export function ProductDetailPage() {
             </div>
             <Button
               onClick={handleAddToCart}
-              disabled={!canAddToCart}
+              disabled={!canAddToCart || isAddingToCart}
               className="px-8"
             >
-              Add to Cart
+              {isAddingToCart ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                  Adding...
+                </>
+              ) : (
+                'Add to Cart'
+              )}
             </Button>
           </div>
         </div>

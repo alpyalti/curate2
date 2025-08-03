@@ -21,6 +21,9 @@ import { PartnershipPage } from './components/pages/PartnershipPage';
 import { LoginPage } from './components/pages/LoginPage';
 import { ForgotPasswordPage } from './components/pages/ForgotPasswordPage';
 import { OrderTrackingPage } from './components/pages/OrderTrackingPage';
+import { ProfilePage } from './components/pages/ProfilePage';
+import { OrderHistoryPage } from './components/pages/OrderHistoryPage';
+import OrderDetailPage from './components/pages/OrderDetailPage';
 import { ScrollToTop } from './components/ui/scroll-to-top';
 
 // Component to handle automatic scroll to top on route changes
@@ -75,6 +78,9 @@ function App() {
             <Route path="/partnership" element={<PartnershipPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile/orders" element={<OrderHistoryPage />} />
+            <Route path="/profile/orders/:orderNumber" element={<OrderDetailPage />} />
           </Routes>
         </main>
 

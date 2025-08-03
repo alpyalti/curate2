@@ -203,7 +203,7 @@ export function SearchBar({
                   <div className="px-2 py-1 text-xs font-medium text-muted-foreground">
                     Keywords
                   </div>
-                  <div className="space-y-1">
+            <div className="space-y-1">
                     {keywordSuggestions.map((keyword, index) => (
                       <button
                         key={index}
@@ -222,38 +222,38 @@ export function SearchBar({
               {/* Products Section */}
               {suggestions.length > 0 && (
                 <div>
-                  <div className="px-2 py-1 text-xs font-medium text-muted-foreground">
-                    Products
-                  </div>
+              <div className="px-2 py-1 text-xs font-medium text-muted-foreground">
+                Products
+              </div>
                   <div className="space-y-1">
-                    {suggestions.map((product) => (
-                      <Link
-                        key={product.id}
-                        to={`/product/${product.id}`}
-                        onClick={() => {
-                          setShowSuggestions(false);
-                          setIsFocused(false);
-                          setQuery("");
-                        }}
-                        className="flex w-full items-center space-x-3 rounded-sm px-2 py-2 text-left text-sm hover:bg-accent focus:bg-accent focus:outline-none"
-                      >
-                        <img
-                          src={product.images[0]?.url}
-                          alt={product.images[0]?.alt}
-                          className="h-8 w-8 rounded object-cover"
-                          loading="lazy"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="truncate font-medium">{product.title}</div>
-                          <div className="truncate text-xs text-muted-foreground">
-                            {product.brand}
-                          </div>
-                        </div>
-                        <div className="text-sm font-medium">
-                          {product.price.formattedAmount}
-                        </div>
-                      </Link>
-                    ))}
+              {suggestions.map((product) => (
+                <Link
+                  key={product.id}
+                  to={`/product/${product.id}`}
+                  onClick={() => {
+                    setShowSuggestions(false);
+                    setIsFocused(false);
+                    setQuery("");
+                  }}
+                  className="flex w-full items-center space-x-3 rounded-sm px-2 py-2 text-left text-sm hover:bg-accent focus:bg-accent focus:outline-none"
+                >
+                  <img
+                    src={product.images[0]?.url}
+                    alt={product.images[0]?.alt}
+                    className="h-8 w-8 rounded object-cover"
+                    loading="lazy"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="truncate font-medium">{product.title}</div>
+                    <div className="truncate text-xs text-muted-foreground">
+                      {product.brand}
+                    </div>
+                  </div>
+                  <div className="text-sm font-medium">
+                    {product.price.formattedAmount}
+                  </div>
+                </Link>
+              ))}
                   </div>
                 </div>
               )}
