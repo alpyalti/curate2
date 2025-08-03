@@ -38,6 +38,7 @@ export function ProductDetailPage() {
   const [isShareDropdownOpen, setIsShareDropdownOpen] = useState(false);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [showSizeFeedback, setShowSizeFeedback] = useState(false);
 
   // Touch/swipe handling
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -47,18 +48,13 @@ export function ProductDetailPage() {
     if (product?.variants?.[0]) {
       setSelectedVariant(product.variants[0]);
       
-      // Set default color and size from first variant
+      // Set default color from first variant
       const colorAttr = product.variants[0].attributes.find(attr => attr.name === 'color');
-      const sizeAttr = product.variants[0].attributes.find(attr => attr.name === 'size');
       
       if (colorAttr) setSelectedColor(colorAttr.value);
       
-      // For bags category, don't require size selection
-      if (product.category === 'bags') {
-        setSelectedSize('one-size'); // Set a default value for bags
-      } else if (sizeAttr) {
-        setSelectedSize(sizeAttr.value);
-      }
+      // Don't set default size - let user select
+      setSelectedSize('');
     }
   }, [product]);
 
@@ -120,12 +116,8 @@ export function ProductDetailPage() {
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
     
-    // For bags category, don't reset size, keep as 'one-size'
-    if (product?.category === 'bags') {
-      setSelectedSize('one-size');
-    } else {
-      setSelectedSize(''); // Reset size when color changes for other categories
-    }
+    // Reset size when color changes for all categories
+    setSelectedSize('');
     
     // Find variant with new color
     const newVariant = product?.variants?.find(variant => 
@@ -155,12 +147,25 @@ export function ProductDetailPage() {
     
     if (isBagsCategory) {
       if (!selectedColor) {
-        alert('Please select color');
+        alert('Please select a color before adding to cart');
         return;
       }
     } else {
-      if (!selectedColor || !selectedSize) {
-        alert('Please select color and size');
+      if (!selectedColor) {
+        alert('Please select a color before adding to cart');
+        return;
+      }
+      if (!selectedSize) {
+        setIsAddingToCart(true);
+        
+        // Simulate API call delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        setIsAddingToCart(false);
+        setShowSizeFeedback(true);
+        
+        // Hide feedback after 5 seconds
+        setTimeout(() => setShowSizeFeedback(false), 5000);
         return;
       }
     }
@@ -584,7 +589,9 @@ export function ProductDetailPage() {
             {availableSizes.length > 0 && product?.category !== 'bags' && (
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="font-medium">Size: {selectedSize}</span>
+                  <span className="font-medium">
+                    Size: {selectedSize || 'Please select a size'}
+                  </span>
                   <Button 
                     variant="ghost" 
                     size="sm" 
@@ -626,7 +633,7 @@ export function ProductDetailPage() {
               <div className="flex space-x-3">
                 <Button
                   onClick={handleAddToCart}
-                  disabled={!canAddToCart || isAddingToCart}
+                  disabled={isAddingToCart}
                   className="flex-1"
                   size="lg"
                 >
@@ -647,18 +654,15 @@ export function ProductDetailPage() {
                 </Button>
               </div>
 
-              {product?.category === 'bags' ? (
-                !selectedColor && (
-                  <p className="text-sm text-muted-foreground">
-                    Please select color
-                  </p>
-                )
-              ) : (
-                (!selectedColor || !selectedSize) && (
-                  <p className="text-sm text-muted-foreground">
-                    Please select {!selectedColor && 'color'} {!selectedColor && !selectedSize && 'and'} {!selectedSize && 'size'}
-                  </p>
-                )
+              {showSizeFeedback && (
+                <p className="text-sm text-red-600 font-medium">
+                  Please select a size before adding to cart
+                </p>
+              )}
+              {!showSizeFeedback && product?.category === 'bags' && !selectedColor && (
+                <p className="text-sm text-muted-foreground">
+                  Please select a color
+                </p>
               )}
             </div>
 
