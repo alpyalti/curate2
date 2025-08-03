@@ -61,49 +61,8 @@ interface SavedAddress {
   isDefault?: boolean;
 }
 
-// Mock cart data
-const mockCartItems: CartItem[] = [
-  {
-    id: "cart-1",
-    productId: "swimwear-001",
-    title: "Black Triangle Bikini Top",
-    brand: "LETS SWIM",
-    image: "https://letsswim.co/cdn/shop/files/LET_SSWIM-BLACKLET_SSWIMTRIANGLEBIKINITOP-6.jpg?v=1721327749",
-    price: 450,
-    formattedPrice: "450 AED",
-    color: "Black",
-    size: "M",
-    quantity: 1,
-    inStock: true
-  },
-  {
-    id: "cart-2",
-    productId: "swimwear-002", 
-    title: "Red Wired Balconette Swimsuit",
-    brand: "LETS SWIM",
-    image: "https://letsswim.co/cdn/shop/files/LET_SSWIM-REDWIREDBALCONETTESWIMSUIT-1.jpg?v=1713187512",
-    price: 750,
-    formattedPrice: "750 AED",
-    color: "Red",
-    size: "S",
-    quantity: 2,
-    inStock: true,
-    stockCount: 2,
-    isLowStock: true
-  },
-  {
-    id: "cart-3",
-    productId: "bags-001",
-    title: "Mardi Matin Lemon Yellow",
-    brand: "NORI ENOMOTO",
-    image: "https://nori-enomoto.com/cdn/shop/files/nori_mardi-matin_lemon-yellow_main_02.png?v=1750655214&width=2400",
-    price: 1850,
-    formattedPrice: "1,850 AED",
-    color: "Lemon Yellow",
-    quantity: 1,
-    inStock: true
-  }
-];
+// Mock cart data - temporarily empty for testing empty states
+const mockCartItems: CartItem[] = [];
 
 const checkoutSteps: CheckoutStep[] = [
   { id: "shipping", title: "Shipping Address", completed: false, active: false },
@@ -404,16 +363,32 @@ export function CartPage() {
   };
 
   if (cartItems.length === 0) {
-      return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+    return (
+      <div className="min-h-screen bg-background">
+        {/* Breadcrumb */}
+        <div className="border-b bg-muted/30">
+          <div className="container mx-auto px-4 py-3">
+            <nav className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <Link to="/" className="hover:text-foreground">Home</Link>
+              <span className="mx-2">/</span>
+              <span className="text-foreground font-medium">My Bag</span>
+            </nav>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-4 py-8">
           <div className="text-center py-16">
-            <ShoppingBag className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Your bag is empty</h2>
-            <p className="text-muted-foreground mb-6">Start shopping to add items to your bag</p>
-            <Button asChild>
-              <Link to="/">Continue Shopping</Link>
-            </Button>
+            <ShoppingBag className="mx-auto h-20 w-20 text-muted-foreground mb-6" />
+            <h2 className="text-3xl font-bold mb-4">Your bag is empty</h2>
+            <p className="text-muted-foreground mb-8 text-lg">Start shopping to add items to your bag</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg">
+                <Link to="/new-in">Start Shopping</Link>
+              </Button>
+              <Button variant="outline" asChild size="lg">
+                <Link to="/sale">View Sale Items</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </div>

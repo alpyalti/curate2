@@ -7,12 +7,13 @@ import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "../../lib/utils";
-import { Save, Check, User, Package } from "lucide-react";
+import { Save, Check, User, Package, MapPin, Edit, Trash2, Plus, ArrowLeft } from "lucide-react";
 
 interface ProfileData {
   firstName: string;
   lastName: string;
   email: string;
+  phone: string;
   zipCode: string;
   country: string;
   subscribeNewsletter: boolean;
@@ -33,6 +34,20 @@ interface Order {
     price: number;
     quantity: number;
   }>;
+}
+
+interface Address {
+  id: string;
+  title: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  apartment?: string;
+  city: string;
+  country: string;
+  zipCode?: string;
+  phone: string;
+  isDefault: boolean;
 }
 
 const countries = [
@@ -61,6 +76,7 @@ const countries = [
 const tabs = [
   { id: "profile", label: "My Profile", icon: User },
   { id: "orders", label: "Order History", icon: Package },
+  { id: "addresses", label: "Address Book", icon: MapPin },
 ];
 
 const mockOrders: Order[] = [
@@ -125,6 +141,35 @@ const mockOrders: Order[] = [
   }
 ];
 
+const mockAddresses: Address[] = [
+  {
+    id: "1",
+    title: "Home",
+    firstName: "Ahmed",
+    lastName: "Al Mansouri",
+    address: "Sheikh Zayed Road, Downtown",
+    apartment: "Apt 1205",
+    city: "Dubai",
+    country: "AE",
+    zipCode: "12345",
+    phone: "+971 50 123 4567",
+    isDefault: true
+  },
+  {
+    id: "2",
+    title: "Office",
+    firstName: "Ahmed",
+    lastName: "Al Mansouri",
+    address: "Business Bay, Bay Square",
+    apartment: "Building 1, Office 201",
+    city: "Dubai",
+    country: "AE",
+    zipCode: "54321",
+    phone: "+971 50 123 4567",
+    isDefault: false
+  }
+];
+
 export function ProfilePage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -133,6 +178,7 @@ export function ProfilePage() {
     firstName: "Ahmed",
     lastName: "Al Mansouri",
     email: "ahmed@example.com",
+    phone: "+971 50 123 4567",
     zipCode: "12345",
     country: "AE",
     subscribeNewsletter: true,
@@ -143,12 +189,31 @@ export function ProfilePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [sortBy, setSortBy] = useState("date");
+  
+  // Address book state
+  const [addresses, setAddresses] = useState<Address[]>(mockAddresses);
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [editingAddress, setEditingAddress] = useState<Address | null>(null);
+  const [addressForm, setAddressForm] = useState<Omit<Address, 'id'>>({
+    title: '',
+    firstName: '',
+    lastName: '',
+    address: '',
+    apartment: '',
+    city: '',
+    country: 'AE',
+    zipCode: '',
+    phone: '',
+    isDefault: false
+  });
 
   // Handle tab changes and URL updates
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId);
     if (tabId === "orders") {
       navigate("/profile/orders");
+    } else if (tabId === "addresses") {
+      navigate("/profile/addresses");
     } else {
       navigate("/profile");
     }
@@ -158,6 +223,8 @@ export function ProfilePage() {
   useEffect(() => {
     if (location.pathname === "/profile/orders") {
       setActiveTab("orders");
+    } else if (location.pathname === "/profile/addresses") {
+      setActiveTab("addresses");
     } else {
       setActiveTab("profile");
     }
@@ -214,6 +281,77 @@ export function ProfilePage() {
     setIsSaving(false);
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 2000);
+  };
+
+  // Address management functions
+  const handleAddAddress = () => {
+    setEditingAddress(null);
+    setAddressForm({
+      title: '',
+      firstName: '',
+      lastName: '',
+      address: '',
+      apartment: '',
+      city: '',
+      country: 'AE',
+      zipCode: '',
+      phone: '',
+      isDefault: false
+    });
+    setShowAddressForm(true);
+  };
+
+  const handleEditAddress = (address: Address) => {
+    setEditingAddress(address);
+    setAddressForm({
+      title: address.title,
+      firstName: address.firstName,
+      lastName: address.lastName,
+      address: address.address,
+      apartment: address.apartment || '',
+      city: address.city,
+      country: address.country,
+      zipCode: address.zipCode || '',
+      phone: address.phone,
+      isDefault: address.isDefault
+    });
+    setShowAddressForm(true);
+  };
+
+  const handleDeleteAddress = (addressId: string) => {
+    setAddresses(prev => prev.filter(addr => addr.id !== addressId));
+  };
+
+  const handleSaveAddress = () => {
+    if (editingAddress) {
+      // Update existing address
+      setAddresses(prev => prev.map(addr => 
+        addr.id === editingAddress.id 
+          ? { ...addressForm, id: editingAddress.id }
+          : addr
+      ));
+    } else {
+      // Add new address
+      const newAddress: Address = {
+        ...addressForm,
+        id: Date.now().toString()
+      };
+      setAddresses(prev => [...prev, newAddress]);
+    }
+    setShowAddressForm(false);
+    setEditingAddress(null);
+  };
+
+  const handleCancelAddress = () => {
+    setShowAddressForm(false);
+    setEditingAddress(null);
+  };
+
+  const handleAddressFormChange = (field: keyof Omit<Address, 'id'>, value: any) => {
+    setAddressForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   return (
@@ -314,15 +452,28 @@ export function ProfilePage() {
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={profileData.email}
-                    onChange={(e) => handleProfileChange('email', e.target.value)}
-                    className="mt-1"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={profileData.email}
+                      onChange={(e) => handleProfileChange('email', e.target.value)}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={profileData.phone}
+                      onChange={(e) => handleProfileChange('phone', e.target.value)}
+                      className="mt-1"
+                      placeholder="+971 50 123 4567"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -364,25 +515,25 @@ export function ProfilePage() {
                 </div>
 
                 {/* Save Button */}
-                <div className="flex justify-end pt-4">
+                <div className="flex justify-center pt-4">
                   <Button
                     onClick={handleSave}
                     disabled={!hasChanges || isSaving}
-                    className="min-w-[120px]"
+                    className="w-full md:w-auto md:min-w-[300px] px-8 py-3 text-base"
                   >
                     {isSaving ? (
                       <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
                         Saving...
                       </>
                     ) : showSuccess ? (
                       <>
-                        <Check className="w-4 h-4 mr-2" />
+                        <Check className="w-5 h-5 mr-2" />
                         Saved!
                       </>
                     ) : (
                       <>
-                        <Save className="w-4 h-4 mr-2" />
+                        <Save className="w-5 h-5 mr-2" />
                         Save
                       </>
                     )}
@@ -497,6 +648,243 @@ export function ProfilePage() {
                     ))}
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Address Book Tab */}
+          {activeTab === "addresses" && (
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xl">Address Book</CardTitle>
+                  {!showAddressForm && (
+                    <Button onClick={handleAddAddress} className="flex items-center gap-2">
+                      <Plus className="w-4 h-4" />
+                      Add New Address
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                {!showAddressForm ? (
+                  <>
+
+                    {/* Address List */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {addresses.map((address) => (
+                        <div key={address.id} className="border rounded-lg p-4 relative">
+                          {/* Action Icons */}
+                          <div className="absolute top-3 right-3 flex gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleEditAddress(address)}
+                              className="h-8 w-8"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleDeleteAddress(address.id)}
+                              className="h-8 w-8 text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+
+                          {/* Address Content */}
+                          <div className="pr-16">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="font-semibold">{address.title}</h3>
+                              {address.isDefault && (
+                                <span className="text-xs bg-primary text-white px-2 py-1 rounded-full">
+                                  Default
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm font-medium mb-1">
+                              {address.firstName} {address.lastName}
+                            </p>
+                            <p className="text-sm text-gray-600 mb-1">
+                              {address.address}
+                              {address.apartment && `, ${address.apartment}`}
+                            </p>
+                            <p className="text-sm text-gray-600 mb-1">
+                              {address.city}, {countries.find(c => c.code === address.country)?.name}
+                              {address.zipCode && ` ${address.zipCode}`}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              {address.phone}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {addresses.length === 0 && (
+                      <div className="text-center py-8">
+                        <MapPin className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">No addresses yet</h3>
+                        <p className="text-gray-600 mb-4">Add your first address to get started</p>
+                        <Button onClick={handleAddAddress}>
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add Address
+                        </Button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  /* Address Form */
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3 pb-4 border-b">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleCancelAddress}
+                      >
+                        <ArrowLeft className="h-4 w-4" />
+                      </Button>
+                      <h3 className="text-lg font-semibold">
+                        {editingAddress ? 'Edit Address' : 'Add New Address'}
+                      </h3>
+                    </div>
+
+                    {/* Form Fields */}
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="addressTitle">Address Title</Label>
+                        <Input
+                          id="addressTitle"
+                          value={addressForm.title}
+                          onChange={(e) => handleAddressFormChange('title', e.target.value)}
+                          placeholder="e.g., Home, Office, etc."
+                          className="mt-1"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="addressFirstName">First Name</Label>
+                          <Input
+                            id="addressFirstName"
+                            value={addressForm.firstName}
+                            onChange={(e) => handleAddressFormChange('firstName', e.target.value)}
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="addressLastName">Last Name</Label>
+                          <Input
+                            id="addressLastName"
+                            value={addressForm.lastName}
+                            onChange={(e) => handleAddressFormChange('lastName', e.target.value)}
+                            className="mt-1"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="addressStreet">Address</Label>
+                        <Input
+                          id="addressStreet"
+                          value={addressForm.address}
+                          onChange={(e) => handleAddressFormChange('address', e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="addressApartment">Apartment, suite, etc. (optional)</Label>
+                        <Input
+                          id="addressApartment"
+                          value={addressForm.apartment}
+                          onChange={(e) => handleAddressFormChange('apartment', e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <Label htmlFor="addressCity">City</Label>
+                          <Input
+                            id="addressCity"
+                            value={addressForm.city}
+                            onChange={(e) => handleAddressFormChange('city', e.target.value)}
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="addressCountry">Country</Label>
+                          <Select 
+                            value={addressForm.country} 
+                            onValueChange={(value) => handleAddressFormChange('country', value)}
+                          >
+                            <SelectTrigger className="mt-1">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {countries.map((country) => (
+                                <SelectItem key={country.code} value={country.code}>
+                                  {country.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="addressZip">ZIP Code (optional)</Label>
+                          <Input
+                            id="addressZip"
+                            value={addressForm.zipCode}
+                            onChange={(e) => handleAddressFormChange('zipCode', e.target.value)}
+                            className="mt-1"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="addressPhone">Phone Number</Label>
+                        <Input
+                          id="addressPhone"
+                          type="tel"
+                          value={addressForm.phone}
+                          onChange={(e) => handleAddressFormChange('phone', e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="isDefault"
+                          checked={addressForm.isDefault}
+                          onCheckedChange={(checked) => handleAddressFormChange('isDefault', checked)}
+                        />
+                        <Label htmlFor="isDefault" className="text-sm">
+                          Set as default address
+                        </Label>
+                      </div>
+                    </div>
+
+                    {/* Form Actions */}
+                    <div className="flex gap-3 pt-4 border-t">
+                      <Button
+                        variant="outline"
+                        onClick={handleCancelAddress}
+                        className="flex-1"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={handleSaveAddress}
+                        className="flex-1"
+                      >
+                        {editingAddress ? 'Update Address' : 'Save Address'}
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}

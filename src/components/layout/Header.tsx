@@ -33,40 +33,8 @@ export function Header({
   const searchIconRef = useRef<HTMLButtonElement>(null);
 
   // Mock cart data - in real app this would come from context/store
-  const cartItems = [
-    {
-      id: "cart-1",
-      name: "Black Triangle Bikini Top",
-      brand: "LETS SWIM",
-      price: 450,
-      quantity: 1,
-      size: "M",
-      color: "Black",
-      image: "https://letsswim.co/cdn/shop/files/LET_SSWIM-BLACKLET_SSWIMTRIANGLEBIKINITOP-6.jpg?v=1721327749"
-    },
-    {
-      id: "cart-2",
-      name: "Red Wired Balconette Swimsuit",
-      brand: "LETS SWIM",
-      price: 750,
-      quantity: 2,
-      size: "S",
-      color: "Red",
-      image: "https://letsswim.co/cdn/shop/files/LET_SSWIM-REDWIREDBALCONETTESWIMSUIT-1.jpg?v=1713187512",
-      stockCount: 2,
-      isLowStock: true
-    },
-    {
-      id: "cart-3",
-      name: "Mardi Matin Lemon Yellow",
-      brand: "NORI ENOMOTO",
-      price: 1850,
-      quantity: 1,
-      size: "One Size",
-      color: "Lemon Yellow",
-      image: "https://nori-enomoto.com/cdn/shop/files/nori_mardi-matin_lemon-yellow_main_02.png?v=1750655214&width=2400"
-    }
-  ];
+  // Temporarily empty for testing empty states
+  const cartItems: any[] = [];
 
   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
 
@@ -502,95 +470,94 @@ export function Header({
                 </Button>
                 
                 {/* Cart Dropdown */}
-                {showCartDropdown && cartItems.length > 0 && (
+                {showCartDropdown && (
                   <div className="hidden md:block absolute top-full right-0 pt-2 z-50">
-                    <div className="bg-background border rounded-lg shadow-lg w-80 max-h-[500px] flex flex-col">
-                      {/* Sticky Header */}
-                      <div className="sticky top-0 bg-background border-b px-4 py-3 rounded-t-lg">
-                        <h3 className="font-semibold text-lg">My Bag</h3>
-                      </div>
-                      
-                      {/* Scrollable Products Area */}
-                      <div className="flex-1 overflow-y-auto p-4 max-h-80">
-                        {cartItems.map((item, index) => (
-                          <div key={item.id}>
-                            <div className="flex gap-3 py-2">
-                              <Link to={`/product/${item.id}`} className="flex-shrink-0">
-                                <img 
-                                  src={item.image} 
-                                  alt={item.name}
-                                  className="w-16 h-20 object-cover rounded"
-                                />
-                              </Link>
-                              <div className="flex-1 min-w-0">
-                                <Link 
-                                  to={`/product/${item.id}`}
-                                  className="font-medium text-sm hover:text-primary transition-colors line-clamp-2"
-                                >
-                                  {item.name}
+                    {cartItems.length > 0 ? (
+                      <div className="bg-background border rounded-lg shadow-lg w-80 max-h-[500px] flex flex-col">
+                        {/* Sticky Header */}
+                        <div className="sticky top-0 bg-background border-b px-4 py-3 rounded-t-lg">
+                          <h3 className="font-semibold text-lg">My Bag</h3>
+                        </div>
+                        
+                        {/* Scrollable Products Area */}
+                        <div className="flex-1 overflow-y-auto p-4 max-h-80">
+                          {cartItems.map((item, index) => (
+                            <div key={item.id}>
+                              <div className="flex gap-3 py-2">
+                                <Link to={`/product/${item.id}`} className="flex-shrink-0">
+                                  <img 
+                                    src={item.image} 
+                                    alt={item.name}
+                                    className="w-16 h-20 object-cover rounded"
+                                  />
                                 </Link>
-                                <p className="text-xs text-muted-foreground mt-1">{item.brand}</p>
-                                <p className="text-xs text-muted-foreground">
-                                  {item.color} • {item.size}
-                                </p>
-                                {item.isLowStock && (
-                                  <div className="flex items-center gap-1 mt-1">
-                                    <Clock className="h-3 w-3 text-orange-500" />
-                                    <p className="text-xs text-orange-600">
-                                      Low in stock: only {item.stockCount} left
+                                <div className="flex-1 min-w-0">
+                                  <Link 
+                                    to={`/product/${item.id}`}
+                                    className="font-medium text-sm hover:text-primary transition-colors line-clamp-2"
+                                  >
+                                    {item.name}
+                                  </Link>
+                                  <p className="text-xs text-muted-foreground mt-1">{item.brand}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {item.color} • {item.size}
+                                  </p>
+                                  {item.isLowStock && (
+                                    <div className="flex items-center gap-1 mt-1">
+                                      <Clock className="h-3 w-3 text-orange-500" />
+                                      <p className="text-xs text-orange-600">
+                                        Low in stock: only {item.stockCount} left
+                                      </p>
+                                    </div>
+                                  )}
+                                  <div className="flex items-center justify-between mt-2">
+                                    <div className="flex items-center gap-2">
+                                      <Button variant="outline" size="icon" className="h-6 w-6">
+                                        <Minus className="h-3 w-3" />
+                                      </Button>
+                                      <span className="text-sm">{item.quantity}</span>
+                                      <Button variant="outline" size="icon" className="h-6 w-6">
+                                        <Plus className="h-3 w-3" />
+                                      </Button>
+                                    </div>
+                                    <p className="font-semibold text-sm">
+                                      {item.price} AED
                                     </p>
                                   </div>
-                                )}
-                                <div className="flex items-center justify-between mt-2">
-                                  <div className="flex items-center gap-2">
-                                    <Button variant="outline" size="icon" className="h-6 w-6">
-                                      <Minus className="h-3 w-3" />
-                                    </Button>
-                                    <span className="text-sm">{item.quantity}</span>
-                                    <Button variant="outline" size="icon" className="h-6 w-6">
-                                      <Plus className="h-3 w-3" />
-                                    </Button>
-                                  </div>
-                                  <p className="font-semibold text-sm">
-                                    {item.price} AED
-                                  </p>
                                 </div>
                               </div>
+                              {/* Divider line - show for all items except the last one */}
+                              {index < cartItems.length - 1 && (
+                                <div className="border-t border-gray-200 my-2"></div>
+                              )}
                             </div>
-                            {/* Divider line - show for all items except the last one */}
-                            {index < cartItems.length - 1 && (
-                              <div className="border-t border-gray-200 my-2"></div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {/* Sticky Footer */}
-                      <div className="sticky bottom-0 bg-background border-t px-4 py-3 rounded-b-lg">
-                        <div className="flex justify-between items-center mb-3">
-                          <span className="font-semibold">Grand Total:</span>
-                          <span className="font-bold text-lg">{subtotal} AED</span>
+                          ))}
                         </div>
-                        <Button asChild className="w-full" onClick={() => setShowCartDropdown(false)}>
-                          <Link to="/cart">Go to Bag</Link>
+                        
+                        {/* Sticky Footer */}
+                        <div className="sticky bottom-0 bg-background border-t px-4 py-3 rounded-b-lg">
+                          <div className="flex justify-between items-center mb-3">
+                            <span className="font-semibold">Grand Total:</span>
+                            <span className="font-bold text-lg">{subtotal} AED</span>
+                          </div>
+                          <Button asChild className="w-full" onClick={() => setShowCartDropdown(false)}>
+                            <Link to="/cart">Go to Bag</Link>
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="bg-background border rounded-lg shadow-lg w-80 p-6 text-center">
+                        <ShoppingBag className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
+                        <p className="text-muted-foreground mb-4">Your bag is empty</p>
+                        <Button asChild className="w-full">
+                          <Link to="/new-in">Shop New In</Link>
                         </Button>
                       </div>
-                    </div>
+                    )}
                   </div>
                 )}
                 
-                {/* Empty Cart Message */}
-                {showCartDropdown && cartItems.length === 0 && (
-                  <div className="hidden md:block absolute top-full right-0 pt-2 z-50">
-                    <div className="bg-background border rounded-lg shadow-lg w-80 p-6 text-center">
-                      <ShoppingBag className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-                      <p className="text-muted-foreground">Your bag is empty</p>
-                      <Button asChild className="mt-4">
-                        <Link to="/new-in">Start Shopping</Link>
-                      </Button>
-                    </div>
-                  </div>
-                )}
+
               </div>
             </div>
           </div>
