@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, ChevronDown, Check } from "lucide-react";
+import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, ChevronDown, Check, X } from "lucide-react";
 import { Button } from "../ui/button";
 
 const footerLinks = {
@@ -31,7 +31,7 @@ const languages = ["English", "العربية", "Français"];
 
 export function Footer() {
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const [subscriptionState, setSubscriptionState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [subscriptionState, setSubscriptionState] = useState<'idle' | 'loading' | 'success' | 'error' | 'demo'>('idle');
   const [email, setEmail] = useState('');
 
   const toggleSection = (section: string) => {
@@ -50,9 +50,9 @@ export function Footer() {
 
     setSubscriptionState('loading');
     
-    // Simulate API call
+    // Simulate API call - show demo state to display both feedback boxes
     setTimeout(() => {
-      setSubscriptionState('success');
+      setSubscriptionState('demo');
       setEmail('');
     }, 1000);
   };
@@ -105,8 +105,9 @@ export function Footer() {
             
             {/* Newsletter - Accordion */}
             <AccordionSection title="Stay in the loop">
-              {subscriptionState === 'success' ? (
-                <div className="py-2">
+              {subscriptionState === 'success' || subscriptionState === 'demo' ? (
+                <div className="py-2 space-y-4">
+                  {/* Green Success Feedback */}
                   <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
                     <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
                       <Check className="h-4 w-4 text-green-600" />
@@ -118,6 +119,21 @@ export function Footer() {
                       </p>
                     </div>
                   </div>
+                  
+                  {/* Red Error Feedback (shown only in demo) */}
+                  {subscriptionState === 'demo' && (
+                    <div className="flex items-start gap-3 p-4 bg-red-50 rounded-lg border border-red-200">
+                      <div className="flex-shrink-0 w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mt-0.5">
+                        <X className="h-4 w-4 text-red-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h5 className="font-semibold text-sm text-red-800 mb-1">Subscription failed!</h5>
+                        <p className="text-xs text-red-700">
+                          Something went wrong. Please try again or contact support.
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <>
@@ -321,8 +337,9 @@ export function Footer() {
           {/* Newsletter Section */}
           <div>
             <h4 className="font-semibold mb-4">Stay in the loop</h4>
-            {subscriptionState === 'success' ? (
-              <div className="py-2">
+            {subscriptionState === 'success' || subscriptionState === 'demo' ? (
+              <div className="py-2 space-y-4">
+                {/* Green Success Feedback */}
                 <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
                   <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
                     <Check className="h-4 w-4 text-green-600" />
@@ -334,6 +351,21 @@ export function Footer() {
                     </p>
                   </div>
                 </div>
+                
+                {/* Red Error Feedback (shown only in demo) */}
+                {subscriptionState === 'demo' && (
+                  <div className="flex items-start gap-3 p-4 bg-red-50 rounded-lg border border-red-200">
+                    <div className="flex-shrink-0 w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mt-0.5">
+                      <X className="h-4 w-4 text-red-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h5 className="font-semibold text-sm text-red-800 mb-1">Subscription failed!</h5>
+                      <p className="text-xs text-red-700">
+                        Something went wrong. Please try again or contact support.
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <>

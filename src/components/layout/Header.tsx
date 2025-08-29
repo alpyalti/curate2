@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Search, User, Heart, ShoppingBag, Menu, X, Minus, Plus, Clock } from "lucide-react";
+import { Search, User, Heart, ShoppingBag, Menu, X, Minus, Plus, Clock, HelpCircle, Package } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { cn } from "../../lib/utils";
@@ -29,12 +29,45 @@ export function Header({
   const [showDesignersMenu, setShowDesignersMenu] = useState(false);
   const [showCartDropdown, setShowCartDropdown] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const mobileSearchRef = useRef<HTMLDivElement>(null);
   const searchIconRef = useRef<HTMLButtonElement>(null);
 
   // Mock cart data - in real app this would come from context/store
-  // Temporarily empty for testing empty states
-  const cartItems: any[] = [];
+  const cartItems = [
+    {
+      id: "cart-1",
+      name: "Black Triangle Bikini Top",
+      brand: "LETS SWIM",
+      price: 450,
+      quantity: 1,
+      size: "M",
+      color: "Black",
+      image: "https://letsswim.co/cdn/shop/files/LET_SSWIM-BLACKLET_SSWIMTRIANGLEBIKINITOP-6.jpg?v=1721327749"
+    },
+    {
+      id: "cart-2",
+      name: "Red Wired Balconette Swimsuit",
+      brand: "LETS SWIM",
+      price: 750,
+      quantity: 2,
+      size: "S",
+      color: "Red",
+      image: "https://letsswim.co/cdn/shop/files/LET_SSWIM-REDWIREDBALCONETTESWIMSUIT-1.jpg?v=1713187512",
+      stockCount: 2,
+      isLowStock: true
+    },
+    {
+      id: "cart-3",
+      name: "Mardi Matin Lemon Yellow",
+      brand: "NORI ENOMOTO",
+      price: 1850,
+      quantity: 1,
+      size: "One Size",
+      color: "Lemon Yellow",
+      image: "https://nori-enomoto.com/cdn/shop/files/nori_mardi-matin_lemon-yellow_main_02.png?v=1750655214&width=2400"
+    }
+  ];
 
   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
 
@@ -410,17 +443,87 @@ export function Header({
             </Button>
 
             {/* Account */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hidden md:flex relative hover:bg-transparent group"
-              aria-label="Account"
-              asChild
-            >
-              <Link to="/login">
-                <User className="h-5 w-5 group-hover:text-primary transition-colors" />
-              </Link>
-            </Button>
+            <div className="relative hidden md:block">
+              <div
+                onMouseEnter={() => setShowProfileDropdown(true)}
+                onMouseLeave={() => setShowProfileDropdown(false)}
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative hover:bg-transparent group"
+                  aria-label="Account"
+                >
+                  <User className="h-5 w-5 group-hover:text-primary transition-colors" />
+                </Button>
+                
+                {/* Profile Dropdown */}
+                {showProfileDropdown && (
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 pt-2 z-50">
+                    <div className="bg-background border rounded-lg shadow-lg w-60 p-3">
+                      {/* Login Button */}
+                      <Link to="/login">
+                        <Button 
+                          className="w-full mb-2 h-10 bg-[#b8956b] hover:bg-[#a6854e] text-white font-medium"
+                          onClick={() => setShowProfileDropdown(false)}
+                        >
+                          LOG IN
+                        </Button>
+                      </Link>
+                      
+                      {/* Create Account Section */}
+                      <div className="mb-3">
+                        <Link to="/complete-profile">
+                          <Button 
+                            variant="outline" 
+                            size="lg"
+                            className="w-full h-10"
+                            onClick={() => setShowProfileDropdown(false)}
+                          >
+                            CREATE ACCOUNT
+                          </Button>
+                        </Link>
+                        <div className="text-xs text-muted-foreground mt-2 text-center">
+                          <p>Don't have an account?</p>
+                          <p>It only takes a minute.</p>
+                        </div>
+                      </div>
+                      
+                      {/* Menu Items */}
+                      <div className="space-y-1 pt-2 border-t">
+                        <Link 
+                          to="/faq" 
+                          className="flex items-center justify-between w-full p-2 text-left hover:text-primary rounded-md transition-colors group"
+                          onClick={() => setShowProfileDropdown(false)}
+                        >
+                          <div className="flex items-center gap-2">
+                            <HelpCircle className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                            <span className="text-sm font-medium">Help & FAQ</span>
+                          </div>
+                          <svg className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </Link>
+                        
+                        <Link 
+                          to="/order-tracking" 
+                          className="flex items-center justify-between w-full p-2 text-left hover:text-primary rounded-md transition-colors group"
+                          onClick={() => setShowProfileDropdown(false)}
+                        >
+                          <div className="flex items-center gap-2">
+                            <Package className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                            <span className="text-sm font-medium">Track Order</span>
+                          </div>
+                          <svg className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
 
             {/* Wishlist */}
             <Button
@@ -500,7 +603,7 @@ export function Header({
                                   </Link>
                                   <p className="text-xs text-muted-foreground mt-1">{item.brand}</p>
                                   <p className="text-xs text-muted-foreground">
-                                    {item.color} • {item.size}
+                                    {item.color}{item.size && ` • ${item.size}`}
                                   </p>
                                   {item.isLowStock && (
                                     <div className="flex items-center gap-1 mt-1">

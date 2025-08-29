@@ -7,7 +7,9 @@ import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "../../lib/utils";
-import { Save, Check, User, Package, MapPin, Edit, Trash2, Plus, ArrowLeft } from "lucide-react";
+import { Save, Check, User, Package, MapPin, Edit, Trash2, Plus, ArrowLeft, MessageSquare, LifeBuoy, Phone, HelpCircle } from "lucide-react";
+import { MessagesPage } from "./MessagesPage";
+import { SupportTicketsPage } from "./SupportTicketsPage";
 
 interface ProfileData {
   firstName: string;
@@ -74,9 +76,11 @@ const countries = [
 ];
 
 const tabs = [
-  { id: "profile", label: "My Profile", icon: User },
-  { id: "orders", label: "Order History", icon: Package },
-  { id: "addresses", label: "Address Book", icon: MapPin },
+  { id: "profile", label: "Profile", icon: User },
+  { id: "orders", label: "My Orders", icon: Package },
+  { id: "addresses", label: "Addresses", icon: MapPin },
+  { id: "messages", label: "Messages", icon: MessageSquare },
+  { id: "tickets", label: "Support Tickets", icon: LifeBuoy },
 ];
 
 const mockOrders: Order[] = [
@@ -117,7 +121,55 @@ const mockOrders: Order[] = [
         title: "Mardi Matin Lemon Yellow",
         brand: "NORI ENOMOTO",
         image: "https://nori-enomoto.com/cdn/shop/files/nori_mardi-matin_lemon-yellow_main_02.png?v=1750655214&width=2400",
-        price: 1850,
+        price: 350,
+        quantity: 1
+      },
+      {
+        id: "12",
+        title: "Summer Floral Dress",
+        brand: "FASHION HOUSE",
+        image: "/images/women.png",
+        price: 250,
+        quantity: 1
+      },
+      {
+        id: "13",
+        title: "Luxury Handbag",
+        brand: "PREMIUM BAGS",
+        image: "/images/bags.png",
+        price: 400,
+        quantity: 1
+      },
+      {
+        id: "14",
+        title: "Sports Running Shoes",
+        brand: "ATHLETIC GEAR",
+        image: "/images/sports.png",
+        price: 300,
+        quantity: 1
+      },
+      {
+        id: "15",
+        title: "Home Decor Set",
+        brand: "INTERIOR DESIGN",
+        image: "/images/home.png",
+        price: 200,
+        quantity: 1
+      },
+      {
+        id: "16",
+        title: "Beauty Kit Essentials",
+        brand: "BEAUTY CO",
+        image: "/images/beauty.png",
+        price: 150,
+        quantity: 1
+      },
+      {
+        id: "17",
+        title: "Men's Casual Wear",
+        brand: "GENTLEMAN STYLE",
+        image: "/images/men.png",
+        price: 200,
         quantity: 1
       }
     ]
@@ -135,6 +187,125 @@ const mockOrders: Order[] = [
         brand: "BASIC WEAR",
         image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&h=500&fit=crop",
         price: 1200,
+        quantity: 1
+      }
+    ]
+  },
+  {
+    id: "4",
+    orderNumber: "#00217997",
+    status: "processing",
+    datePlaced: "15/05/25",
+    total: 890.50,
+    items: [
+      {
+        id: "5",
+        title: "Summer Floral Dress",
+        brand: "FASHION HOUSE",
+        image: "/images/women.png",
+        price: 890.50,
+        quantity: 1
+      }
+    ]
+  },
+  {
+    id: "5",
+    orderNumber: "#00217996",
+    status: "delivered",
+    datePlaced: "12/05/25",
+    total: 2150,
+    items: [
+      {
+        id: "6",
+        title: "Luxury Handbag",
+        brand: "PREMIUM BAGS",
+        image: "/images/bags.png",
+        price: 2150,
+        quantity: 1
+      }
+    ]
+  },
+  {
+    id: "6",
+    orderNumber: "#00217995",
+    status: "cancelled",
+    datePlaced: "10/05/25",
+    total: 675.75,
+    items: [
+      {
+        id: "7",
+        title: "Sports Running Shoes",
+        brand: "ATHLETIC GEAR",
+        image: "/images/sports.png",
+        price: 675.75,
+        quantity: 1
+      }
+    ]
+  },
+  {
+    id: "7",
+    orderNumber: "#00217994",
+    status: "shipped",
+    datePlaced: "08/05/25",
+    total: 1425.00,
+    items: [
+      {
+        id: "8",
+        title: "Home Decor Set",
+        brand: "INTERIOR DESIGN",
+        image: "/images/home.png",
+        price: 1425.00,
+        quantity: 1
+      }
+    ]
+  },
+  {
+    id: "8",
+    orderNumber: "#00217993",
+    status: "delivered",
+    datePlaced: "05/05/25",
+    total: 320.25,
+    items: [
+      {
+        id: "9",
+        title: "Beauty Kit Essentials",
+        brand: "BEAUTY CO",
+        image: "/images/beauty.png",
+        price: 320.25,
+        quantity: 1
+      }
+    ]
+  },
+  {
+    id: "9",
+    orderNumber: "#00217992",
+    status: "processing",
+    datePlaced: "03/05/25",
+    total: 1875.50,
+    items: [
+      {
+        id: "10",
+        title: "Men's Casual Wear Set",
+        brand: "GENTLEMAN STYLE",
+        image: "/images/men.png",
+        price: 1875.50,
+        quantity: 1
+      }
+    ]
+  },
+  {
+    id: "10",
+    orderNumber: "#00217991",
+    status: "pending",
+    datePlaced: "01/05/25",
+    total: 455.00,
+    items: [
+      {
+        id: "11",
+        title: "Vintage Preloved Jacket",
+        brand: "SECOND CHANCE",
+        image: "/images/preloved.png",
+        price: 455.00,
         quantity: 1
       }
     ]
@@ -174,6 +345,8 @@ export function ProfilePage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("profile");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ordersPerPage = 6;
   const [profileData, setProfileData] = useState<ProfileData>({
     firstName: "Ahmed",
     lastName: "Al Mansouri",
@@ -214,28 +387,40 @@ export function ProfilePage() {
       navigate("/profile/orders");
     } else if (tabId === "addresses") {
       navigate("/profile/addresses");
+    } else if (tabId === "messages") {
+      navigate("/profile/messages");
+    } else if (tabId === "tickets") {
+      navigate("/profile/tickets");
     } else {
       navigate("/profile");
     }
   };
 
   // Update active tab based on current URL
-  useEffect(() => {
+  const getActiveTabFromUrl = () => {
     if (location.pathname === "/profile/orders") {
       setActiveTab("orders");
     } else if (location.pathname === "/profile/addresses") {
       setActiveTab("addresses");
+    } else if (location.pathname === "/profile/messages") {
+      setActiveTab("messages");
+    } else if (location.pathname === "/profile/tickets") {
+      setActiveTab("tickets");
     } else {
       setActiveTab("profile");
     }
+  };
+
+  useEffect(() => {
+    getActiveTabFromUrl();
   }, [location.pathname]);
 
-  // Sort orders based on selected criteria
-  const sortedOrders = React.useMemo(() => {
+  // Sort orders and handle pagination
+  const { sortedOrders, currentOrders, totalPages } = React.useMemo(() => {
     const sorted = [...mockOrders];
     switch (sortBy) {
       case "date":
-        return sorted.sort((a, b) => {
+        sorted.sort((a, b) => {
           // Convert DD/MM/YY format to Date object for comparison
           const [dayA, monthA, yearA] = a.datePlaced.split('/');
           const [dayB, monthB, yearB] = b.datePlaced.split('/');
@@ -243,14 +428,26 @@ export function ProfilePage() {
           const dateB = new Date(2000 + parseInt(yearB), parseInt(monthB) - 1, parseInt(dayB));
           return dateB.getTime() - dateA.getTime();
         });
+        break;
       case "status":
-        return sorted.sort((a, b) => a.status.localeCompare(b.status));
+        sorted.sort((a, b) => a.status.localeCompare(b.status));
+        break;
       case "total":
-        return sorted.sort((a, b) => b.total - a.total);
-      default:
-        return sorted;
+        sorted.sort((a, b) => b.total - a.total);
+        break;
     }
-  }, [sortBy]);
+    
+    const totalPages = Math.ceil(sorted.length / ordersPerPage);
+    const startIndex = (currentPage - 1) * ordersPerPage;
+    const currentOrders = sorted.slice(startIndex, startIndex + ordersPerPage);
+    
+    return { sortedOrders: sorted, currentOrders, totalPages };
+  }, [sortBy, currentPage, ordersPerPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Check if there are any changes
   const hasChanges = JSON.stringify(profileData) !== JSON.stringify(originalData);
@@ -370,8 +567,31 @@ export function ProfilePage() {
       <div className="container mx-auto px-4 py-6">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Profile</h1>
-          <p className="text-gray-600">Manage your account information and preferences</p>
+          <div className="w-full">
+            <div className="flex items-center justify-between mb-2">
+              <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
+              <p className="text-gray-500">Need help?</p>
+            </div>
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600">Manage your account</p>
+              <div className="flex items-center gap-4">
+                <Link 
+                  to="/contact" 
+                  className="flex items-center gap-1 text-sm text-amber-700 hover:text-amber-800 transition-colors"
+                >
+                  <Phone className="w-4 h-4" />
+                  <span>Call us</span>
+                </Link>
+                <Link 
+                  to="/profile/tickets" 
+                  className="flex items-center gap-1 text-sm text-amber-700 hover:text-amber-800 transition-colors"
+                >
+                  <LifeBuoy className="w-4 h-4" />
+                  <span>Support</span>
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Tabs */}
@@ -550,28 +770,25 @@ export function ProfilePage() {
                 <CardTitle className="text-xl">Order History</CardTitle>
               </CardHeader>
               <CardContent>
-                {/* Header with order count and filter */}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                {/* Header with pagination info and sorting */}
+                <div className="flex items-center justify-between mb-6">
                   <div className="text-sm text-gray-600">
-                    {sortedOrders.length} Orders
+                    Showing {((currentPage - 1) * ordersPerPage) + 1}-{Math.min(currentPage * ordersPerPage, sortedOrders.length)} of {sortedOrders.length}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Label htmlFor="sort" className="text-sm text-gray-600">Sort by:</Label>
-                    <Select value={sortBy} onValueChange={setSortBy}>
-                      <SelectTrigger className="w-32 h-8 text-sm">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="date">Date</SelectItem>
-                        <SelectItem value="status">Status</SelectItem>
-                        <SelectItem value="total">Total</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger className="w-32 h-8 text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="date">Date</SelectItem>
+                      <SelectItem value="status">Status</SelectItem>
+                      <SelectItem value="total">Total</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
-                {/* Orders Table */}
-                <div className="border rounded-lg overflow-hidden">
+                {/* Desktop Orders Table */}
+                <div className="hidden md:block border rounded-lg overflow-hidden">
                   {/* Table Header */}
                   <div className="bg-gray-50 px-4 py-3 border-b">
                     <div className="grid grid-cols-4 gap-4 text-xs font-semibold text-gray-700 uppercase tracking-wide">
@@ -584,7 +801,7 @@ export function ProfilePage() {
 
                   {/* Table Body */}
                   <div className="divide-y">
-                    {sortedOrders.map((order) => (
+                    {currentOrders.map((order) => (
                       <div key={order.id} className="px-4 py-4 hover:bg-gray-50 transition-colors">
                         <div className="grid grid-cols-4 gap-4 items-center">
                           {/* Order Number */}
@@ -624,7 +841,7 @@ export function ProfilePage() {
                         {/* Order Items Preview */}
                         <div className="mt-3 pt-3 border-t border-gray-100">
                           <div className="flex items-center gap-3">
-                            {order.items.slice(0, 3).map((item) => (
+                            {order.items.slice(0, 5).map((item) => (
                               <div key={item.id} className="flex items-center gap-2">
                                 <img
                                   src={item.image}
@@ -637,9 +854,9 @@ export function ProfilePage() {
                                 </div>
                               </div>
                             ))}
-                            {order.items.length > 3 && (
+                            {order.items.length > 5 && (
                               <div className="text-xs text-gray-500">
-                                +{order.items.length - 3} more items
+                                +{order.items.length - 5} more items
                               </div>
                             )}
                           </div>
@@ -648,6 +865,119 @@ export function ProfilePage() {
                     ))}
                   </div>
                 </div>
+
+                {/* Mobile Compact View */}
+                <div className="md:hidden space-y-3">
+                  {currentOrders.map((order) => (
+                    <Link
+                      key={order.id}
+                      to={`/profile/orders/${order.orderNumber.replace('#', '')}`}
+                      className="block"
+                    >
+                      <Card className="hover:shadow-md transition-shadow">
+                        <CardContent className="p-4">
+                          {/* Main row: Date, Total, Status */}
+                          <div className="grid grid-cols-3 gap-4 items-center">
+                            {/* Date - Left */}
+                            <div className="text-left">
+                              <div className="text-sm font-medium text-gray-900">
+                                {order.datePlaced}
+                              </div>
+                            </div>
+                            
+                            {/* Total - Center */}
+                            <div className="text-center">
+                              <div className="font-bold text-sm text-gray-900">
+                                AED {order.total.toFixed(2)}
+                              </div>
+                            </div>
+                            
+                            {/* Status - Right */}
+                            <div className="text-right">
+                              <span className={cn(
+                                "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium",
+                                order.status === 'pending' && "bg-yellow-100 text-yellow-800",
+                                order.status === 'processing' && "bg-blue-100 text-blue-800",
+                                order.status === 'shipped' && "bg-purple-100 text-purple-800",
+                                order.status === 'delivered' && "bg-green-100 text-green-800",
+                                order.status === 'cancelled' && "bg-red-100 text-red-800"
+                              )}>
+                                {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                              </span>
+                            </div>
+                          </div>
+                          
+                          {/* Order Number - separate row, left aligned */}
+                          <div className="mt-1">
+                            <div className="text-left">
+                              <div className="text-sm text-primary font-medium">
+                                {order.orderNumber}
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Order Items Preview */}
+                          <div className="mt-3 pt-3 border-t border-gray-100">
+                            <div className="flex items-center gap-3">
+                              {order.items.slice(0, 5).map((item) => (
+                                <img
+                                  key={item.id}
+                                  src={item.image}
+                                  alt={item.title}
+                                  className="w-8 h-8 object-cover rounded"
+                                />
+                              ))}
+                              {order.items.length > 5 && (
+                                <div className="text-xs text-gray-500">
+                                  +{order.items.length - 5} more
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex justify-center items-center gap-2 mt-6 pt-6 border-t">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="h-8 px-3"
+                    >
+                      Previous
+                    </Button>
+                    
+                    <div className="flex gap-1">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <Button
+                          key={page}
+                          variant={currentPage === page ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => handlePageChange(page)}
+                          className="w-8 h-8 p-0"
+                        >
+                          {page}
+                        </Button>
+                      ))}
+                    </div>
+                    
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="h-8 px-3"
+                    >
+                      Next
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
@@ -697,17 +1027,14 @@ export function ProfilePage() {
                           {/* Address Content */}
                           <div className="pr-16">
                             <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-semibold">{address.title}</h3>
+                              <h3 className="font-semibold">{address.firstName} {address.lastName}</h3>
                               {address.isDefault && (
                                 <span className="text-xs bg-primary text-white px-2 py-1 rounded-full">
                                   Default
                                 </span>
                               )}
                             </div>
-                            <p className="text-sm font-medium mb-1">
-                              {address.firstName} {address.lastName}
-                            </p>
-                            <p className="text-sm text-gray-600 mb-1">
+                            <p className="text-sm mb-1">
                               {address.address}
                               {address.apartment && `, ${address.apartment}`}
                             </p>
@@ -753,18 +1080,23 @@ export function ProfilePage() {
 
                     {/* Form Fields */}
                     <div className="space-y-4">
-                      <div>
-                        <Label htmlFor="addressTitle">Address Title</Label>
-                        <Input
-                          id="addressTitle"
-                          value={addressForm.title}
-                          onChange={(e) => handleAddressFormChange('title', e.target.value)}
-                          placeholder="e.g., Home, Office, etc."
-                          className="mt-1"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <Label htmlFor="addressTitle">Title (Optional)</Label>
+                          <Select value={addressForm.title} onValueChange={(value) => handleAddressFormChange('title', value)}>
+                            <SelectTrigger className="mt-1">
+                              <SelectValue placeholder="Select title" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Mr.">Mr.</SelectItem>
+                              <SelectItem value="Mrs.">Mrs.</SelectItem>
+                              <SelectItem value="Ms.">Ms.</SelectItem>
+                              <SelectItem value="Miss">Miss</SelectItem>
+                              <SelectItem value="Rev.">Rev.</SelectItem>
+                              <SelectItem value="Dr.">Dr.</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                         <div>
                           <Label htmlFor="addressFirstName">First Name</Label>
                           <Input
@@ -887,6 +1219,16 @@ export function ProfilePage() {
                 )}
               </CardContent>
             </Card>
+          )}
+
+          {/* Messages Tab */}
+          {activeTab === "messages" && (
+            <MessagesPage />
+          )}
+
+          {/* Support Tickets Tab */}
+          {activeTab === "tickets" && (
+            <SupportTicketsPage />
           )}
         </div>
       </div>

@@ -23,6 +23,10 @@ import { ForgotPasswordPage } from './components/pages/ForgotPasswordPage';
 import { OrderTrackingPage } from './components/pages/OrderTrackingPage';
 import { ProfilePage } from './components/pages/ProfilePage';
 import OrderDetailPage from './components/pages/OrderDetailPage';
+import MessageDetailPage from './components/pages/MessageDetailPage';
+import CompleteProfilePage from './components/pages/CompleteProfilePage';
+import { ProfilePopupDemoPage } from './components/pages/ProfilePopupDemoPage';
+import { OrderConfirmationPage } from './components/pages/OrderConfirmationPage';
 import { ScrollToTop } from './components/ui/scroll-to-top';
 
 // Component to handle automatic scroll to top on route changes
@@ -80,7 +84,14 @@ function App() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/profile/orders" element={<ProfilePage />} />
             <Route path="/profile/addresses" element={<ProfilePage />} />
+            <Route path="/profile/messages" element={<ProfilePage />} />
+            <Route path="/profile/messages/:messageId" element={<MessageDetailPage />} />
+            <Route path="/profile/tickets" element={<ProfilePage />} />
             <Route path="/profile/orders/:orderNumber" element={<OrderDetailPage />} />
+            <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
+
+            <Route path="/complete-profile" element={<CompleteProfilePage />} />
+            <Route path="/profile-popup-demo" element={<ProfilePopupDemoPage />} />
           </Routes>
         </main>
 

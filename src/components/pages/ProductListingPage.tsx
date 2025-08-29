@@ -36,6 +36,12 @@ export function ProductListingPage() {
   const [sortBy, setSortBy] = useState('featured');
   const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false);
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
+  
+  // Show more/less state for filters
+  const [showMoreCategories, setShowMoreCategories] = useState(false);
+  const [showMoreBrands, setShowMoreBrands] = useState(false);
+  const [showMoreColors, setShowMoreColors] = useState(false);
+  const [showMoreSizes, setShowMoreSizes] = useState(false);
 
   // Force mobile grid to 2 columns
   useEffect(() => {
@@ -84,11 +90,14 @@ export function ProductListingPage() {
 
   // Mock filter data
   const filterData = {
-    brands: ['Nike', 'Adidas', 'Puma', 'Under Armour', 'New Balance', 'Reebok'],
-    colors: ['Black', 'White', 'Red', 'Blue', 'Green', 'Pink', 'Yellow'],
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-    categories: ['Tops', 'Bottoms', 'Dresses', 'Outerwear', 'Shoes', 'Accessories']
+    brands: ['Nike', 'Adidas', 'Puma', 'Under Armour', 'New Balance', 'Reebok', 'Zara', 'H&M', 'Uniqlo', 'Ralph Lauren', 'Tommy Hilfiger', 'Calvin Klein'],
+    colors: ['Black', 'White', 'Red', 'Blue', 'Green', 'Pink', 'Yellow', 'Purple', 'Orange', 'Brown', 'Grey', 'Navy'],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL', '28', '30', '32', '34', '36', '38'],
+    categories: ['Tops', 'Bottoms', 'Dresses', 'Outerwear', 'Shoes', 'Accessories', 'Bags', 'Jewelry', 'Swimwear', 'Loungewear']
   };
+  
+  // Show more/less limits
+  const INITIAL_SHOW_COUNT = 4;
 
   // Update active filters when selections change
   useEffect(() => {
@@ -214,7 +223,9 @@ export function ProductListingPage() {
           <AccordionTrigger>Category</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
-              {filterData.categories.map((cat) => (
+              {filterData.categories
+                .slice(0, showMoreCategories ? filterData.categories.length : INITIAL_SHOW_COUNT)
+                .map((cat) => (
                 <div key={cat} className="flex items-center space-x-2">
                   <Checkbox 
                     id={`category-${cat}`}
@@ -232,6 +243,17 @@ export function ProductListingPage() {
                   </label>
                 </div>
               ))}
+              {filterData.categories.length > INITIAL_SHOW_COUNT && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowMoreCategories(!showMoreCategories);
+                  }}
+                  className="text-sm text-primary hover:text-primary/80 font-medium pt-2"
+                >
+                  {showMoreCategories ? 'Show Less' : `Show More (${filterData.categories.length - INITIAL_SHOW_COUNT} more)`}
+                </button>
+              )}
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -241,7 +263,9 @@ export function ProductListingPage() {
           <AccordionTrigger>Brand</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
-              {filterData.brands.map((brand) => (
+              {filterData.brands
+                .slice(0, showMoreBrands ? filterData.brands.length : INITIAL_SHOW_COUNT)
+                .map((brand) => (
                 <div key={brand} className="flex items-center space-x-2">
                   <Checkbox 
                     id={`brand-${brand}`}
@@ -259,6 +283,17 @@ export function ProductListingPage() {
                   </label>
                 </div>
               ))}
+              {filterData.brands.length > INITIAL_SHOW_COUNT && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowMoreBrands(!showMoreBrands);
+                  }}
+                  className="text-sm text-primary hover:text-primary/80 font-medium pt-2"
+                >
+                  {showMoreBrands ? 'Show Less' : `Show More (${filterData.brands.length - INITIAL_SHOW_COUNT} more)`}
+                </button>
+              )}
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -315,26 +350,41 @@ export function ProductListingPage() {
         <AccordionItem value="color">
           <AccordionTrigger>Color</AccordionTrigger>
           <AccordionContent>
-            <div className="grid grid-cols-4 gap-2" onClick={(e) => e.stopPropagation()}>
-              {filterData.colors.map((color) => (
+            <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
+              <div className="grid grid-cols-4 gap-2">
+                {filterData.colors
+                  .slice(0, showMoreColors ? filterData.colors.length : INITIAL_SHOW_COUNT)
+                  .map((color) => (
+                  <button
+                    key={color}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (selectedColors.includes(color)) {
+                        setSelectedColors(prev => prev.filter(c => c !== color));
+                      } else {
+                        setSelectedColors(prev => [...prev, color]);
+                      }
+                    }}
+                    className={cn(
+                      "w-8 h-8 rounded-full border-2 transition-all",
+                      selectedColors.includes(color) ? "border-primary scale-110" : "border-gray-300 hover:border-gray-400"
+                    )}
+                    style={{ backgroundColor: color.toLowerCase() }}
+                    title={color}
+                  />
+                ))}
+              </div>
+              {filterData.colors.length > INITIAL_SHOW_COUNT && (
                 <button
-                  key={color}
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (selectedColors.includes(color)) {
-                      setSelectedColors(prev => prev.filter(c => c !== color));
-                    } else {
-                      setSelectedColors(prev => [...prev, color]);
-                    }
+                    setShowMoreColors(!showMoreColors);
                   }}
-                  className={cn(
-                    "w-8 h-8 rounded-full border-2 transition-all",
-                    selectedColors.includes(color) ? "border-primary scale-110" : "border-gray-300 hover:border-gray-400"
-                  )}
-                  style={{ backgroundColor: color.toLowerCase() }}
-                  title={color}
-                />
-              ))}
+                  className="text-sm text-primary hover:text-primary/80 font-medium pt-2"
+                >
+                  {showMoreColors ? 'Show Less' : `Show More (${filterData.colors.length - INITIAL_SHOW_COUNT} more)`}
+                </button>
+              )}
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -343,25 +393,40 @@ export function ProductListingPage() {
         <AccordionItem value="size">
           <AccordionTrigger>Size</AccordionTrigger>
           <AccordionContent>
-            <div className="grid grid-cols-3 gap-2" onClick={(e) => e.stopPropagation()}>
-              {filterData.sizes.map((size) => (
-                <Button
-                  key={size}
-                  variant={selectedSizes.includes(size) ? "default" : "outline"}
-                  size="sm"
+            <div className="space-y-3" onClick={(e) => e.stopPropagation()}>
+              <div className="grid grid-cols-3 gap-2">
+                {filterData.sizes
+                  .slice(0, showMoreSizes ? filterData.sizes.length : INITIAL_SHOW_COUNT)
+                  .map((size) => (
+                  <Button
+                    key={size}
+                    variant={selectedSizes.includes(size) ? "default" : "outline"}
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (selectedSizes.includes(size)) {
+                        setSelectedSizes(prev => prev.filter(s => s !== size));
+                      } else {
+                        setSelectedSizes(prev => [...prev, size]);
+                      }
+                    }}
+                    className="text-xs"
+                  >
+                    {size}
+                  </Button>
+                ))}
+              </div>
+              {filterData.sizes.length > INITIAL_SHOW_COUNT && (
+                <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (selectedSizes.includes(size)) {
-                      setSelectedSizes(prev => prev.filter(s => s !== size));
-                    } else {
-                      setSelectedSizes(prev => [...prev, size]);
-                    }
+                    setShowMoreSizes(!showMoreSizes);
                   }}
-                  className="text-xs"
+                  className="text-sm text-primary hover:text-primary/80 font-medium pt-2"
                 >
-                  {size}
-                </Button>
-              ))}
+                  {showMoreSizes ? 'Show Less' : `Show More (${filterData.sizes.length - INITIAL_SHOW_COUNT} more)`}
+                </button>
+              )}
             </div>
           </AccordionContent>
         </AccordionItem>

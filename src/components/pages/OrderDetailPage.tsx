@@ -150,7 +150,7 @@ const OrderDetailPage: React.FC = () => {
                 <h1 className="text-2xl font-bold text-gray-900">Order {order.orderNumber}</h1>
                 <p className="text-gray-600 mt-1">Placed on {order.datePlaced}</p>
               </div>
-              <Badge className={`${getStatusColor(order.status)} px-3 py-1 text-sm font-medium`}>
+              <Badge className={`${getStatusColor(order.status)} px-3 py-1 text-sm font-medium w-fit`}>
                 {getStatusText(order.status)}
               </Badge>
             </div>
@@ -168,7 +168,7 @@ const OrderDetailPage: React.FC = () => {
               <div>
                 <p className="text-sm text-gray-600">Sold by</p>
                 <p className="font-semibold text-gray-900">{order.soldBy}</p>
-                <Badge className="bg-green-100 text-green-800 hover:bg-green-200 mt-2">RECEIVED</Badge>
+                <Badge className="bg-green-100 text-green-800 hover:bg-green-200 mt-2 px-3 py-1 text-sm font-medium w-fit">RECEIVED</Badge>
               </div>
               <div className="flex flex-col sm:flex-row gap-2">
                 <Button variant="outline" size="sm">
@@ -239,19 +239,21 @@ const OrderDetailPage: React.FC = () => {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Products in the package</h3>
             <div className="space-y-4">
               {order.items.map((item) => (
-                <div key={item.id} className="flex items-start gap-4 p-4 border border-gray-200 rounded-lg">
-                  <img 
-                    src={item.image} 
-                    alt={item.name}
-                    className="w-16 h-16 object-cover rounded-lg"
-                  />
-                  <div className="flex-1">
-                    <h4 className="font-medium text-gray-900">{item.name}</h4>
-                    {item.size && <p className="text-sm text-gray-600">{item.size}</p>}
-                    <p className="text-sm text-gray-600">QTY: {item.quantity}</p>
-                    <p className="font-medium text-gray-900 mt-1">AED {item.price.toFixed(2)}</p>
+                <div key={item.id} className="flex flex-col sm:flex-row sm:items-start gap-4 p-4 border border-gray-200 rounded-lg">
+                  <div className="flex items-start gap-4 flex-1">
+                    <img 
+                      src={item.image} 
+                      alt={item.name}
+                      className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-gray-900">{item.name}</h4>
+                      {item.size && <p className="text-sm text-gray-600">{item.size}</p>}
+                      <p className="text-sm text-gray-600">QTY: {item.quantity}</p>
+                      <p className="font-medium text-gray-900 mt-1">AED {item.price.toFixed(2)}</p>
+                    </div>
                   </div>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="w-full sm:w-auto">
                     OPEN AN INCIDENT
                   </Button>
                 </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   Minus, 
   Plus, 
@@ -61,8 +61,49 @@ interface SavedAddress {
   isDefault?: boolean;
 }
 
-// Mock cart data - temporarily empty for testing empty states
-const mockCartItems: CartItem[] = [];
+// Mock cart data
+const mockCartItems: CartItem[] = [
+  {
+    id: "cart-1",
+    productId: "swimwear-001",
+    title: "Black Triangle Bikini Top",
+    brand: "LETS SWIM",
+    image: "https://letsswim.co/cdn/shop/files/LET_SSWIM-BLACKLET_SSWIMTRIANGLEBIKINITOP-6.jpg?v=1721327749",
+    price: 450,
+    formattedPrice: "450 AED",
+    color: "Black",
+    size: "M",
+    quantity: 1,
+    inStock: true
+  },
+  {
+    id: "cart-2",
+    productId: "swimwear-002", 
+    title: "Red Wired Balconette Swimsuit",
+    brand: "LETS SWIM",
+    image: "https://letsswim.co/cdn/shop/files/LET_SSWIM-REDWIREDBALCONETTESWIMSUIT-1.jpg?v=1713187512",
+    price: 750,
+    formattedPrice: "750 AED",
+    color: "Red",
+    size: "S",
+    quantity: 2,
+    inStock: true,
+    stockCount: 2,
+    isLowStock: true
+  },
+  {
+    id: "cart-3",
+    productId: "bags-001",
+    title: "Mardi Matin Lemon Yellow",
+    brand: "NORI ENOMOTO",
+    image: "https://nori-enomoto.com/cdn/shop/files/nori_mardi-matin_lemon-yellow_main_02.png?v=1750655214&width=2400",
+    price: 1850,
+    formattedPrice: "1,850 AED",
+    color: "Lemon Yellow",
+    quantity: 1,
+    inStock: true
+  }
+];
 
 const checkoutSteps: CheckoutStep[] = [
   { id: "shipping", title: "Shipping Address", completed: false, active: false },
@@ -72,6 +113,7 @@ const checkoutSteps: CheckoutStep[] = [
 ];
 
 export function CartPage() {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState<CartItem[]>(mockCartItems);
   const [promoCode, setPromoCode] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
@@ -259,15 +301,14 @@ export function CartPage() {
     { code: '+1-345', name: 'Cayman Islands', flag: '🇰🇾' }
   ];
   
-  const [deliveryMode, setDeliveryMode] = useState('standard');
   const [paymentMethod, setPaymentMethod] = useState('');
   
-  const [paymentDetails, setPaymentDetails] = useState({
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
-    cardholderName: ''
-  });
+  // Vendor-specific shipping methods
+  const [vendorShipping, setVendorShipping] = useState<Record<string, {
+    method: string;
+    cost: string;
+    description: string;
+  }>>({});
 
   // Group items by brand
   const groupedItems = cartItems.reduce((groups, item) => {
@@ -281,7 +322,12 @@ export function CartPage() {
 
   // Calculate totals
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const deliveryFee = deliveryMode === 'pickup' ? 0 : (subtotal > 500 ? 0 : 20); // Free delivery over 500 AED or pickup
+  
+  // Calculate total delivery fee from all vendors
+  const deliveryFee = Object.values(vendorShipping).reduce((sum, shipping) => {
+    return sum + parseFloat(shipping.cost || '0');
+  }, 0);
+  
   const promoDiscount = promoApplied ? Math.round(subtotal * 0.1) : 0; // 10% discount
   const total = subtotal + deliveryFee - promoDiscount;
 
@@ -324,6 +370,32 @@ export function CartPage() {
   const backToCart = () => {
     setIsCheckout(false);
     setCurrentStep(0);
+  };
+
+  const handleVendorShippingChange = (vendor: string, method: string, cost: string, description: string) => {
+    setVendorShipping(prev => ({
+      ...prev,
+      [vendor]: { method, cost, description }
+    }));
+  };
+
+  const handlePlaceOrder = () => {
+    // Generate order number
+    const orderNumber = Math.random().toString().substr(2, 8);
+    
+    // Prepare order data
+    const orderData = {
+      orderNumber,
+      total,
+      items: cartItems,
+      shippingAddress,
+      billingAddress: sameAsShipping ? shippingAddress : billingAddress,
+      vendorShipping,
+      paymentMethod: paymentMethod === 'card' ? 'Payment online' : paymentMethod
+    };
+
+    // Navigate to confirmation page with order data
+    navigate('/order-confirmation', { state: { orderData } });
   };
 
   const selectAddress = (address: SavedAddress) => {
@@ -562,16 +634,10 @@ export function CartPage() {
                       <span>{deliveryFee === 0 ? 'Free' : `${deliveryFee} AED`}</span>
                     </div>
 
-                    {deliveryFee === 0 && deliveryMode !== 'pickup' && (
+                    {deliveryFee === 0 && (
                       <div className="text-sm text-green-600 flex items-center gap-1">
                         <CheckCircle className="h-4 w-4" />
-                        Free delivery on orders over 500 AED
-                      </div>
-                    )}
-                    {deliveryMode === 'pickup' && (
-                      <div className="text-sm text-blue-600 flex items-center gap-1">
-                        <CheckCircle className="h-4 w-4" />
-                        Store pickup is always free
+                        Free shipping selected
                       </div>
                     )}
 
@@ -680,7 +746,7 @@ export function CartPage() {
                       {currentStep === 1 && <Truck className="h-4 w-4 md:h-5 md:w-5" />}
                       {currentStep === 2 && <CreditCard className="h-4 w-4 md:h-5 md:w-5" />}
                       {currentStep === 3 && <CheckCircle className="h-4 w-4 md:h-5 md:w-5" />}
-                      {checkoutSteps[currentStep].title}
+                      {currentStep === 1 ? 'Shipping Method' : checkoutSteps[currentStep].title}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 md:p-6 space-y-4">
@@ -959,51 +1025,108 @@ export function CartPage() {
                     {/* Delivery Mode Form */}
                     {currentStep === 1 && (
                       <div className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div 
-                            className={cn(
-                              "border rounded-lg p-4 cursor-pointer transition-all touch-manipulation",
-                              deliveryMode === 'standard' ? "border-primary bg-primary/5" : "border-muted hover:border-gray-300"
-                            )}
-                            onClick={() => setDeliveryMode('standard')}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <div className={cn(
-                                  "w-5 h-5 rounded-full border-2",
-                                  deliveryMode === 'standard' ? "border-primary bg-primary" : "border-muted"
-                                )} />
-                                <div>
-                                  <h3 className="font-medium">Standard Delivery</h3>
-                                  <p className="text-sm text-muted-foreground">1-2 business days</p>
+                        {/* Group items by vendor */}
+                        {Object.entries(
+                          cartItems.reduce((acc, item) => {
+                            if (!acc[item.brand]) {
+                              acc[item.brand] = [];
+                            }
+                            acc[item.brand].push(item);
+                            return acc;
+                          }, {} as Record<string, CartItem[]>)
+                                                 ).map(([vendor, items], index) => (
+                           <div key={vendor} className={cn("space-y-4", index > 0 && "pt-8 border-t")}>
+                            {/* Vendor Header */}
+                            <div className="text-sm text-muted-foreground">
+                              Sold by <span className="font-medium text-foreground">{vendor}</span>
+                            </div>
+                            
+                            {/* Vendor Products */}
+                            <div className="space-y-3">
+                              {items.map((item) => (
+                                <div key={item.id} className="flex items-center gap-4">
+                                                                <img 
+                                src={item.image} 
+                                alt={item.title}
+                                className="w-16 h-20 object-cover rounded-lg"
+                              />
+                                  <div className="flex-1">
+                                    <h4 className="font-medium text-sm">{item.title}</h4>
+                                    <div className="text-sm text-muted-foreground">
+                                      Color: {item.color}
+                                      {item.size && `, Size: ${item.size}`}
+                                    </div>
+                                  </div>
+                                  <div className="text-right">
+                                    <div className="text-sm">QTY: {item.quantity}</div>
+                                    <div className="font-semibold">{item.formattedPrice}</div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                            
+                            {/* Shipping Options for this Vendor */}
+                            <div className="space-y-3">
+                              <div 
+                                className={cn(
+                                  "border rounded-lg p-4 cursor-pointer transition-all",
+                                  vendorShipping[vendor]?.method === 'international' ? "border-primary bg-primary/5" : "border-muted hover:border-gray-300"
+                                )}
+                                onClick={() => handleVendorShippingChange(
+                                  vendor, 
+                                  'international', 
+                                  vendor === 'LETS SWIM' ? '167.71' : '1,053.91',
+                                  'International shipping'
+                                )}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-3">
+                                    <div className={cn(
+                                      "w-5 h-5 rounded-full border-2",
+                                      vendorShipping[vendor]?.method === 'international' ? "border-primary bg-primary" : "border-muted"
+                                    )} />
+                                    <div>
+                                      <h3 className="font-medium">Ships Internationally</h3>
+                                      <p className="text-sm text-muted-foreground">International shipping</p>
+                                    </div>
+                                  </div>
+                                  <span className="font-medium">
+                                    AED {vendor === 'LETS SWIM' ? '167.71' : '1,053.91'}
+                                  </span>
                                 </div>
                               </div>
-                              <span className="font-medium">20 AED</span>
-                            </div>
-                          </div>
-                          
-                          <div 
-                            className={cn(
-                              "border rounded-lg p-4 cursor-pointer transition-all touch-manipulation",
-                              deliveryMode === 'pickup' ? "border-primary bg-primary/5" : "border-muted hover:border-gray-300"
-                            )}
-                            onClick={() => setDeliveryMode('pickup')}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <div className={cn(
-                                  "w-5 h-5 rounded-full border-2",
-                                  deliveryMode === 'pickup' ? "border-primary bg-primary" : "border-muted"
-                                )} />
-                                <div>
-                                  <h3 className="font-medium">Pick-up</h3>
-                                  <p className="text-sm text-muted-foreground">Pick it up from the pickup location</p>
+                              
+                              <div 
+                                className={cn(
+                                  "border rounded-lg p-4 cursor-pointer transition-all",
+                                  vendorShipping[vendor]?.method === 'express' ? "border-primary bg-primary/5" : "border-muted hover:border-gray-300"
+                                )}
+                                onClick={() => handleVendorShippingChange(
+                                  vendor, 
+                                  'express', 
+                                  vendor === 'LETS SWIM' ? '200.00' : '1,200.00',
+                                  'Express shipping (1-2 days)'
+                                )}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-3">
+                                    <div className={cn(
+                                      "w-5 h-5 rounded-full border-2",
+                                      vendorShipping[vendor]?.method === 'express' ? "border-primary bg-primary" : "border-muted"
+                                    )} />
+                                    <div>
+                                      <h3 className="font-medium">Express Shipping</h3>
+                                      <p className="text-sm text-muted-foreground">1-2 business days</p>
+                                    </div>
+                                  </div>
+                                  <span className="font-medium">
+                                    AED {vendor === 'LETS SWIM' ? '200.00' : '1,200.00'}
+                                  </span>
                                 </div>
                               </div>
-                              <span className="font-medium">Free</span>
                             </div>
                           </div>
-                        </div>
+                        ))}
                       </div>
                     )}
 
@@ -1234,14 +1357,52 @@ export function CartPage() {
                           
                           <div className="bg-muted/30 p-4 rounded-lg">
                             <h4 className="font-medium mb-3">Delivery Method</h4>
-                            <div className="text-sm">
-                              <p className="capitalize">
-                                {deliveryMode === 'pickup' ? 'Store Pickup' : `${deliveryMode.replace('-', ' ')} Delivery`}
-                              </p>
-                              <p className="text-muted-foreground">
-                                {deliveryMode === 'standard' && '1-2 business days - 20 AED'}
-                                {deliveryMode === 'pickup' && 'Pick-up from location - Free'}
-                              </p>
+                            <div className="space-y-3">
+                              {Object.entries(
+                                cartItems.reduce((acc, item) => {
+                                  if (!acc[item.brand]) {
+                                    acc[item.brand] = [];
+                                  }
+                                  acc[item.brand].push(item);
+                                  return acc;
+                                }, {} as Record<string, CartItem[]>)
+                              ).map(([vendor, items]) => {
+                                const shipping = vendorShipping[vendor];
+                                return (
+                                  <div key={vendor} className="border-l-2 border-primary/20 pl-3">
+                                    <div className="flex items-start justify-between">
+                                      <div className="flex-1">
+                                        <div className="font-medium text-sm text-primary">{vendor}</div>
+                                        <div className="text-xs text-muted-foreground mt-1">
+                                          {items.map(item => item.title).join(', ')}
+                                        </div>
+                                        {shipping && (
+                                          <div className="mt-2 text-sm">
+                                            <div className="font-medium capitalize">
+                                              {shipping.method.replace('-', ' ')} Shipping
+                                            </div>
+                                            <div className="text-muted-foreground text-xs">
+                                              {shipping.description}
+                                            </div>
+                                          </div>
+                                        )}
+                                      </div>
+                                      {shipping && (
+                                        <div className="text-right">
+                                          <div className="font-semibold text-sm">AED {shipping.cost}</div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                              
+                              {/* Show message if no shipping methods selected */}
+                              {Object.keys(vendorShipping).length === 0 && (
+                                <div className="text-sm text-muted-foreground">
+                                  Please select shipping methods for all vendors in the previous step.
+                                </div>
+                              )}
                             </div>
                           </div>
                           
@@ -1288,8 +1449,7 @@ export function CartPage() {
                         </Button>
                       )}
                       <Button 
-                        onClick={nextStep}
-                        disabled={currentStep === checkoutSteps.length - 1}
+                        onClick={currentStep === checkoutSteps.length - 1 ? handlePlaceOrder : nextStep}
                         className="h-12 md:h-10 w-full sm:w-auto"
                         size="lg"
                       >
